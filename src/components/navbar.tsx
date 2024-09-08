@@ -18,7 +18,7 @@ function Navbar() {
   return (
     <nav className='bg-slate-700 py-3 flex justify-between px-5 text-white items-center'>
         <h1>
-            Señalando un futuro❤️
+            Señalando un futuro
         </h1>
         <div>
             <Button className='bg-white text-black px-6 py-2 rounded' variant="outline" onClick={() => signIn('google') }>Inicia sesion con Google</Button>
