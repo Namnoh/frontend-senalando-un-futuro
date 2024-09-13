@@ -54,12 +54,12 @@ function Navbar() {
         </button>*/}
 
         {/* Menu Items */}
-        <div className={`md:flex space-x-4 ${open() ? 'block' : 'hidden'}`}>
+        <div className="md:flex space-x-4">
           <Link href="/login"
             className="text-white hover:text-gray-400">¡Comienza ahora!
           </Link>
         </div>
-        <div className={`md:flex space-x-4 ${open() ? 'block' : 'hidden'}`}>
+        <div className="md:flex space-x-4">
           <Link href="/quienesSomos"
             className="text-white hover:text-gray-400">Sobre nosotros
           </Link>

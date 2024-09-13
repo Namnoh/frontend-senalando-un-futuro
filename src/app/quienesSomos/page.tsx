@@ -4,97 +4,92 @@ import Image from 'next/image'
 function quienesSomosPage() {
 return (
     <>
-    <div className=''>    
-        <div className="grid grid-cols-2 grid-rows-1 gap-4">
-            <div>
-                <img 
-                src="" 
-                alt="" 
-                width={600}
-                height={600}
-                />
-            </div>
-            <div>
-                <div className="text-left pt-16 text-7xl">
-                    <h1 className="text-center"> <b>Nuestra mision</b> </h1>
+    {/* inicio, div general */}
+        <div className='container mx-auto p-4'>
+            {/* Sección: Nuestra misión  */}
+            <div className="flex flex-col md:space-x-20 md:flex-row items-center md:items-start md:text-left text-center mt-32 mb-24">
+                {/* Imagen */}
+                <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center md:justify-center">
+                    <img
+                        src="https://static.vecteezy.com/system/resources/previews/007/933/127/non_2x/about-us-button-about-us-text-template-for-website-about-us-icon-flat-style-vector.jpg"
+                        alt="imagen_about_us"
+                        className="w-full h-auto max-w-sm object-contain"
+                    />
                 </div>
-                <div className='pt-16 pr-60 text-xl text-center leading-loose'>
-                    <p >Nuestra mision como equipo es ayudar a las personas a aprender el lenguaje de señas de manera simple y divertida, usando videos interactivos y retroalimentación personalizada, para crear un mundo más inclusivo donde todos podamos comunicarnos y entendernos mejor.
+                {/* Texto */}
+                <div className="md:w-1/2 w-full md:pl-8">
+                    <h1 className="text-7xl font-bold mb-4">Nuestra misión</h1>
+                    <p className="text-2xl leading-relaxed font-medium">
+                        Nuestra misión como equipo es ayudar a las personas a aprender el lenguaje de señas de manera simple y divertida, usando videos interactivos y retroalimentación personalizada...
                     </p>
                 </div>
             </div>
-        </div>
-        <div className="grid grid-cols-2 grid-rows-1 gap-4">
-            <div>
-                <div className="text-left pt-10 text-7xl">
-                    <h1 className="text-center"> <b> Inspiracion</b></h1>
+
+            {/* Sección: Inspiración  */}
+            <div className="flex flex-col md:flex-row-reverse items-center md:items-start md:text-left text-center md:space-x-30 mt-24 mb-12">
+                {/* Imagen */}
+                <div className="md:w-1/2 w-full mb-12 md:mb-0 flex justify-center md:justify-center">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/4214/4214085.png"
+                        alt="Inspiración"
+                        className="w-full h-auto max-w-sm object-contain"
+                    />
                 </div>
-                <div className='pt-16 pl-60'>
-                    <p className='text-center text-xl leading-loose'>
-                        Todo comienza con un integrante de nuestro grupo el cual estudio un tiempo lenguaje de señas en Chile, de ahi surgio la idea de crear esta aplicacion, cuando decidimos estudiar mas a fondo el lenguaje de señas, nos percatamos de que hay muchas personas que sufren de perdida auditiva y muy pocas personas saben como comunicarse a traves del lenguaje de señas, asi que decidimos poder aportar de algun modo a esas personas que le interesa y esten dispuestas a aprender este hermoso lenguaje
+                {/* Texto */}
+                <div className="md:w-1/2 w-full md:pl-8 md:pr-8">
+                    <h1 className="text-7xl font-bold mb-4">Inspiración</h1>
+                    <p className="text-2xl leading-relaxed font-medium">
+                        Todo comienza con un integrante de nuestro grupo el cual estudio un tiempo lenguaje de señas en Chile, de ahi surgio la idea de crear esta aplicacion, cuando decidimos estudiar mas a fondo el lenguaje de señas, 
+                        nos percatamos de que hay muchas personas que sufren de perdida auditiva y muy pocas personas saben como comunicarse a traves del lenguaje de señas, asi que decidimos poder aportar de algun modo a esas personas que le interesa y esten dispuestas a aprender este hermoso lenguaje
                     </p>
                 </div>
             </div>
-            <div>
-                <img 
-                src="" 
-                alt="" 
-                width={600}
-                height={600}
-                />
-            </div>
-        </div>
-        <div className="grid grid-cols-2 grid-rows-1 gap-4">
-            <div>
-                <img 
-                src="" 
-                alt="" 
-                width={600}
-                height={600}
-                />
-            </div>
-            <div>
-                <div className="text-left pt-16 text-7xl">
-                    <h1 className="text-center"> <b>Impacto Social</b> </h1>
+
+            {/* Sección: Impacto Social  */}
+            <div className="flex flex-col md:flex-row items-center md:items-start md:text-left text-center md:space-x-8 mt-16">
+                {/* Imagen */}
+                <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center md:justify-center">
+                    <img
+                        src="https://th.bing.com/th/id/OIP.WEYQzxaLAe1HMFkSQqTldgHaHa?rs=1&pid=ImgDetMain"
+                        alt="Impacto Social"
+                        className="w-full h-auto max-w-sm object-contain"
+                    />
                 </div>
-                <div className='pt-16 pr-60 text-xl text-center leading-loose' >
-                    <p >En nuestro equipo, creemos que la comunicación es un derecho de todos. Con nuestra plataforma, buscamos romper las barreras entre personas sordas y oyentes, promoviendo una sociedad más inclusiva y accesible para todos. 
-                        Sabemos que el desconocimiento del lenguaje de señas limita la interacción de las personas con discapacidad auditiva, y queremos cambiar esto.
+                {/* Texto */}
+                <div className="md:w-1/2 w-full md:pl-8">
+                    <h1 className="text-7xl font-bold mb-4">Impacto Social</h1>
+                    <p className="text-2xl leading-relaxed font-medium">
+                    En nuestro equipo, creemos que la comunicación es un derecho universal. Con nuestra plataforma, buscamos derribar barreras entre personas sordas y oyentes, promoviendo una sociedad más inclusiva. A través de un enfoque interactivo, capacitamos a personas de todas las edades para aprender el lenguaje de señas, fomentando la inclusión en escuelas, trabajos y la vida cotidiana. Queremos construir un mundo más equitativo donde todos puedan comunicarse y entenderse.
+                    </p>
+                </div>
+            </div>
+
+            {/* Sección: Plan a futuro  */}
+            <div className="flex flex-col md:flex-row-reverse items-center md:items-start md:text-left text-center mt-24">
+                {/* Imagen */}
+                <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center md:justify-center">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/1636/1636917.png"
+                        alt="Plan a Futuro"
+                        className="w-full h-auto max-w-sm object-contain"
+                    />
+                </div>
+                {/* Texto */}
+                <div className="md:w-1/2 w-full md:pl-8">
+                    <h1 className="text-7xl font-bold mb-4">Plan a futuro</h1>
+                    <p className="text-2xl leading-relaxed font-medium">                  
+                    Este es solo el comienzo. En el futuro, planeamos expandir nuestra plataforma con nuevas funcionalidades y metas, como:
+                    </p>
+                    <ul className="list-disc pl-4 mt-4 text-left text-2xl leading-relaxed font-medium">
+                        <li>Integrar lenguajes de señas como ASL y LSM para beneficiar a más personas.</li>
                         <br />
-                        A través de nuestro enfoque interactivo y amigable, estamos capacitando a personas de todas las edades a aprender este hermoso idioma. El impacto va más allá del aprendizaje: estamos construyendo puentes de comunicación que ayudan a mejorar la inclusión en escuelas, lugares de trabajo, y entornos cotidianos. Creemos firmemente que un mundo donde todos puedan entenderse es un mundo más equitativo y mejor para todos.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div className="grid grid-cols-2 grid-rows-1 gap-4">
-            <div>
-                <div className="text-left pt-10 text-7xl">
-                    <h1 className="text-center"> <b> Plan a futuro</b></h1>
-                </div>
-                <div className='pt-16 pl-60'>
-                    <p className='text-center text-xl leading-loose '>
-                    Este es solo el comienzo. En el futuro, planeamos expandir nuestra plataforma para llegar a más personas y ofrecer nuevas funcionalidades que mejoren aún más la experiencia de aprendizaje. Aquí te compartimos algunas de nuestras metas a largo plazo:
-                    </p>
-                    <br />
-                    <ul className='list-disc text-xl'>
-                        <li><b>Nuevos idiomas de señas:</b> Nos gustaria integrar diferentes lenguajes de señas, como el <b>American Sign Language (ASL)</b> y la <b>Lengua de Señas Mexicana (LSM)</b>, para que personas de diferentes países puedan beneficiarse de nuestra plataforma.</li>
+                        <li>Ofrecer cursos especializados en áreas como educación, atención al cliente y turismo.</li>
                         <br />
-                        <li><b>Cursos especializados:</b> Planeamos ofrecer módulos específicos para sectores como la educación, atención al cliente y turismo, donde la comunicación inclusiva es esencial.</li>
-                        <br />
-                        <li><b>Colaboración con organizaciones:</b> Queremos aliarnos con escuelas, ONGs y empresas para llevar nuestra plataforma a más espacios, promoviendo la inclusión desde una edad temprana y en lugares donde más se necesita.</li>
+                        <li>Ofrecer cursos especializados en áreas como educación, atención al cliente y turismo.</li>
                     </ul>
                 </div>
             </div>
-            <div>
-                <img 
-                src="" 
-                alt="" 
-                width={600}
-                height={600}
-                />
-            </div>
         </div>
-    </div>
     </>
 )
 }
