@@ -20,17 +20,8 @@ function Navbar() {
   }
 
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/">
-          <Avatar className="w-24 h-24"> 
-              <AvatarImage className="w-full h-full object-cover rounder-full" src="/images/Logo_SinBG.png" alt="Logo" />
-              <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        
-            
-        </Link>
+    <nav>
+      <div className="container mx-auto flex items-center justify-between p-2">
 
         {/* boton de amburguesa palñ celu, opcional y no operativo */}
         {/*<button
@@ -55,16 +46,26 @@ function Navbar() {
 
         {/* Menu Items */}
         <div className="md:flex space-x-4">
-          <Link href="/login"
-            className="text-white hover:text-gray-400">¡Comienza ahora!
+          <Link href="/login" className="text-defaultTextColor hover:text-gray-400 font-medium sm:text-lg">
+            ¡Comienza ahora!
           </Link>
         </div>
+
+        {/* Logo */}
+        <Link href="/">
+          <Avatar className="w-11 h-11 sm:w-14 sm:h-14"> 
+              <AvatarImage className="w-full h-full object-cover rounder-full" src="/images/Logo_SinBG.png" alt="Logo" />
+              <AvatarFallback>Avatar Image</AvatarFallback>
+          </Avatar>
+        </Link>
+
         <div className="md:flex space-x-4">
-          <Link href="/quienesSomos"
-            className="text-white hover:text-gray-400">Sobre nosotros
+          <Link href="/quienesSomos" className="hover:text-gray-400 font-medium sm:text-lg">
+            Sobre nosotros
           </Link>
         </div>
       </div>
+      <hr />
     </nav>
   )
 }
