@@ -47,7 +47,7 @@ function Login() {
               </div>
               <div className=" text-red-600 col-span-3 row-span-7 col-start-6 row-start-7 flex justify-center">
                 <Avatar className="w-10 h-10">
-                  <AvatarImage src= {session.user.image}/> {/* Funciona igual dejenlo */}
+                  <AvatarImage src={session.user.image!}/> {/* Funciona igual dejenlo */}
                 </Avatar>
               </div>
             </>
