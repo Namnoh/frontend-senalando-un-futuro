@@ -1,10 +1,17 @@
 // /** @type {import('next').NextConfig} */
-// const nextConfig = {};
 
-// export default nextConfig;
-export default {
+const nextConfig = {
     images: {
-      domains: ['i.gifer.com'], // Agrega aquí el dominio de la imagen
+      // Agrega aquí el dominio de la imagen
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'i.gifer.com',
+          // port: '',
+          // pathname: ''
+        }
+      ]
     },
 };
 
+export default nextConfig;
