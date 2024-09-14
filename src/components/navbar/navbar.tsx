@@ -21,7 +21,7 @@ function Navbar() {
 
   return (
     <nav>
-      <div className="container mx-auto flex items-center justify-between p-2">
+      <div className="container mx-auto min-h-[6vh] flex items-center justify-between p-2">
 
         {/* boton de amburguesa palñ celu, opcional y no operativo */}
         {/*<button
