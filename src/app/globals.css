@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --primary: 34, 193, 195; /* Color en formato HSL */
+    --primary-foreground: 255, 255, 255; /* Color de primer plano para `primary` */
+    --secondary: 253, 187, 45; /* Color en formato HSL */
+    --secondary-foreground: 0, 0, 0; /* Color de primer plano para `secondary` */
+}
