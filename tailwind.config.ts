@@ -50,7 +50,7 @@ const config: Config = {
 					'4': 'hsl(var(--chart-4))',
 					'5': 'hsl(var(--chart-5))'
 				},
-				defaultTextColor: 'var(--default-text-color)',
+				defaultTextColor: 'var(--default-text-color)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -58,7 +58,7 @@ const config: Config = {
 				sm: 'calc(var(--radius) - 4px)'
 			}
 		}
-	},
+    },
 	plugins: [require("tailwindcss-animate")],
 };
 export default config;
