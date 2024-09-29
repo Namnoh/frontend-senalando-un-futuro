@@ -7,13 +7,13 @@
     --primary-foreground: 255, 255, 255; /* Color de primer plano para `primary` */
     --secondary: 253, 187, 45; /* Color en formato HSL */
     --secondary-foreground: 0, 0, 0; /* Color de primer plano para `secondary` */
-    --background: hsl(0,0%,96.1%); /* Color background*/
-    --default-text-color: #333333; /* Color para default para el texto */
+    /* --background: hsl(0,0%,96.1%); Color background */
+    /* --default-text-color: #333333; Color para default para el texto */
 }
 
 body {
-    color: var(--default-text-color);
-    background-color: var(--background);
+    /* color: var(--default-text-color); */
+    /* background-color: var(--background); */
 }
 
 @layer base {
