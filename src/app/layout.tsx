@@ -6,9 +6,10 @@ import "aos/dist/aos.css"; // Importa los estilos de AOS
 import { metadata } from './metadata';
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/navbar/navbar";
+import { Sidebar, MobileNav } from "@/components/navbar/";
 import Footer from "@/components/footer/footer";
 import { Providers } from "./providers";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,11 +39,31 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Providers>
-            <Navbar />
-            <main className="min-h-[71vh] sm:min-h-[74vh] md:min-h-[78vh] lg:min-h-[81vh] min-w-screen pt-4 pb-4 md:pr-16 md:pl-16 lg:pr-56 lg:pl-56">
-              {children}
-            </main>
-            <Footer />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div className="flex flex-col h-screen md:flex-row">
+                <div className="hidden h-screen md:block md:w-[220px] lg:w-[280px]">
+                  <Sidebar />
+                </div>
+                <div className="w-full p-5 md:hidden">
+                  <MobileNav />
+                </div>
+                <div className="flex-grow">
+                  <div className="flex flex-col h-full">
+                    <main className="flex-grow">
+                      {children}
+                    </main>
+                    <div className="w-full">
+                      <Footer />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ThemeProvider>
           </Providers>
       </body>
     </html>
