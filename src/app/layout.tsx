@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Importa los estilos de AOS
-import { metadata } from './metadata';
+// import { metadata } from './metadata';
 import localFont from "next/font/local";
 import "./globals.scss";
 import { Sidebar, MobileNav } from "@/components/navbar/";
