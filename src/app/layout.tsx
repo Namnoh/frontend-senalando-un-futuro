@@ -6,7 +6,7 @@ import "aos/dist/aos.css"; // Importa los estilos de AOS
 import { metadata } from './metadata';
 import localFont from "next/font/local";
 import "./globals.css";
-import { Sidebar, MobileNav } from "@/components/navbar/";
+import { Sidebar, MobileNav, Sidebar2 } from "@/components/navbar/";
 import Footer from "@/components/footer/footer";
 import { Providers } from "./providers";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -46,13 +46,14 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <div className="flex flex-col h-screen md:flex-row">
-                <div className="hidden h-screen md:block md:w-[220px] lg:w-[280px]">
-                  <Sidebar />
+                <div className="hidden md:block">
+                  {/* <Sidebar /> */}
+                  <Sidebar2 />
                 </div>
                 <div className="w-full p-5 md:hidden">
                   <MobileNav />
                 </div>
-                <div className="flex-grow">
+                <div className="flex-grow md:ml-20">
                   <div className="flex flex-col h-full">
                     <main className="flex-grow">
                       {children}
