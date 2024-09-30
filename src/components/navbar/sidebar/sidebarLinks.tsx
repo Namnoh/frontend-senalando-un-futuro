@@ -17,12 +17,12 @@ const links = [
     {href: "/quienesSomos", icon: Info, text: 'Sobre Nosotros',},
     {href: "#", icon: Users, text: 'Perfil',},
     {href: "#", icon: CirclePlus, text: 'Administración',},
-    {href: "#", icon: LogOut, text: 'Cerrar Sesión',},
+    {href: "/login", icon: LogOut, text: 'Cerrar Sesión',},
 ]
 
 // SIDEBAR CUANDO ESTÁ CERRADA
 
-export const ClosedSidebarLinks = () => {
+export const ClosedSidebarLinks = (props:{actualRoute:string}) => {
     return (
         <>
             <div className="flex flex-col gap-5">
@@ -32,7 +32,8 @@ export const ClosedSidebarLinks = () => {
                             <Link
                                 key={index}
                                 href={l.href}
-                                className="group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted"
+                                className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted
+                                ${props.actualRoute === l.href ? 'bg-muted-foreground text-white' : ''}`}
                             >
                                 {IconToRender && <IconToRender className="h-6 w-6" />}
                                 <span

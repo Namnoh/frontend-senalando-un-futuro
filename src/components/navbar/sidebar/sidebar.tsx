@@ -15,7 +15,7 @@ import { ClosedSidebarLinks, OpenedSidebarLinks } from "./sidebarLinks";
 
 
 
-export default function MobileNav() {
+export default function Sidebar(props:{actualRoute:string}) {
     return (
         <aside className="fixed w-20 h-screen border-r flex flex-col items-center gap-5">
             <Sheet>
@@ -33,7 +33,7 @@ export default function MobileNav() {
                         </div>
                     </SheetTrigger>
                     <nav>
-                        <ClosedSidebarLinks/>
+                        <ClosedSidebarLinks actualRoute={props.actualRoute}/>
                     </nav>
                     <div className="mt-auto pb-5">
                         <ModeToggle /> 
