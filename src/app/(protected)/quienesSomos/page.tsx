@@ -1,16 +1,16 @@
 "use client"
 import React from 'react';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import 'aos/dist/aos.css'; // Importa los estilos de AOS
-import AOS from 'aos'; // Importa AOS
+// import AOS from 'aos'; // Importa AOS
 
 function quienesSomosPage() {
-    useEffect(() => {
-    AOS.init({
-      duration: 1000, // Duración de las animaciones
-      once: true, // Si solo se debe animar una vez al hacer scroll
-    });
-    }, []);
+    // useEffect(() => {
+    // AOS.init({
+    //   duration: 1000, // Duración de las animaciones
+    //   once: true, // Si solo se debe animar una vez al hacer scroll
+    // });
+    // }, []);
 
     return (
         <>
