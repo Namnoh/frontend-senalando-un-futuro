@@ -11,6 +11,7 @@ import { Sidebar, MobileNav } from "@/components/navbar/";
 import Footer from "@/components/footer/footer";
 import { Providers } from "./providers";
 import { ThemeProvider } from "@/components/theme-provider";
+import { fredoka } from './fonts/fonts';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        className={`${fredoka.className} antialiased`}>
           <Providers>
             <ThemeProvider
               attribute="class"
