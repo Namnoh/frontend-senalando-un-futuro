@@ -1,11 +1,12 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Importa los estilos de AOS
-import { metadata } from './metadata';
+// import { metadata } from './metadata';
 import localFont from "next/font/local";
-import "./globals.css";
+import "./globals.scss";
 import { Sidebar, MobileNav } from "@/components/navbar/";
 import Footer from "@/components/footer/footer";
 import { Providers } from "./providers";
@@ -34,6 +35,9 @@ export default function RootLayout({
     });
   }, []);
 
+  const actualRoute = usePathname();
+  const hideSidebarPaths = ['/login', '/register'];
+
   return (
     <html lang="es">
       <body
@@ -46,13 +50,18 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <div className="flex flex-col h-screen md:flex-row">
-                <div className="hidden h-screen md:block md:w-[220px] lg:w-[280px]">
-                  <Sidebar />
-                </div>
-                <div className="w-full p-5 md:hidden">
-                  <MobileNav />
-                </div>
-                <div className="flex-grow">
+                {!hideSidebarPaths.includes(actualRoute) && (
+                  <>
+                    <div className="hidden md:block">
+                      {/* <Sidebar /> */}
+                      <Sidebar actualRoute={actualRoute} />
+                    </div>
+                    <div className="w-full p-5 md:hidden">
+                      <MobileNav />
+                    </div>
+                  </>
+                )}
+                <div className="flex-grow md:ml-20">
                   <div className="flex flex-col h-full">
                     <main className="flex-grow">
                       {children}
