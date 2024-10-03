@@ -9,20 +9,8 @@ import localFont from "next/font/local";
 import "./globals.scss";
 import { Sidebar, MobileNav } from "@/components/navbar/";
 import Footer from "@/components/footer/footer";
-import { Providers } from "./providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { fredoka } from './fonts/fonts';
-
-const geistSanss = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMonos = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export default function RootLayout({
   children,
@@ -43,38 +31,36 @@ export default function RootLayout({
     <html lang="es">
       <body
         className={`${fredoka.className} antialiased`}>
-          <Providers>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <div className="flex flex-col h-screen md:flex-row">
-                {!hideSidebarPaths.includes(actualRoute) && (
-                  <>
-                    <div className="hidden md:block">
-                      {/* <Sidebar /> */}
-                      <Sidebar actualRoute={actualRoute} />
-                    </div>
-                    <div className="w-full p-5 md:hidden">
-                      <MobileNav />
-                    </div>
-                  </>
-                )}
-                <div className="flex-grow md:ml-20">
-                  <div className="flex flex-col h-full">
-                    <main className="flex-grow">
-                      {children}
-                    </main>
-                    <div className="w-full">
-                      <Footer />
-                    </div>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="flex flex-col h-screen md:flex-row">
+              {!hideSidebarPaths.includes(actualRoute) && (
+                <>
+                  <div className="hidden md:block">
+                    {/* <Sidebar /> */}
+                    <Sidebar actualRoute={actualRoute} />
+                  </div>
+                  <div className="w-full p-5 md:hidden">
+                    <MobileNav />
+                  </div>
+                </>
+              )}
+              <div className="flex-grow md:ml-20">
+                <div className="flex flex-col h-full">
+                  <main className="flex-grow">
+                    {children}
+                  </main>
+                  <div className="w-full">
+                    <Footer />
                   </div>
                 </div>
               </div>
-            </ThemeProvider>
-          </Providers>
+            </div>
+          </ThemeProvider>
       </body>
     </html>
   );
