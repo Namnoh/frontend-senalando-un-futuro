@@ -29,12 +29,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useEffect(() => {
-    AOS.init({
-      duration: 1000, // Duración de las animaciones
-      once: true, // Si solo se debe animar una vez al hacer scroll
-    });
-  }, []);
+  // useEffect(() => {
+  //   AOS.init({
+  //     duration: 1000, // Duración de las animaciones
+  //     once: true, // Si solo se debe animar una vez al hacer scroll
+  //   });
+  // }, []);
 
   const actualRoute = usePathname();
   const hideSidebarPaths = ['/login', '/register'];
