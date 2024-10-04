@@ -25,7 +25,7 @@ export default function RootLayout({
   // }, []);
 
   const actualRoute = usePathname();
-  const hideSidebarPaths = ['/login', '/register'];
+  const hideSidebarPaths = ['/login', '/register','/'];
 
   return (
     <html lang="es">
@@ -49,7 +49,7 @@ export default function RootLayout({
                   </div>
                 </>
               )}
-              <div className="flex-grow md:ml-20">
+              <div className="flex-grow">
                 <div className="flex flex-col h-full">
                   <main className="flex-grow">
                     {children}
