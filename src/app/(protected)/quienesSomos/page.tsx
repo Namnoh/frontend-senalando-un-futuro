@@ -1,23 +1,13 @@
 "use client"
 import React from 'react';
-// import { useEffect } from 'react';
-import 'aos/dist/aos.css'; // Importa los estilos de AOS
-// import AOS from 'aos'; // Importa AOS
 
 function quienesSomosPage() {
-    // useEffect(() => {
-    // AOS.init({
-    //   duration: 1000, // Duración de las animaciones
-    //   once: true, // Si solo se debe animar una vez al hacer scroll
-    // });
-    // }, []);
-
     return (
         <>
         {/* Inicio, div general */}
         <div className='container mx-auto p-4'>
             {/* Sección: Nuestra misión */}
-            <div className="flex flex-col  md:flex-row items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96" data-aos="zoom-in">
+            <div className="flex flex-col  md:flex-row items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96">
             {/* Imagen */}
                 <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center md:justify-center">
                     <img
@@ -35,7 +25,7 @@ function quienesSomosPage() {
             </div>
 
             {/* Sección: Inspiración */}
-            <div className="flex flex-col md:flex-row-reverse items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96" data-aos="zoom-in-left">
+            <div className="flex flex-col md:flex-row-reverse items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96">
             {/* Imagen */}
                 <div className="md:w-1/2 w-full mb-12 md:mb-0 flex justify-center md:justify-center">
                     <img
@@ -55,7 +45,7 @@ function quienesSomosPage() {
             </div>
 
             {/* Sección: Impacto Social */}
-            <div className="flex flex-col md:flex-row items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96" data-aos="zoom-in-right">
+            <div className="flex flex-col md:flex-row items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96">
                 {/* Imagen */}
                 <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center md:justify-center">
                     <img
@@ -73,7 +63,7 @@ function quienesSomosPage() {
             </div>
 
             {/* Sección: Plan a futuro */}
-            <div className="flex flex-col md:flex-row-reverse items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96" data-aos="zoom-in-left">
+            <div className="flex flex-col md:flex-row-reverse items-center md:items-start md:text-left text-center md:space-x-50 mt-[45%] mb-96">
             {/* Imagen */}
                 <div className="md:w-1/2 w-full mb-4 md:mb-0 flex justify-center md:justify-center">
                     <img
