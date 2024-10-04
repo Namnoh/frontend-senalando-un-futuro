@@ -40,7 +40,7 @@ export default function RootLayout({
                   </div>
                 </>
               )}
-              <div className={`flex-grow ${showSide ? 'md:ml-20' : ''}`}>
+              <div className={`flex-grow ${showSide ? 'md:ml-16' : ''}`}>
                 <div className="flex flex-col h-full">
                   <main className="flex-grow">
                     {children}

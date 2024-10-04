@@ -19,7 +19,7 @@ export const ClosedSidebarLinks = (props:{actualRoute:string}) => {
                                 className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-accent-800 hover:bg-accent-50
                                 ${props.actualRoute === l.href ? 'bg-accent text-accent-foreground' : 'text-foreground'}`} 
                             >
-                                {IconToRender && <IconToRender className="h-6 w-6" />}
+                                {IconToRender && <IconToRender className="h-5 w-5" />}
                                 <span
                                     className="absolute rounded-md px-2 py-1 ml-6 text-nowrap
                                     bg-accent-100 text-text-foreground text-sm
@@ -49,10 +49,10 @@ export const OpenedSidebarLinks = (props:{actualRoute:string}) => {
                     <Link
                         key={index}
                         href={l.href}
-                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-accent-800 hover:bg-accent-50
+                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-accent-800 hover:bg-accent-50
                             ${props.actualRoute === l.href ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
                     >
-                        {IconToRender && <IconToRender className="h-6 w-6" />}
+                        {IconToRender && <IconToRender className="h-5 w-5" />}
                         {l.text}
                     </Link>
                 )
