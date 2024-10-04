@@ -19,12 +19,11 @@ export default function Sidebar(props:{actualRoute:string}) {
     return (
         <aside className="fixed w-20 h-screen border-r flex flex-col items-center gap-5">
             <Sheet>
-                
                 {/* Sidebar Cerrada */}
                 <div className="flex flex-col items-center gap-5 h-screen">
                     <SheetTrigger asChild>
                         <div className="h-20 p-5">
-                            <Button variant="ghost" size="icon" className="">
+                            <Button variant="fullGhost" size="icon">
                                 <Avatar className="w-12 h-12"> 
                                     <AvatarImage className="w-full h-full object-cover rounder-full" src="/images/Logo_SinBG.png" alt="Logo" />
                                     <AvatarFallback>Avatar Image</AvatarFallback>
@@ -48,7 +47,7 @@ export default function Sidebar(props:{actualRoute:string}) {
                                 <AvatarFallback>Avatar Image</AvatarFallback>
                             </Avatar>
                         </div>
-                        <OpenedSidebarLinks />
+                        <OpenedSidebarLinks actualRoute={props.actualRoute}/>
                     </nav>
                     <div>
                         <ModeToggle />
