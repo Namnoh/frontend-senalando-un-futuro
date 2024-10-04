@@ -5,7 +5,7 @@ import {
     Info,
     LogOut,
     Search,
-    Users,
+    User,
 } from "lucide-react";
 
 // Links donde no mostrar la navbar
@@ -17,7 +17,7 @@ const links = [
     {href: "/", icon: Home, text: 'Niveles',},
     {href: "#", icon: FastForward, text: 'Tu progreso',},
     {href: "/quienesSomos", icon: Info, text: 'Sobre Nosotros',},
-    {href: "#", icon: Users, text: 'Perfil',},
+    {href: "#", icon: User, text: 'Perfil',},
     {href: "#", icon: CirclePlus, text: 'Administración',},
     {href: "/login", icon: LogOut, text: 'Cerrar Sesión',},
 ]
