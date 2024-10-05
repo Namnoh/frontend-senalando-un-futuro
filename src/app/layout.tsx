@@ -1,22 +1,19 @@
-'use client';
-
-import { usePathname } from 'next/navigation';
-// import { metadata } from './metadata';
+import type { Metadata } from "next";
 import "./globals.scss";
-import { Sidebar, MobileNav } from "@/components/navbar/";
-import Footer from "@/components/footer/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { fredoka } from './fonts/fonts';
-import { showSidebar } from '@/services/sidebar.service';
+
+export const metadata: Metadata = {
+  title: "Señalando Un Futuro",
+  description: "Señalando Un Futuro es una aplicación web para el aprendizaje y reforzamiento de la Lengua de Señas Chilena (LSCh) con el apoyo de la Inteligencia artificial (IA).",
+  manifest: "/manifest.json",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const actualRoute = usePathname();
-  const showSide = showSidebar({pathName: actualRoute});
 
   return (
     <html lang="es">
@@ -28,28 +25,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col h-screen md:flex-row">
-              {showSide && (
-                <>
-                  <div className="hidden md:block">
-                    {/* <Sidebar /> */}
-                    <Sidebar actualRoute={actualRoute} />
-                  </div>
-                  <div className="fixed p-5 md:hidden">
-                    <MobileNav actualRoute={actualRoute}/>
-                  </div>
-                </>
-              )}
-              <div className={`flex-grow ${showSide ? 'md:ml-16' : ''}`}>
-                <div className="flex flex-col h-full">
-                  <main className="flex-grow">
-                    {children}
-                  </main>
-                  <div className="w-full">
-                    <Footer />
-                  </div>
-                </div>
-              </div>
+            <div className="flex flex-col h-full">
+              <main className="flex-grow">
+                {children}
+              </main>
             </div>
           </ThemeProvider>
       </body>
