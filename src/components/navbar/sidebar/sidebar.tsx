@@ -4,30 +4,30 @@ import { Button } from "../../ui/button";
 
 import {
     Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
+    // CardContent,
+    // CardDescription,
+    // CardHeader,
     CardTitle,
 } from "../../ui/card";
 import { ModeToggle } from "@/components/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ClosedSidebarLinks, OpenedSidebarLinks } from "./sidebarLinks";
+import Link from "next/link";
 
 
 
 export default function Sidebar(props:{actualRoute:string}) {
     return (
-        <aside className="fixed w-20 h-screen border-r flex flex-col items-center gap-5">
+        <aside className="fixed w-16 h-screen border-r flex flex-col items-center gap-5">
             <Sheet>
-                
                 {/* Sidebar Cerrada */}
                 <div className="flex flex-col items-center gap-5 h-screen">
                     <SheetTrigger asChild>
-                        <div className="h-20 p-5">
-                            <Button variant="ghost" size="icon" className="">
+                        <div className="h-20 p-4">
+                            <Button variant="fullGhost" size="icon">
                                 <Avatar className="w-12 h-12"> 
                                     <AvatarImage className="w-full h-full object-cover rounder-full" src="/images/Logo_SinBG.png" alt="Logo" />
-                                    <AvatarFallback>Avatar Image</AvatarFallback>
+                                    <AvatarFallback>AI</AvatarFallback>
                                 </Avatar>
                             </Button>
                         </div>
@@ -48,25 +48,26 @@ export default function Sidebar(props:{actualRoute:string}) {
                                 <AvatarFallback>Avatar Image</AvatarFallback>
                             </Avatar>
                         </div>
-                        <OpenedSidebarLinks />
+                        <OpenedSidebarLinks actualRoute={props.actualRoute}/>
                     </nav>
                     <div>
                         <ModeToggle />
                     </div>
                     <div className="mt-auto">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Upgrade to Pro</CardTitle>
-                                <CardDescription>
-                                    Unlock all features and get unlimited access to our support team.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Button size="sm" className="w-full">
-                                    Upgrade
-                                </Button>
-                            </CardContent>
-                        </Card>
+                        <Link href={'/'}>
+                            <Card>
+                                <div className="flex items-center p-4">
+                                    <Avatar className="w-14 h-14"> 
+                                        <AvatarImage className="w-full h-full object-cover rounder-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2TgOv9CMmsUzYKCcLGWPvqcpUk6HXp2mnww&s" alt="Logo" />
+                                        <AvatarFallback>AI</AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex flex-grow flex-col items-center justify-center">
+                                        <CardTitle>Miau Venegas</CardTitle>
+                                        miau.venegas@duocuc.cl
+                                    </div>
+                                </div>
+                            </Card>
+                        </Link>
                     </div>
                 </SheetContent>
             </Sheet>

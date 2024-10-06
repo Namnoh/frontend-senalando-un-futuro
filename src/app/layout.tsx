@@ -1,31 +1,19 @@
-'use client';
-
-import { usePathname } from 'next/navigation';
-import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css"; // Importa los estilos de AOS
-// import { metadata } from './metadata';
-import localFont from "next/font/local";
+import type { Metadata } from "next";
 import "./globals.scss";
-import { Sidebar, MobileNav } from "@/components/navbar/";
-import Footer from "@/components/footer/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { fredoka } from './fonts/fonts';
+
+export const metadata: Metadata = {
+  title: "Señalando Un Futuro",
+  description: "Señalando Un Futuro es una aplicación web para el aprendizaje y reforzamiento de la Lengua de Señas Chilena (LSCh) con el apoyo de la Inteligencia artificial (IA).",
+  manifest: "/manifest.json",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // useEffect(() => {
-  //   AOS.init({
-  //     duration: 1000, // Duración de las animaciones
-  //     once: true, // Si solo se debe animar una vez al hacer scroll
-  //   });
-  // }, []);
-
-  const actualRoute = usePathname();
-  const hideSidebarPaths = ['/login', '/register','/'];
 
   return (
     <html lang="es">
@@ -37,28 +25,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col h-screen md:flex-row">
-              {!hideSidebarPaths.includes(actualRoute) && (
-                <>
-                  <div className="hidden md:block">
-                    {/* <Sidebar /> */}
-                    <Sidebar actualRoute={actualRoute} />
-                  </div>
-                  <div className="w-full p-5 md:hidden">
-                    <MobileNav />
-                  </div>
-                </>
-              )}
-              <div className="flex-grow">
-                <div className="flex flex-col h-full">
-                  <main className="flex-grow">
-                    {children}
-                  </main>
-                  <div className="w-full">
-                    <Footer />
-                  </div>
-                </div>
-              </div>
+            <div className="flex flex-col h-full">
+              <main className="flex-grow">
+                {children}
+              </main>
             </div>
           </ThemeProvider>
       </body>

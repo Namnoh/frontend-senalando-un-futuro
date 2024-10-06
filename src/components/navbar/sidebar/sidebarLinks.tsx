@@ -1,24 +1,8 @@
 import * as React from "react"
-import {
-    CirclePlus,
-    FastForward,
-    Home,
-    Info,
-    LogOut,
-    Search,
-    Users,
-} from "lucide-react";
 import Link from "next/link";
+import { getSidebarLinks } from "@/services/sidebar.service";
 
-const links = [
-    {href: "#", icon: Search, text: 'Buscar Palabras',},
-    {href: "/", icon: Home, text: 'Niveles',},
-    {href: "#", icon: FastForward, text: 'Tu progreso',},
-    {href: "/quienesSomos", icon: Info, text: 'Sobre Nosotros',},
-    {href: "#", icon: Users, text: 'Perfil',},
-    {href: "#", icon: CirclePlus, text: 'Administración',},
-    {href: "/login", icon: LogOut, text: 'Cerrar Sesión',},
-]
+const links = getSidebarLinks();
 
 // SIDEBAR CUANDO ESTÁ CERRADA
 
@@ -32,13 +16,13 @@ export const ClosedSidebarLinks = (props:{actualRoute:string}) => {
                             <Link
                                 key={index}
                                 href={l.href}
-                                className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted
-                                ${props.actualRoute === l.href ? 'bg-muted-foreground text-white' : ''}`}
+                                className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-accent-800 hover:bg-accent-50
+                                ${props.actualRoute === l.href ? 'bg-accent text-accent-foreground' : 'text-foreground'}`} 
                             >
-                                {IconToRender && <IconToRender className="h-6 w-6" />}
+                                {IconToRender && <IconToRender className="h-5 w-5" />}
                                 <span
                                     className="absolute rounded-md px-2 py-1 ml-6 text-nowrap
-                                    bg-muted text-text-foreground text-sm
+                                    bg-accent-100 text-text-foreground text-sm
                                     invisible opacity-20 -translate-x-3 transition-all w-50
                                     group-hover:visible group-hover:opacity-100 group-hover:translate-x-10
                                     "
@@ -55,7 +39,7 @@ export const ClosedSidebarLinks = (props:{actualRoute:string}) => {
 
 // SIDEBAR CUANDO ESTÁ ABIERTA
 
-export const OpenedSidebarLinks = () => {
+export const OpenedSidebarLinks = (props:{actualRoute:string}) => {
     return (
         <>
             {links.map((l, index) => {
@@ -65,9 +49,10 @@ export const OpenedSidebarLinks = () => {
                     <Link
                         key={index}
                         href={l.href}
-                        className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-muted"
+                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-accent-800 hover:bg-accent-50
+                            ${props.actualRoute === l.href ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
                     >
-                        {IconToRender && <IconToRender className="h-6 w-6" />}
+                        {IconToRender && <IconToRender className="h-5 w-5" />}
                         {l.text}
                     </Link>
                 )
