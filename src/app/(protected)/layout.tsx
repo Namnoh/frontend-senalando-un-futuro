@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Sidebar, MobileNav } from "@/components/navbar/";
 import { showSidebar } from '@/services/sidebar.service';
 import Footer from '@/components/footer/footer';
+import { useMediaQuery } from '@/hooks/uiHooks';
 
 export default function Layout (
     { children } : { children: React.ReactNode }
@@ -12,20 +13,17 @@ export default function Layout (
     const actualRoute = usePathname();
     const showSide = showSidebar({pathName: actualRoute});
 
+    const isMobile = useMediaQuery('(max-width: 768px)');
+
     return (
         <div className="flex flex-col h-screen md:flex-row">
-            {showSide && (
-                <>
-                    <div className="hidden md:block">
-                        {/* <Sidebar /> */}
-                        <Sidebar actualRoute={actualRoute} />
-                    </div>
-                    <div className="fixed p-5 md:hidden">
-                        {/* MobileSidebar */}
-                        <MobileNav actualRoute={actualRoute}/>
-                    </div>
-                </>
+            {/* Sidebar */}
+            {showSide && isMobile != undefined && (
+                <div className={`${isMobile ? 'fixed p-5' : ''}`}>
+                    {isMobile ? <MobileNav actualRoute={actualRoute}/> : <Sidebar actualRoute={actualRoute} />}
+                </div>
             )}
+            {/* Contenido Principal */}
             <div className={`flex flex-col flex-grow ${showSide ? 'md:ml-16' : ''}`}>
                 <main className="flex-grow">
                     {children}
