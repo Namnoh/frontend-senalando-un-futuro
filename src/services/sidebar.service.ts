@@ -20,7 +20,6 @@ const links = [
     {href: "#", icon: User, text: 'Perfil',},
     {href: "#", icon: CirclePlus, text: 'Administración',},
     {href: "/login", icon: LogOut, text: 'Cerrar Sesión',},
-    {href: "/testing", icon: Home, text: 'Testing',},
 ]
 
 // TODO: Obtener links según rol de usuario 
