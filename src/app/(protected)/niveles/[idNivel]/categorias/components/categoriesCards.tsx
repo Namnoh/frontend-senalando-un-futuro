@@ -1,11 +1,5 @@
 import Link from "next/link";
-
-interface Category {
-    id: number;
-    nombre: string;
-    icono: any;
-    bg: string;
-}
+import { Category } from '@interfaces/categoryInterface';
 
 export const CategoriesCards = ({idNivel, category}: {idNivel:number, category:Category}) => {
     const cat = category;

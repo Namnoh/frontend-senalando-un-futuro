@@ -9,6 +9,8 @@ const categories = [
 ]
 
 export async function getCategory(idCategoria:number) {
+    // TODO: Revisar qué pasa cuando la petición se demora
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
     const category = categories.find(category => category.id === Number(idCategoria));
     return category;
 }

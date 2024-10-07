@@ -1,18 +1,13 @@
 import React, { Suspense } from 'react'
 import WordContainer from './components/wordsContainer';
 import { getCategory } from '@/services/categories.service';
-
-interface Category {
-    id: number;
-    nombre: string;
-    bg: string;
-}
+import { Category } from '@interfaces/categoryInterface';
 
 export default async function Palabras({params}:any) {
     const idNivel = params.idNivel;
     const idCategoria  = params.idCategoria;
-    // Crear un componente
-    const category= await getCategory(idCategoria);
+    // TODO: Crear un componente para pedir las categorías dinámicamente y con Suspense
+    const category = await getCategory(idCategoria);
     return (
         <div className="relative flex h-full w-full">
             {/* Imagen de fondo */}
