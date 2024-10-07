@@ -12,7 +12,7 @@ export const CategoriesCards = ({idNivel, category}: {idNivel:number, category:C
     const IconToRender = cat.icono;
     return (
         <Link
-            href={`/niveles/${idNivel}/categorias/${cat.id}`}
+            href={`/niveles/${idNivel}/categorias/${cat.id}/palabras`}
             className='group'
         >
             <div className='flex items-center justify-center border-2 border-accent-100 rounded-2xl p-5 relative shadow-md'>
