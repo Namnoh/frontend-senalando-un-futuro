@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.scss";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/themeToggle/theme-provider";
 import { fredoka } from './fonts/fonts';
 
 export const metadata: Metadata = {
