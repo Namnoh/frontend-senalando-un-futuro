@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import { ThemeProvider } from "@/components/themeToggle/theme-provider";
 import { fredoka } from './fonts/fonts';
+import AnimatedLayout from "../components/customUI/page-transition"
 
 export const metadata: Metadata = {
   title: "Señalando Un Futuro",
@@ -27,7 +28,9 @@ export default function RootLayout({
           >
             <div className="flex flex-col h-full">
               <main className="flex-grow">
-                {children}
+                <AnimatedLayout animationType="scale">
+                  {children}
+                </AnimatedLayout>
               </main>
             </div>
           </ThemeProvider>
