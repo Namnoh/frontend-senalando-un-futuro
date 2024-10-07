@@ -1,10 +1,11 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Sidebar, MobileNav } from "@/components/navbar/";
+import { AllSidebars } from "@/components/navbar/";
 import { showSidebar } from '@/services/sidebar.service';
 import Footer from '@/components/footer/footer';
 import { useMediaQuery } from '@/hooks/uiHooks';
+
 
 export default function Layout (
     { children } : { children: React.ReactNode }
@@ -17,11 +18,9 @@ export default function Layout (
 
     return (
         <div className="flex flex-col h-screen md:flex-row">
-            {/* Sidebar */}
+            {/* Sidebars */}
             {showSide && isMobile != undefined && (
-                <div className={`${isMobile ? 'fixed p-5' : ''}`}>
-                    {isMobile ? <MobileNav actualRoute={actualRoute}/> : <Sidebar actualRoute={actualRoute} />}
-                </div>
+                <AllSidebars actualRoute={actualRoute} isMobile={isMobile}/>
             )}
             {/* Contenido Principal */}
             <div className={`flex flex-col flex-grow ${showSide ? 'md:ml-16' : ''}`}>

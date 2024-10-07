@@ -9,12 +9,13 @@ import {
     // CardHeader,
     CardTitle,
 } from "../ui/card";
-import { ModeToggle } from "@/components/modeToggle";
+import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { OpenedSidebarLinks } from "./sidebar/sidebarLinks";
 import Link from "next/link";
 
-export default function MobileNav(props:{actualRoute:string}) {
+export default function MobileNav({actualRoute, links}:{actualRoute:string, links:any}) {
+
     return (
         <Sheet>
             {/* Sidebar Cerrada */}
@@ -33,7 +34,7 @@ export default function MobileNav(props:{actualRoute:string}) {
                             <AvatarFallback>Avatar Image</AvatarFallback>
                         </Avatar>
                     </div>
-                    <OpenedSidebarLinks actualRoute={props.actualRoute} />
+                    <OpenedSidebarLinks actualRoute={actualRoute} links={links}/>
                 </nav>
                 <div>
                     <ModeToggle />

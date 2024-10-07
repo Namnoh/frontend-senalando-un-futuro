@@ -1,7 +1,8 @@
+'use client'
+
 import * as React from "react"
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
 import { Button } from "../../ui/button";
-
 import {
     Card,
     // CardContent,
@@ -9,14 +10,14 @@ import {
     // CardHeader,
     CardTitle,
 } from "../../ui/card";
-import { ModeToggle } from "@/components/modeToggle";
+import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ClosedSidebarLinks, OpenedSidebarLinks } from "./sidebarLinks";
 import Link from "next/link";
 
+export default function Sidebar({actualRoute, links}:{actualRoute:string, links:any}) {
+    
 
-
-export default function Sidebar(props:{actualRoute:string}) {
     return (
         <aside className="fixed w-16 h-screen border-r flex flex-col items-center gap-5">
             <Sheet>
@@ -33,7 +34,7 @@ export default function Sidebar(props:{actualRoute:string}) {
                         </div>
                     </SheetTrigger>
                     <nav>
-                        <ClosedSidebarLinks actualRoute={props.actualRoute}/>
+                        <ClosedSidebarLinks actualRoute={actualRoute} links={links}/>
                     </nav>
                     <div className="mt-auto pb-5">
                         <ModeToggle /> 
@@ -48,7 +49,7 @@ export default function Sidebar(props:{actualRoute:string}) {
                                 <AvatarFallback>Avatar Image</AvatarFallback>
                             </Avatar>
                         </div>
-                        <OpenedSidebarLinks actualRoute={props.actualRoute}/>
+                        <OpenedSidebarLinks actualRoute={actualRoute} links={links}/>
                     </nav>
                     <div>
                         <ModeToggle />
