@@ -6,7 +6,7 @@ export default async function WordsContainer({idCategoria, idNivel}: {idCategori
     const words = await getWordsFrom(idCategoria);
 
     return (
-        <div className='flex flex-wrap justify-center gap-5 w-2/3'>
+        <div className='flex flex-wrap justify-center gap-5 w-2/3 mb-10'>
             { words.map((w, index) =>
                 {
                     return (
