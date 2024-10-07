@@ -14,7 +14,7 @@ const hideSidebarPaths = ['/login', '/register'];
 // Links Sidebar
 const links = [
     {href: "#", icon: Search, text: 'Buscar Palabras',},
-    {href: "/", icon: Home, text: 'Niveles',},
+    {href: "/niveles", icon: Home, text: 'Niveles',},
     {href: "#", icon: FastForward, text: 'Tu progreso',},
     {href: "/quienesSomos", icon: Info, text: 'Sobre Nosotros',},
     {href: "#", icon: User, text: 'Perfil',},
@@ -24,7 +24,8 @@ const links = [
 ]
 
 // TODO: Obtener links según rol de usuario 
-export const getSidebarLinks = () =>  {
+export async function getSidebarLinks() {
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
     return links;
 }
 
