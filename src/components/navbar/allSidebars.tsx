@@ -37,7 +37,7 @@ export default function AllSidebars({actualRoute, isMobile} : {actualRoute:strin
         }
     } else {
         return (
-            <div className={`${isMobile ? 'fixed p-5' : ''}`}>
+            <div className={`${isMobile ? 'fixed p-5 z-10' : ''}`}>
                 { isMobile ? <MobileNav actualRoute={actualRoute} links={links} /> : <Sidebar actualRoute={actualRoute} links={links} /> }
             </div>
         )

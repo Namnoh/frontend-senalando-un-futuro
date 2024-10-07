@@ -1,6 +1,6 @@
 import * as React from "react"
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
+import { Button } from "../../ui/button";
 import { Menu } from "lucide-react";
 import {
     Card,
@@ -8,19 +8,19 @@ import {
     // CardDescription,
     // CardHeader,
     CardTitle,
-} from "../ui/card";
+} from "../../ui/card";
 import { ModeToggle } from "@/components/themeToggle/modeToggle";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { OpenedSidebarLinks } from "./sidebar/sidebarLinks";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { OpenedSidebarLinks } from "../sidebar/sidebarLinks";
 import Link from "next/link";
 
 export default function MobileNav({actualRoute, links}:{actualRoute:string, links:any}) {
-
+    const isWordsSection = actualRoute.endsWith('/palabras');
     return (
         <Sheet>
             {/* Sidebar Cerrada */}
             <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="md:hidden">
+                <Button variant={`${isWordsSection ? 'fullGhost' : 'outline'}`} size="icon" className={`md:hidden  ${isWordsSection ? 'text-white' : ''}`}>
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Toggle navigation menu</span>
                 </Button>
