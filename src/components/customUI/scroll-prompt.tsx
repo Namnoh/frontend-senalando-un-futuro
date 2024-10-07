@@ -12,10 +12,10 @@ export default function ScrollPrompt({ className = "" }: ScrollPromptProps) {
     <div className={`absolute bottom-4 left-1/2 transform -translate-x-1/2 ${className}`}>
       <motion.div
         animate={{
-          y: [0, 5, 0],
+          y: [0, 10, 0],
         }}
         transition={{
-          duration: 2,
+          duration: '2',
           repeat: Infinity,
           repeatType: "loop",
           ease: "easeInOut",
@@ -23,7 +23,7 @@ export default function ScrollPrompt({ className = "" }: ScrollPromptProps) {
         className="flex space-x-1"
       >
         {[...Array(3)].map((_, index) => (
-          <ChevronDown key={index} className="h-6 w-6 text-primary" />
+          <ChevronDown key={index} className="h-10 w-8 text-primary" />
         ))}
       </motion.div>
     </div>
