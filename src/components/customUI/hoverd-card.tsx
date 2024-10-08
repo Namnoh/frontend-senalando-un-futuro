@@ -83,7 +83,7 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
                 }`}
             >
                 <div className="flex-grow flex items-center justify-center">
-                    <Icon className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56" stroke-width="1.25" /> 
+                    <Icon className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56" strokeWidth="1.25" /> 
                 </div>
                 <div className="text-center mt-4">
                     <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semi-bold">{title}</h3>
