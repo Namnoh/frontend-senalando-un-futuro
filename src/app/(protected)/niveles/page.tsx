@@ -54,9 +54,11 @@ export default function NivelesPage() {
     return (
     <div className={styles.backgroundImage} >   
         <div className="flex flex-col min-h-screen">
-            <div className="flex flex-col items-center p-8 space-y-8">
-                <h2 className="text-2xl font-semibold text-center">Bienvenido Miau Venegas</h2>
-                <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold text-center text-primary">Niveles</h1>
+            <div className="relative">
+                <div className="flex flex-col items-center p-8 space-y-8">
+                    <h2 className="text-2xl font-semibold text-center">Bienvenido Miau Venegas</h2>
+                    <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold text-center text-secondary bg-background ">Niveles</h1>
+                </div>
             </div>
         <main className="flex-grow flex flex-col items-center p-4 sm:p-6 md:p-8 lg:p-10">
             <div className="flex flex-col md:flex-row gap-6 w-full max-w-7xl">

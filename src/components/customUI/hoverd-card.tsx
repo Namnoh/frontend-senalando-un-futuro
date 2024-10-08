@@ -24,23 +24,26 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
             case 'orange':
                 return {
                     border: 'border-primary-300',
-                    bg: 'bg-primary-200', //el bg no quedo iwal al mockup por que las letras estas webeadas con el fondo oscuro y claro
-                    hover: 'hover:bg-primary-300',
-                    progress: 'hsl(var(--primaryVar),30%)' //es la opacidad que tendra el color
+                    bg: 'bg-primary-50',
+                    hover: 'bg-primary-50',
+                    progress: 'hsl(var(--primaryVar),40%)', //es la opacidad que tendra el color
+                    trailColor: 'hsl(var(--mutedVar), 70%)'
                 }
             case 'blue':
                 return {
-                    border: 'border-secondary-400',
-                    bg: 'bg-secondary-200',
-                    hover: 'hover:bg-secondary-400',
-                    progress: 'hsl(var(--secondaryVar), 30%)'
+                    border: 'border-secondary-300',
+                    bg: 'bg-secondary-50',
+                    hover: 'bg-secondary-50',
+                    progress: 'hsl(var(--secondaryVar), 40%)',
+                    trailColor: 'hsl(var(--secondaryVar), 70%)'
                 }
             case 'red':
                 return {
                     border: 'border-destructive-300',
-                    bg: 'bg-destructive-200',
-                    hover: 'hover:bg-destructive-300',
-                    progress: 'hsl(var(--destructiveVar), 30%)'
+                    bg: 'bg-destructive-100',
+                    hover: 'bg-destructive-100',
+                    progress: 'hsl(var(--destructiveVar), 40%)',
+                    trailColor: 'hsl(var(--destructiveVar), 70%)'
                 }
             default:
                 return {
@@ -56,7 +59,7 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
 
     const CardContent = (
         <Card 
-            className={`relative flex flex-col items-center justify-between border-8 p-6 h-96 sm:h-[28rem] md:h-[32rem] lg:h-[36rem] w-full overflow-hidden cursor-pointer transition-all duration-300 ease-in-out
+            className={`text-black relative flex flex-col items-center justify-between border-8 p-6 h-96 sm:h-[28rem] md:h-[32rem] lg:h-[36rem] w-full overflow-hidden cursor-pointer transition-all duration-300 ease-in-out
             ${colorClasses.border} ${colorClasses.bg} ${colorClasses.hover}
             ${isHovered ? 'shadow-lg transform -translate-y-8' : ''}`}
             onMouseEnter={() => setIsHovered(true)}
@@ -70,7 +73,7 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
                         textSize: '24px',
                         pathColor: colorClasses.progress,
                         textColor: colorClasses.progress,
-                        trailColor: 'hsl(var(--muted-50))', //lo deje transparente por que me daba tok 
+                        trailColor: colorClasses.trailColor//lo deje transparente por que me daba tok 
                     })}
                 />
             </div>
@@ -83,7 +86,7 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
                     <Icon className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56" /> 
                 </div>
                 <div className="text-center mt-4">
-                    <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">{title}</h3>
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semi-bold">{title}</h3>
                 </div>
             </div>
             <div 
@@ -91,7 +94,7 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
                     isHovered ? 'opacity-100' : 'opacity-0'
                 }`}
             >
-                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-4">{title}</h3>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-semi-bold mb-4">{title}</h3>
                 <div className="sm:text-lg md:text-xl lg:text-2xl text-center">{description}</div>
             </div>
         </Card>
