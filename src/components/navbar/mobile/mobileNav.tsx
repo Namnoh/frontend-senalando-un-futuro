@@ -11,7 +11,7 @@ import {
 } from "../../ui/card";
 import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { OpenedSidebarLinks } from "../sidebar/sidebarLinks";
+import { OpenedSidebarLinks } from "../sidebarLinks";
 import Link from "next/link";
 
 export default function MobileNav({actualRoute, links}:{actualRoute:string, links:any}) {
