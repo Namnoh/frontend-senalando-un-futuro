@@ -1,5 +1,5 @@
 import React from 'react'
-import { WordsCards } from './wordCard';
+import { WordCard } from './wordCard';
 import { getWordsFrom } from '@/services/words.service';
 
 export default async function WordsContainer({idCategoria, idNivel}: {idCategoria:number, idNivel:number}) {
@@ -10,7 +10,7 @@ export default async function WordsContainer({idCategoria, idNivel}: {idCategori
             { words.map((w) =>
                 {
                     return (
-                        <WordsCards key={w.idPalabra} idNivel={idNivel} idCategoria={idCategoria} word={w} />
+                        <WordCard key={w.idPalabra} idNivel={idNivel} idCategoria={idCategoria} word={w} />
                     )
                 }
             )}

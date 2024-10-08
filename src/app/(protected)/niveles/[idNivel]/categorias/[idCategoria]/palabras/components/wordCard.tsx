@@ -3,7 +3,7 @@ import { Palabra } from '@/interfaces/palabraInterface';
 import ProgressBadge from "@/components/customUI/progressBadge";
 
 
-export const WordsCards = ({idNivel, idCategoria, word}: {idNivel:number, idCategoria:number, word:Palabra}) => {
+export const WordCard = ({idNivel, idCategoria, word}: {idNivel:number, idCategoria:number, word:Palabra}) => {
     const w = word;
     const IconToRender = w.iconoPalabra;
     return (
