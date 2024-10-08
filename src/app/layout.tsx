@@ -28,9 +28,7 @@ export default function RootLayout({
           >
             <div className="flex flex-col h-full">
               <main className="flex-grow">
-                <AnimatedLayout animationType="scale">
-                  {children}
-                </AnimatedLayout>
+                {children}
               </main>
             </div>
           </ThemeProvider>
