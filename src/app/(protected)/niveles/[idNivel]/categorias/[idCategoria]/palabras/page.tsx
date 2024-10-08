@@ -16,7 +16,7 @@ export default async function Palabras({params}:any) {
                 style={{ backgroundImage: `url(${category?.bg})` }}
             >
                 {/* Superposición oscura y blur */}
-                <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm -z-10"></div>
+                <div className="absolute inset-0 bg-black bg-opacity-65 backdrop-blur-sm -z-10"></div>
             </div>
             <div className='flex flex-col items-center gap-20 flex-grow'>
                 <div className="flex flex-col items-center gap-5">
