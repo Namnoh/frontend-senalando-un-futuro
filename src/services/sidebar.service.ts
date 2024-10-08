@@ -7,19 +7,20 @@ import {
     Search,
     User,
 } from "lucide-react";
+import { Vista } from "@/interfaces/vistaInterface";
 
 // Links donde no mostrar la navbar
 const hideSidebarPaths = ['/login', '/register'];
 
 // Links Sidebar
-const links = [
-    {href: "#", icon: Search, text: 'Buscar Palabras',},
-    {href: "/niveles", icon: Home, text: 'Niveles',},
-    {href: "#", icon: FastForward, text: 'Tu progreso',},
-    {href: "/quienesSomos", icon: Info, text: 'Sobre Nosotros',},
-    {href: "#", icon: User, text: 'Perfil',},
-    {href: "#", icon: CirclePlus, text: 'Administración',},
-    {href: "/login", icon: LogOut, text: 'Cerrar Sesión',},
+const links: Vista[] = [
+    {idVista:1 ,hrefVista: "#", iconoVista: Search, tituloVista: 'Buscar Palabras',},
+    {idVista:2 ,hrefVista: "/niveles", iconoVista: Home, tituloVista: 'Niveles',},
+    {idVista:3 ,hrefVista: "#", iconoVista: FastForward, tituloVista: 'Tu progreso',},
+    {idVista:4 ,hrefVista: "/quienesSomos", iconoVista: Info, tituloVista: 'Sobre Nosotros',},
+    {idVista:5 ,hrefVista: "#", iconoVista: User, tituloVista: 'Perfil',},
+    {idVista:6 ,hrefVista: "#", iconoVista: CirclePlus, tituloVista: 'Administración',},
+    {idVista:7 ,hrefVista: "/login", iconoVista: LogOut, tituloVista: 'Cerrar Sesión',},
 ]
 
 // TODO: Obtener links según rol de usuario 

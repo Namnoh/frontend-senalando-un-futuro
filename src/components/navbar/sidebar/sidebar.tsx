@@ -12,7 +12,7 @@ import {
 } from "../../ui/card";
 import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { ClosedSidebarLinks, OpenedSidebarLinks } from "./sidebarLinks";
+import { ClosedSidebarLinks, OpenedSidebarLinks } from "../sidebarLinks";
 import Link from "next/link";
 
 export default function Sidebar({actualRoute, links}:{actualRoute:string, links:any}) {

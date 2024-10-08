@@ -1,24 +1,20 @@
 import * as React from "react"
 import Link from "next/link";
+import { Vista } from "@/interfaces/vistaInterface";
 
-interface SidebarLink {
-    href: string;
-    icon: any;
-    text: string;
-}
 // SIDEBAR CUANDO ESTÁ CERRADA
 
-export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, links:SidebarLink[]}) => {
+export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, links:Vista[]}) => {
     return (
         <>
             <div className="flex flex-col gap-5">
-                {links.map((l, index) => {
-                    const isActualRoute = actualRoute.includes(l.href);
-                    const IconToRender = l.icon;
+                {links.map((l) => {
+                    const isActualRoute = actualRoute.includes(l.hrefVista);
+                    const IconToRender = l.iconoVista;
                     return (
                             <Link
-                                key={index}
-                                href={l.href}
+                                key={l.idVista}
+                                href={l.hrefVista}
                                 className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-accent-800 hover:bg-accent-50
                                 ${isActualRoute ? 'bg-accent text-accent-foreground' : 'text-foreground'}`} 
                             >
@@ -30,7 +26,7 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                                     group-hover:visible group-hover:opacity-100 group-hover:translate-x-10
                                     "
                                 >
-                                    {l.text}
+                                    {l.tituloVista}
                                 </span>
                             </Link>
                     )
@@ -42,22 +38,22 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
 
 // SIDEBAR CUANDO ESTÁ ABIERTA
 
-export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, links:SidebarLink[]}) => {
+export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, links:Vista[]}) => {
     return (
         <>
-            {links.map((l, index) => {
-                const isActualRoute = actualRoute.includes(l.href);
-                const IconToRender = l.icon;
+            {links.map((l) => {
+                const isActualRoute = actualRoute.includes(l.hrefVista);
+                const IconToRender = l.iconoVista;
                 return (
                     
                     <Link
-                        key={index}
-                        href={l.href}
+                        key={l.idVista}
+                        href={l.hrefVista}
                         className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-accent-800 hover:bg-accent-50
                             ${isActualRoute ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
                     >
                         {IconToRender && <IconToRender className="h-5 w-5" />}
-                        {l.text}
+                        {l.tituloVista}
                     </Link>
                 )
             })}
