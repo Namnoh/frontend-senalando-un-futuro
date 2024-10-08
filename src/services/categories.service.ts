@@ -1,17 +1,19 @@
 import { ArrowDownAZ, ArrowUp10, Cat, Home, Palette } from 'lucide-react';
+import { Categoria } from '@/interfaces/categoriaInterface';
 
-const categories = [
-    {id: 1, nombre: "Abecedario", icono: ArrowDownAZ, bg: 'a', idNivel: 1, status: 0},
-    {id: 2, nombre: "Animales", icono: Cat, bg: 'https://amazonianproject.org/wp-content/uploads/2017/11/Rainforest_5.jpg', idNivel: 1, status: .55},
-    {id: 3, nombre: "Colores", icono: Palette, bg: 'a', idNivel: 1, status: 0},
-    {id: 4, nombre: "Números", icono: ArrowUp10, bg: 'a', idNivel: 1, status: 1},
-    {id: 5, nombre: "Ejemplo", icono: Home, bg: 'a', idNivel: 2},
+
+const categories:Categoria[] = [
+    {idCategoria: 1, nombreCategoria: "Abecedario", descripcionCategoria:'', iconoCategoria: ArrowDownAZ, bgCategoria: 'a', idNivel: 1, status: 0},
+    {idCategoria: 2, nombreCategoria: "Animales", descripcionCategoria:'', iconoCategoria: Cat, bgCategoria: 'https://amazonianproject.org/wp-content/uploads/2017/11/Rainforest_5.jpg', idNivel: 1, status: .55},
+    {idCategoria: 3, nombreCategoria: "Colores", descripcionCategoria:'', iconoCategoria: Palette, bgCategoria: 'a', idNivel: 1, status: 0},
+    {idCategoria: 4, nombreCategoria: "Números", descripcionCategoria:'', iconoCategoria: ArrowUp10, bgCategoria: 'a', idNivel: 1, status: 1},
+    {idCategoria: 5, nombreCategoria: "Ejemplo", descripcionCategoria:'', iconoCategoria: Home, bgCategoria: 'a', idNivel: 2, status: 1},
 ]
 
 export async function getCategory(idCategoria:number) {
     // TODO: Revisar qué pasa cuando la petición se demora
     // await new Promise((resolve) => setTimeout(resolve, 3000))
-    const category = categories.find(category => category.id === Number(idCategoria));
+    const category = categories.find(category => category.idCategoria === Number(idCategoria));
     return category;
 }
 
