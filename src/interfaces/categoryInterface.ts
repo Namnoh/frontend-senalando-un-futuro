@@ -4,4 +4,5 @@ export interface Category {
     icono: any;
     bg: string;
     idNivel: number;
+    status: number;
 }

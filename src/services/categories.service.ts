@@ -1,10 +1,10 @@
 import { ArrowDownAZ, ArrowUp10, Cat, Home, Palette } from 'lucide-react';
 
 const categories = [
-    {id: 1, nombre: "Abecedario", icono: ArrowDownAZ, bg: 'a', idNivel: 1},
-    {id: 2, nombre: "Animales", icono: Cat, bg: 'https://amazonianproject.org/wp-content/uploads/2017/11/Rainforest_5.jpg', idNivel: 1},
-    {id: 3, nombre: "Colores", icono: Palette, bg: 'a', idNivel: 1},
-    {id: 4, nombre: "Números", icono: ArrowUp10, bg: 'a', idNivel: 1},
+    {id: 1, nombre: "Abecedario", icono: ArrowDownAZ, bg: 'a', idNivel: 1, status: 0},
+    {id: 2, nombre: "Animales", icono: Cat, bg: 'https://amazonianproject.org/wp-content/uploads/2017/11/Rainforest_5.jpg', idNivel: 1, status: .55},
+    {id: 3, nombre: "Colores", icono: Palette, bg: 'a', idNivel: 1, status: 0},
+    {id: 4, nombre: "Números", icono: ArrowUp10, bg: 'a', idNivel: 1, status: 1},
     {id: 5, nombre: "Ejemplo", icono: Home, bg: 'a', idNivel: 2},
 ]
 
