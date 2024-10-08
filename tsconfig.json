@@ -21,6 +21,7 @@
       "@/*": ["./src/*"],
       "@controllers/*": ["./src/controllers/*"],
       "@hooks/*": ["./src/hooks/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
       "@middlewares/*": ["./src/middlewares/*"],
       "@services/*" : ["./src/services/*"],
     }

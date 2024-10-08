@@ -7,7 +7,7 @@ export default async function CategoriesContainer(props:{idNivel:number}) {
     const categories = await getCategoriesFrom(idNivel);
 
     return (
-        <div className='flex flex-wrap justify-center gap-5 w-2/3'>
+        <div className='flex flex-wrap justify-center gap-5 w-2/3 mb-10'>
             { categories.map((c, index) =>
                 {
                     return (

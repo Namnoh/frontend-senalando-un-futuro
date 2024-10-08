@@ -5,6 +5,7 @@ import { AllSidebars } from "@/components/navbar/";
 import { showSidebar } from '@/services/sidebar.service';
 import Footer from '@/components/footer/footer';
 import { useMediaQuery } from '@/hooks/uiHooks';
+import BackButton from '@/components/backButton';
 
 
 export default function Layout (
@@ -22,6 +23,8 @@ export default function Layout (
             {showSide && isMobile != undefined && (
                 <AllSidebars actualRoute={actualRoute} isMobile={isMobile}/>
             )}
+            {/* Votón para volver */}
+            <BackButton actualRoute={actualRoute} isMobile={isMobile}/>
             {/* Contenido Principal */}
             <div className={`flex flex-col flex-grow ${showSide ? 'md:ml-16' : ''}`}>
                 <main className="flex-grow">

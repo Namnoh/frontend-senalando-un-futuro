@@ -19,7 +19,7 @@ export default function NivelesPage() {
         ),
         progress: 75,
         color: 'orange',
-        link: "/quienesSomos" //es por mientras pero aqui  se cambian los links de las paginas
+        link: "/niveles/1/categorias" //es por mientras pero aqui  se cambian los links de las paginas
     },
     { 
         title: "Nivel Intermedio", 
