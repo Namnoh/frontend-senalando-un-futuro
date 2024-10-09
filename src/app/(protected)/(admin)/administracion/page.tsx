@@ -5,7 +5,7 @@ import CrudUsuarios from './crudUsuarios/page'
 import CrudCategorias from './crudCategorias/page'
 import SelectionTabs from './components/selectionTabs'
 
-export default function AdministracionPage({ children } : { children: React.ReactNode }) {
+export default function AdministracionPage() {
     return (
         <>
             <Tabs defaultValue="users" className="w-full h-full flex flex-col items-center justify-center">
