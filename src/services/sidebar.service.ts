@@ -19,7 +19,7 @@ const links: Vista[] = [
     {idVista:3 ,hrefVista: "#", iconoVista: FastForward, tituloVista: 'Tu progreso',},
     {idVista:4 ,hrefVista: "/quienesSomos", iconoVista: Info, tituloVista: 'Sobre Nosotros',},
     {idVista:5 ,hrefVista: "#", iconoVista: User, tituloVista: 'Perfil',},
-    {idVista:6 ,hrefVista: "#", iconoVista: CirclePlus, tituloVista: 'Administración',},
+    {idVista:6 ,hrefVista: "/administracion", iconoVista: CirclePlus, tituloVista: 'Administración',},
     {idVista:7 ,hrefVista: "/login", iconoVista: LogOut, tituloVista: 'Cerrar Sesión',},
 ]
 
