@@ -50,7 +50,7 @@ const HomePage = () => {
       {/* Seccion 1 */}
       <AnimatedSection className='flex flex-col lg:flex-row-reverse items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap h-[80vh] mt-10'>
         <div className="lg:max-w-[60%] sm:max-w-[70%] md:max-w-[70%] max-w-[70%] flex flex-col items-center">
-          <div className="text-center mb-5 xl:text-[40px] lg:text-[34px] md:text-[28px] sm:text-[28px] text-[24px]">
+          <div className="text-center mb-5 xl:text-6xl lg:text-[34px] md:text-[28px] sm:text-[28px] text-[24px]">
             ¿Que es S.U.F?
           </div>
           <div className="text-center">
