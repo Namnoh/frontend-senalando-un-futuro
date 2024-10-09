@@ -1,8 +1,8 @@
-'use client'
 import { Categoria } from '@/interfaces/categoriaInterface'
-import React from 'react'
+import { getCategory } from '@/services/categories.service';
 
-export default function ClientSideBg({category}: {category: Categoria | undefined}) {
+export default async function Bg({idCategoria}: {idCategoria: number}) {
+    const category: Categoria = (await getCategory(idCategoria))!;
     return (
         <>
             {/* Imagen de fondo */}

@@ -1,12 +1,28 @@
 import React, { Suspense } from 'react'
-import GeneralContainer from './components/generalContainer';
+import WordsContainer from './components/wordsContainer';
+import { CategoriesContainerSkeleton } from '../../components/categoriesContainerSkeleton';
+import Bg from './components/bg';
+import Header from './components/header';
+import { getParamsTitle } from '@/lib/utils';
 
-export default function Palabras({params}:any) {
-    const idNivel = params.idNivel;
-    const idCategoria  = params.idCategoria;
+export default async function GeneralContainer({params}:any) {
+    const level = getParamsTitle(params.idNivel);
+    const cat = getParamsTitle(params.idCategoria);
+    // const idCategoria = params.idCategoria;
+    // const idNivel = params.idNivel;
+    
     return (
-        <Suspense fallback={<div className='flex items-center justify-center text-9xl h-full'>CARGANDO...</div>}>
-            <GeneralContainer idNivel={idNivel} idCategoria={idCategoria}/>
-        </Suspense>
+        <div className="relative flex h-full w-full">
+            <Suspense fallback={<div className='absolute inset-0 bg-background w-full h-full -z-10'></div>}>
+                <Bg idCategoria={cat.idTitle}/>
+            </Suspense>
+            <div className='flex flex-col items-center gap-20 flex-grow'>
+                <Header level={level} nombreCategoria={cat.nameTitle} />
+                {/* Palabras */}
+                <Suspense fallback={<CategoriesContainerSkeleton />}>
+                    <WordsContainer idCategoria={cat.idTitle} idNivel={level.idTitle}/>
+                </Suspense>
+            </div>
+        </div>
     )
 }

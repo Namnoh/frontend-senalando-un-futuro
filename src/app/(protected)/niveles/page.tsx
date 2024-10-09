@@ -19,7 +19,7 @@ export default function NivelesPage() {
         ),
         progress: 75,
         color: 'orange',
-        link: "/niveles/1/categorias" //es por mientras pero aqui  se cambian los links de las paginas
+        link: `/niveles/1-${encodeURIComponent('BÁSICO')}/categorias` //es por mientras pero aqui  se cambian los links de las paginas
     },
     { 
         title: "Nivel Intermedio", 
@@ -33,7 +33,7 @@ export default function NivelesPage() {
         ),
         progress: 60, //LA BARRA AUMENTA CON EL % ES DECIR SI LO CAMBBIAS, CAMBIARA LA BARRITA
         color: 'blue',
-        link: "/quienesSomos"
+        link: `/niveles/2-${encodeURIComponent('Intermedio')}/categorias`
     },
     { 
         title: "Nivel Avanzado", 

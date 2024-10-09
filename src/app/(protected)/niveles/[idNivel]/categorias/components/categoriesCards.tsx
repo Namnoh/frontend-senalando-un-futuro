@@ -4,12 +4,13 @@ import Link from "next/link";
 import { Categoria } from '@/interfaces/categoriaInterface';
 import ProgressBadge from "@/components/customUI/progressBadge";
 import { DynamicIcon } from "@/components/customUI/dynamicLucideIcon";
+import { TitleProp } from "@/interfaces/commonInterfaces";
 
-export const CategoriesCards = ({idNivel, category}: {idNivel:number, category:Categoria}) => {
+export const CategoriesCards = ({level, category}: {level:TitleProp, category:Categoria}) => {
     
     return (
         <Link
-            href={`/niveles/${idNivel}/categorias/${category.idCategoria}/palabras`}
+            href={`/niveles/${level.idTitle}-${level.nameTitle}/categorias/${category.idCategoria}-${category.nombreCategoria}/palabras`}
             className='group'
         >
             <div className='flex items-center justify-center border-2 border-accent-100 rounded-2xl p-5 relative shadow-md bg-background'>

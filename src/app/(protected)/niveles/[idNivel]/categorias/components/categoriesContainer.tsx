@@ -1,17 +1,17 @@
 import React from 'react'
 import { CategoriesCards } from './categoriesCards';
 import { getCategoriesFrom } from '@/services/categories.service';
+import { TitleProp } from '@/interfaces/commonInterfaces';
 
-export default async function CategoriesContainer(props:{idNivel:number}) {
-    const idNivel = props.idNivel;
-    const categories = await getCategoriesFrom(idNivel);
+export default async function CategoriesContainer({level}: {level:TitleProp}) {
+    const categories = await getCategoriesFrom(level.idTitle);
 
     return (
         <div className='flex flex-wrap justify-center gap-5 w-2/3 mb-10'>
             { categories.map((c) =>
                 {
                     return (
-                        <CategoriesCards key={c.idCategoria} idNivel={idNivel} category={c} />
+                        <CategoriesCards key={c.idCategoria} level={level} category={c} />
                     )
                 }
             )}
