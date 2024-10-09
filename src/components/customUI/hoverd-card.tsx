@@ -59,7 +59,7 @@ export function HoverCard({ title, icon: Icon, description, progress, color, lin
 
     const CardContent = (
         <Card 
-            className={`text-black relative flex flex-col items-center justify-between border-8 p-6 h-96 sm:h-[28rem] md:h-[32rem] lg:h-[36rem] w-full overflow-hidden cursor-pointer transition-all duration-300 ease-in-out
+            className={`text-black relative flex flex-col items-center justify-between border-8 p-6 h-96 sm:h-[28rem] md:h-[32rem] lg:h-[28rem] w-full overflow-hidden cursor-pointer transition-all duration-300 ease-in-out
             ${colorClasses.border} ${colorClasses.bg} ${colorClasses.hover}
             ${isHovered ? 'shadow-lg transform -translate-y-8' : ''}`}
             onMouseEnter={() => setIsHovered(true)}

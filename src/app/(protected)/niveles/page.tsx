@@ -12,6 +12,7 @@ export default function NivelesPage() {
         icon: BookOpen, //hay que cambiar la descripcion del hover pero nose que poner xd
         description:(
             <ul>En este nivel aprenderas de estas categorias: 
+                <li> Abecedario</li>
                 <li> Animales</li>
                 <li> Paises</li>
                 <li> Colores </li>
@@ -56,7 +57,7 @@ export default function NivelesPage() {
         <div className="flex flex-col min-h-screen">
             <div className="relative">
                 <div className="flex flex-col items-center p-8 space-y-8">
-                    <h2 className="text-2xl font-semibold text-center">Bienvenido Miau Venegas</h2>
+                    <h2 className="text-2xl sm:text-2xl font-semibold text-center">Bienvenido Miau Venegas</h2>
                     <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold text-center text-secondary bg-background ">Niveles</h1>
                 </div>
             </div>
