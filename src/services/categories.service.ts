@@ -1,4 +1,3 @@
-import { ArrowDownAZ, ArrowUp10, Cat, Home, Palette } from 'lucide-react';
 import { Categoria } from '@/interfaces/categoriaInterface';
 
 
