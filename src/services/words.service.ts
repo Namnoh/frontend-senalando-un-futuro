@@ -7,6 +7,11 @@ const words:Palabra[] = [
     {idPalabra: 3, nombrePalabra: "Conejo", iconoPalabra: Rabbit, videoPalabra: '', status:false, idCategoria: 2,},
     {idPalabra: 4, nombrePalabra: "Ardilla", iconoPalabra: Squirrel, videoPalabra: '', status:true, idCategoria: 2,},
     {idPalabra: 5, nombrePalabra: "Tortuga", iconoPalabra: Turtle, videoPalabra: '', status:false, idCategoria: 2,},
+    {idPalabra: 6, nombrePalabra: "Perro", iconoPalabra: Dog, videoPalabra: '', status:false, idCategoria: 1,},
+    {idPalabra: 7, nombrePalabra: "Gato", iconoPalabra: Cat, videoPalabra: '', status:false, idCategoria: 1,},
+    {idPalabra: 8, nombrePalabra: "Conejo", iconoPalabra: Rabbit, videoPalabra: '', status:false, idCategoria: 1,},
+    {idPalabra: 9, nombrePalabra: "Ardilla", iconoPalabra: Squirrel, videoPalabra: '', status:true, idCategoria: 1,},
+    {idPalabra: 10, nombrePalabra: "Tortuga", iconoPalabra: Turtle, videoPalabra: '', status:true, idCategoria: 1,},
 ]
 
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
