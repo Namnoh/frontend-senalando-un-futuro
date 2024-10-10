@@ -22,6 +22,7 @@ import EncabezadoTabla from "./encabezadoTabla";
 import ContenidoTabla from "./contenidoTabla";
 import SelectedOptions from "./selectedOptions";
 import PaginationBtns from "./paginationBtns";
+import CleanFilters from "./cleanFilters";
 
 export function DataTable<TData, TValue>({
     columns,
@@ -54,8 +55,9 @@ export function DataTable<TData, TValue>({
     return (
         <div>
             <div className="flex items-center py-4">
-                <BarraBusqueda table={table}/>
-                <DropDownOptions table={table}/>
+                <BarraBusqueda table={table} />
+                <DropDownOptions table={table} />
+                <CleanFilters table={table} />
             </div>
             <div className="rounded-md border">
                 <Table>

@@ -1,23 +1,13 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table";
-
-import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { Button } from "@/components/ui/button";
 import CrudOptions from "../components/crudOptions";
+import { Usuario } from "@/interfaces/usuarioInterface";
+import FilterAscDesc from "@/components/customUI/table/filterAscDesc";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Usuario>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -39,34 +29,53 @@ export const columns: ColumnDef<Payment>[] = [
         ),
     },
     {
-        accessorKey: "status",
-        header: () => <div className="text-lg">Status</div>,
-    },
-    {
-        accessorKey: "email",
-        header: ({ column }) => {
+        accessorKey: "idUsuario",
+        header: ({ column, table }) => {
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    className="text-lg p-0"
-                >
-                    Email
-                    <ArrowUpDown className="ml-2 h-5 w-5" />
-                </Button>
+                <FilterAscDesc table={table} column={column}>
+                    ID
+                </FilterAscDesc>
             )
         },
     },
     {
-        accessorKey: "amount",
-        header: () => <div className="text-right text-lg">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount)
-            return <div className="text-right font-medium">{formatted}</div>
+        accessorKey: "nombreUsuario",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    Nombre
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
+        accessorKey: "apellidoUsuario",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    Apellido
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
+        accessorKey: "correoUsuario",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    Correo
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
+        accessorKey: "idRol",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    ID Rol
+                </FilterAscDesc>
+            )
         },
     },
     {
@@ -79,4 +88,17 @@ export const columns: ColumnDef<Payment>[] = [
             )
         },
     },
-]
+];
+
+// {
+//     accessorKey: "amount",
+//     header: () => <div className="text-right text-lg">Amount</div>,
+//     cell: ({ row }) => {
+//         const amount = parseFloat(row.getValue("amount"))
+//         const formatted = new Intl.NumberFormat("en-US", {
+//             style: "currency",
+//             currency: "USD",
+//         }).format(amount)
+//         return <div className="text-right font-medium">{formatted}</div>
+//     },
+// },
