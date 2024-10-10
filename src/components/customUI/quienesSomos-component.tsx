@@ -38,7 +38,7 @@ export default function QuienesSomos() {
         <div className="min-h-screen bg-background text-foreground">
             <div className="container mx-auto px-4 py-8  sm:py-12 md:py-16 ">
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold text-center text-secondary mt-10 mb-32 sm:mb-24 md:mb-32">
-                    Sobre Nosotros
+                    Sobre <span className='text-primary'>Nosotros</span>
                 </h1>
                 {sections.map((section, index) => (
                     <AnimatedSection key={index} 
