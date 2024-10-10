@@ -22,3 +22,10 @@ export async function getCategoriesFrom(idNivel:number) {
     const categoryList = categories.filter(category => category.idNivel === Number(idNivel));
     return categoryList;
 }
+
+// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
+export async function getAllWords():Promise<Categoria[]> {
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
+    const categoriesList = categories;
+    return categoriesList;
+};

@@ -20,3 +20,10 @@ export async function getWordsFrom(idCategoria:number) {
     const wordList = words.filter(words => words.idCategoria === Number(idCategoria));
     return wordList;
 }
+
+// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
+export async function getAllWords():Promise<Palabra[]> {
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
+    const wordsList = words;
+    return wordsList;
+};
