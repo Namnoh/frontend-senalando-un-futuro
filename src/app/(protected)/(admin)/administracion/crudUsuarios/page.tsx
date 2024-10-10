@@ -1,3 +1,4 @@
+import { getAllUsers } from "@/services/users.service";
 import { Payment, columns } from "./columns";
 import { DataTable } from '@/components/customUI/table/data-table';
 
@@ -95,7 +96,7 @@ async function getData(): Promise<Payment[]> {
 }
 
 export default async function DemoPage() {
-    const data = await getData()
+    const data = await getAllUsers();
 
     return (
         <div className="container mx-auto py-10 lg:min-w-[600px]">
