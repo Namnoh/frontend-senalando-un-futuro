@@ -4,7 +4,8 @@ import { Usuario } from '@/interfaces/usuarioInterface';
 const users:Usuario[] = [
     {idUsuario: 1, nombreUsuario: 'Alfredo', apellidoUsuario: 'Galdames', correoUsuario:'alfr.galdames@duocuc.cl', idRol:0},
     {idUsuario: 2, nombreUsuario: 'Fernando', apellidoUsuario: 'Muñoz', correoUsuario:'fe.munozf@duocuc.cl', idRol:0},
-    {idUsuario: 3, nombreUsuario: 'Jean', apellidoUsuario: 'Venegas', correoUsuario:'je.venegasa@duocuc.cl', idRol:0}
+    {idUsuario: 3, nombreUsuario: 'Jean', apellidoUsuario: 'Venegas', correoUsuario:'je.venegasa@duocuc.cl', idRol:0},
+    {idUsuario: 4, nombreUsuario: 'Alfredo', apellidoUsuario: 'NoGaldames', correoUsuario:'alfr.galdames@duocuc.cl', idRol:0},
 ]
 
 export async function getUsers(idUsuario:number) {
