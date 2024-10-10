@@ -24,7 +24,7 @@ const links: Vista[] = [
 ]
 
 // TODO: Obtener links según rol de usuario 
-export async function getSidebarLinks() {
+export async function getSidebarLinks():Promise<Vista[]> {
     // await new Promise((resolve) => setTimeout(resolve, 3000))
     return links;
 }
