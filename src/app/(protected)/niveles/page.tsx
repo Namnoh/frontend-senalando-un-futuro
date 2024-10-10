@@ -19,9 +19,9 @@ const niveles = [
         id: 3,
         enlace: `/niveles/3-${encodeURIComponent('Intermedio')}/categorias`
     },
-    ]
+]
 
-    export default function NivelesPage() {
+export default function NivelesPage() {
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
