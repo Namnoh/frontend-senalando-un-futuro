@@ -5,14 +5,14 @@ import withPWA from "next-pwa";
 const nextConfig = {
     images: {
       // Agrega aquí el dominio de la imagen
-      remotePatterns: [
-        {
-          protocol: 'https',
-          hostname: 'i.gifer.com',
-          // port: '',
-          // pathname: ''
-        }
-      ]
+      // remotePatterns: [
+      //   {
+      //     // protocol: '',
+      //     // hostname: '',
+      //     // port: '',
+      //     // pathname: ''
+      //   }
+      // ]
     },
 };
 
