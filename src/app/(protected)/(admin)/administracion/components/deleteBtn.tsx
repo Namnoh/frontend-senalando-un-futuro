@@ -9,7 +9,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-export function DeleteBtn({id}: {id:number}) {
+export function DeleteBtn({id, type}: {id:number, type:string}) {
+    function handleRemoveItem(id:number) {
+        console.log(id);
+        console.log(type);
+    }
     return (
         <>
             <DialogTrigger asChild>
@@ -23,7 +27,7 @@ export function DeleteBtn({id}: {id:number}) {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex flex-row sm:justify-between w-full">
-                    <Button type="submit" variant="destructive">Eliminar Definitivamente</Button>
+                    <Button type="submit" onClick={() => handleRemoveItem(id)} variant="destructive">Eliminar Permanentemente</Button>
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cancelar</Button>
                     </DialogClose>

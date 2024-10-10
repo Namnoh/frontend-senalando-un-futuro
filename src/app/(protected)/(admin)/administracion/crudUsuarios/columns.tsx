@@ -82,7 +82,6 @@ export const columns: ColumnDef<Usuario>[] = [
         id: "actions",
         cell: ({ row }) => {
             const item = row.original
-            
             return (
                 <CrudOptions item={item} />
             )

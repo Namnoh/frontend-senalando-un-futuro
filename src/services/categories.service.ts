@@ -12,7 +12,7 @@ const categories:Categoria[] = [
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllCategories(idNivel:number) {
     // await new Promise((resolve) => setTimeout(resolve, 3000))
-    // const categories = await fetch("BASE_URI+`/api/products`);
+    // const categories = await fetch("BASE_URI+`/products`);
     // const categoryList = await categories.json();
     const categoryList = categories;
     return categoryList;
