@@ -7,6 +7,7 @@ export interface DataTableProps<TData, TValue> {
 
 export type OnlyTableProp<TData> = {
     table: Table<TData>
+    filtros?: string[]
 };
 
 export type TableProps<TData, TValue> = {
