@@ -17,23 +17,25 @@ import { Palabra } from "@/interfaces/palabraInterface";
 import { isCategoria, isPalabra, isUsuario } from "@/services/crud.service";
 
 type CrudOptionsProp = {
-    item: Usuario | Categoria | Palabra;
+    item?: Usuario | Categoria | Palabra;
 }
 
 export default function CrudOptions({item}: CrudOptionsProp) {
-    let itemId: number;
-    let type: string;
-    if (isUsuario(item)) {
-        itemId = item.idUsuario;
-        type = 'users';
-    } else if (isCategoria(item)) {
-        itemId = item.idCategoria;
-        type = 'categories';
-    } else if (isPalabra(item)) {
-        itemId = item.idPalabra;
-        type = 'words';
-    } else {
-        throw new Error('Tipo de item no reconocido');
+    let itemId: number = 0;
+    let type: string = '';
+    if (item) {
+        if (isUsuario(item)) {
+            itemId = item.idUsuario;
+            type = 'users';
+        } else if (isCategoria(item)) {
+            itemId = item.idCategoria;
+            type = 'categories';
+        } else if (isPalabra(item)) {
+            itemId = item.idPalabra;
+            type = 'words';
+        } else {
+            throw new Error('Tipo de item no reconocido');
+        }
     }
     return (
         <DropdownMenu>
@@ -50,7 +52,7 @@ export default function CrudOptions({item}: CrudOptionsProp) {
                         onSelect={(e) => e.preventDefault()}
                         className="hover:bg-accent hover:text-white"
                     >
-                        <EditCreateBtn create={false} item={item}/>
+                        <EditCreateBtn type={type} item={item}/>
                     </DropdownMenuItem>
                 </Dialog>
                 <DropdownMenuSeparator />

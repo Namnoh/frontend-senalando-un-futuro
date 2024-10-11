@@ -8,13 +8,14 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { UserForm } from "./formularios/usersForms/userForm";
 import { CirclePlus } from "lucide-react";
 
 type AllTextContent = {
     title: 'Crear Registro' | 'Editar Registro',
 }
 
-export function EditCreateBtn({create, item}: {create:boolean, item?:any}) {
+export function EditCreateBtn({type, item}: {type:string, item?:any}) {
     let textContent: AllTextContent;
 
     if (!item) {
@@ -41,23 +42,16 @@ export function EditCreateBtn({create, item}: {create:boolean, item?:any}) {
                     </DialogDescription>
                 </DialogHeader>
                 {/* Contenido Formulario */}
-                {/* {!item ? (
-                        // Renderizar componente formulario crear
-                    ) : (
-                        // Renderizar componente formulario actualizar
-                    )
-                } */}
-                <DialogFooter className="flex flex-row sm:justify-between w-full">
-                    {!item ? (
-                            <Button type="submit" variant="default" className="text-background">Crear Registro</Button>
-                        ) : (
-                            <Button type="submit" variant="default" className="text-background">Actualizar Registro</Button>
-                        )
-                    }
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
-                    </DialogClose>
-                </DialogFooter>
+                {type === 'users' ? (
+                    // Renderizar componente formulario Usuario
+                    <UserForm user={item ? item : null}/>
+                ) : type === 'categories' ? (
+                    // Renderizar componente formulario Categoria
+                    <div>Categorias</div>
+                ) : (
+                    // Palabras
+                    <div>Palabras</div>
+                )}
             </DialogContent>
         </>
     )
