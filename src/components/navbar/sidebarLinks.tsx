@@ -1,6 +1,7 @@
 import * as React from "react"
 import Link from "next/link";
 import { Vista } from "@/interfaces/vistaInterface";
+import { DynamicIcon } from "../customUI/dynamicLucideIcon";
 
 // SIDEBAR CUANDO ESTÁ CERRADA
 
@@ -10,7 +11,6 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
             <div className="flex flex-col gap-5">
                 {links.map((l) => {
                     const isActualRoute = actualRoute.includes(l.hrefVista);
-                    const IconToRender = l.iconoVista;
                     return (
                             <Link
                                 key={l.idVista}
@@ -18,7 +18,7 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                                 className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-accent-800 hover:bg-accent-50
                                 ${isActualRoute ? 'bg-accent text-accent-foreground' : 'text-foreground'}`} 
                             >
-                                {IconToRender && <IconToRender className="h-5 w-5" />}
+                                <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
                                 <span
                                     className="absolute rounded-md px-2 py-1 ml-6 text-nowrap
                                     bg-accent-100 text-text-foreground text-sm
@@ -43,7 +43,6 @@ export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
         <>
             {links.map((l) => {
                 const isActualRoute = actualRoute.includes(l.hrefVista);
-                const IconToRender = l.iconoVista;
                 return (
                     
                     <Link
@@ -52,7 +51,7 @@ export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                         className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-accent-800 hover:bg-accent-50
                             ${isActualRoute ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
                     >
-                        {IconToRender && <IconToRender className="h-5 w-5" />}
+                        <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
                         {l.tituloVista}
                     </Link>
                 )

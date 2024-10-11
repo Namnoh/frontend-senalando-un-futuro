@@ -8,8 +8,6 @@ import { getParamsTitle } from '@/lib/utils';
 export default async function GeneralContainer({params}:any) {
     const level = getParamsTitle(params.idNivel);
     const cat = getParamsTitle(params.idCategoria);
-    // const idCategoria = params.idCategoria;
-    // const idNivel = params.idNivel;
     
     return (
         <div className="relative flex h-full w-full">

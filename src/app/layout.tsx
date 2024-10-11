@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "Señalando Un Futuro",
   description: "Señalando Un Futuro es una aplicación web para el aprendizaje y reforzamiento de la Lengua de Señas Chilena (LSCh) con el apoyo de la Inteligencia artificial (IA).",
   manifest: "/manifest.json",
+  keywords: 
+  "Lengua de Señas, Lengua de Señas Chilena, Señas Chile, Señas Chilena, Aprender Lengua de Señas, IA, Aprender con IA, Lengua de Signos, Aprender Lengua de Señas con IA, \
+  IA para Aprender Lengua de Señas, Lengua de Señas en Chile, Lengua de Signos Chilena, Lengua de Señas online, Aprender Lengua de Signos, Aprender lengua de señas online \
+  Lengua de Señas para principiantes, Lengua de Señas para intermedios, Lengua de Señas para avanzados",
+  // authors: 'Bytes & Bits Team, Alfredo Galdames - Fernando Muñoz - Jean Venegas'
 };
 
 export default function RootLayout({

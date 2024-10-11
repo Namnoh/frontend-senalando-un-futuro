@@ -1,4 +1,3 @@
-import { Dog, Cat, Rabbit, Squirrel, Turtle } from 'lucide-react';
 import { Palabra } from '@/interfaces/palabraInterface';
 
 const words:Palabra[] = [
