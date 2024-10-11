@@ -19,12 +19,12 @@ const links: Vista[] = [
     {idVista:3 ,hrefVista: "#", iconoVista: FastForward, tituloVista: 'Tu progreso',},
     {idVista:4 ,hrefVista: "/sobreNostros", iconoVista: Info, tituloVista: 'Sobre Nosotros',},
     {idVista:5 ,hrefVista: "#", iconoVista: User, tituloVista: 'Perfil',},
-    {idVista:6 ,hrefVista: "#", iconoVista: CirclePlus, tituloVista: 'Administración',},
+    {idVista:6 ,hrefVista: "/administracion", iconoVista: CirclePlus, tituloVista: 'Administración',},
     {idVista:7 ,hrefVista: "/login", iconoVista: LogOut, tituloVista: 'Cerrar Sesión',},
 ]
 
 // TODO: Obtener links según rol de usuario 
-export async function getSidebarLinks() {
+export async function getSidebarLinks():Promise<Vista[]> {
     // await new Promise((resolve) => setTimeout(resolve, 3000))
     return links;
 }

@@ -9,9 +9,7 @@ import BackButton from '@/components/backButton';
 
 
 export default function Layout (
-    { children } : { children: React.ReactNode }
-    ) 
-{
+    { children } : { children: React.ReactNode }){
     const actualRoute = usePathname();
     const showSide = showSidebar({pathName: actualRoute});
 

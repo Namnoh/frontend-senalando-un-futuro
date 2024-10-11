@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
-}
+};
 
 export function getParamsTitle(params:string): TitleProp {
   const [idTitleString, nameTitleCodificado] = params ? params.split('-') : [];
@@ -13,4 +13,8 @@ export function getParamsTitle(params:string): TitleProp {
   
   const level:TitleProp = { idTitle, nameTitle }
   return level;
+};
+
+export function capitalizeFirstLetter(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
