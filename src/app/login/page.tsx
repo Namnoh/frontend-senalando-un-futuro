@@ -52,7 +52,9 @@ export default function LoginPage() {
                   />
                 </div>
               </div>
-              <Button className="w-full mt-4" type="submit">Iniciar sesión</Button>
+              <Link href={'/niveles'}>
+                <Button className="w-full mt-4" type="submit">Iniciar sesión</Button>
+              </Link>
             </form>
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
