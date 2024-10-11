@@ -16,7 +16,7 @@ export function isPalabra(item: CrudItem): item is Palabra {
     return 'idPalabra' in item;
 }
 
-const VALID_TYPES = ['usuario', 'categoria', 'palabra'];
+// const VALID_TYPES = ['usuario', 'categoria', 'palabra'];
 // TODO: Hacer servicio general para las peticiones
 // export async function deleteItem(id:number, type:string) {
 //     if (!VALID_TYPES.includes(type)) {

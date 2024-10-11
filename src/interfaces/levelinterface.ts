@@ -1,7 +1,7 @@
 export interface Nivel {
     id: number
     nombreNivel: string
-    descripcionNivel: any
+    descripcionNivel: string
     iconoNivel: string,
     statusNivel: number
     progreso: number

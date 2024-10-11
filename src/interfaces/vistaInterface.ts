@@ -1,6 +1,6 @@
 export interface Vista {
     idVista: number;
     hrefVista: string;
-    iconoVista: any;
+    iconoVista: string;
     tituloVista: string;
 }

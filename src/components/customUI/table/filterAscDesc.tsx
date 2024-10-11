@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from "@/components/ui/button";
-import { ArrowDownUp, ArrowUpDown, FilterX } from "lucide-react";
+import { ArrowDownUp, ArrowUpDown } from "lucide-react";
 import { Column, Table } from '@tanstack/react-table';
 
 interface FilterAscDescProps<TData> {

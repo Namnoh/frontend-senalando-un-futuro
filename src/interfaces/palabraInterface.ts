@@ -1,7 +1,7 @@
 export interface Palabra {
     idPalabra: number;
     nombrePalabra: string;
-    iconoPalabra: any;
+    iconoPalabra: string;
     videoPalabra: string;
     status: boolean;
     idCategoria: number;
