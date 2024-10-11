@@ -9,6 +9,7 @@ import {
 import { UserForm } from "./formularios/usersForms/userForm";
 import { CirclePlus } from "lucide-react";
 import { CategoryForm } from "./formularios/categoryForms/categoryForm";
+import { WordForm } from "./formularios/wordsForms/wordsForm";
 
 type AllTextContent = {
     title: 'Crear Registro' | 'Editar Registro',
@@ -52,7 +53,7 @@ export function EditCreateBtn({type, item}: {type:string, item?:any}) {
                     <CategoryForm category={item ? item : null}/>
                 ) : (
                     // Palabras
-                    <div>Palabras</div>
+                    <WordForm word={item ? item : null}/>
                 )}
             </DialogContent>
         </>
