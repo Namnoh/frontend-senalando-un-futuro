@@ -132,11 +132,11 @@ export function HoverCard({ levelId, link }: HoverCardProps) {
                 <DynamicIcon 
                     strokeWidth={1.25}
                     name={isLocked ? 'Lock' : levelData.iconoNivel} 
-                    classes={`w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 ${isLocked ? 'text-gray-400' : 'text-black'}`}
+                    classes={`w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-40 xl:w-56 lg:h-56 ${isLocked ? 'text-gray-400' : 'text-black'}`}
                 />
             </div>
             <div className="text-center mt-4 ">
-                <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-black">{levelData.nombreNivel}</h3>
+                <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-normal text-black">{levelData.nombreNivel}</h3>
             </div>
         </div>
         <div 
@@ -153,15 +153,15 @@ export function HoverCard({ levelId, link }: HoverCardProps) {
     )
 
     return isLocked ? (
-        <div className="w-full md:w-1/3">
+        <div className="w-full md:w-2/3">
             {CardContent}
         </div>
     ) : link ? (
-    <Link href={link} className="w-full md:w-1/3">
+    <Link href={link} className="w-full md:w-2/3">
         {CardContent}
     </Link>
     ) : (
-    <div className="w-full md:w-1/3">
+    <div className="w-full md:w-2/3">
         {CardContent}
     </div>
     )
