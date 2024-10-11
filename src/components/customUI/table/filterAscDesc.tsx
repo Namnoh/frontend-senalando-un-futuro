@@ -39,13 +39,15 @@ export default function FilterAscDesc<TData>({children, column, table}:FilterAsc
             : <ArrowDownUp className="ml-2 h-5 w-5" />
     }
     return (
-        <Button
-            variant="ghost"
-            onClick={handleSort}
-            className="text-lg p-1"
-        >
-            {children}
-            {getSortIcon()}
-        </Button>
+        <div className='text-center'>
+            <Button
+                variant="ghost"
+                onClick={handleSort}
+                className="text-lg p-1"
+            >
+                {children}
+                {getSortIcon()}
+            </Button>
+        </div>
     )
 };

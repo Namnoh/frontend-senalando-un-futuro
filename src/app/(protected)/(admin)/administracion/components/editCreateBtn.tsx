@@ -1,15 +1,14 @@
 import { Button } from "@/components/ui/button"
 import {
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { UserForm } from "./formularios/usersForms/userForm";
 import { CirclePlus } from "lucide-react";
+import { CategoryForm } from "./formularios/categoryForms/categoryForm";
 
 type AllTextContent = {
     title: 'Crear Registro' | 'Editar Registro',
@@ -34,9 +33,12 @@ export function EditCreateBtn({type, item}: {type:string, item?:any}) {
                     )
                 }
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>{textContent.title}</DialogTitle>
+                    <DialogTitle>
+                        {textContent.title} - {' '}
+                        {type === 'users' ? 'Usuario' : type === 'categories' ? 'Categoría' : 'Palabra'}
+                    </DialogTitle>
                     <DialogDescription>
                         Completa los campos.
                     </DialogDescription>
@@ -47,7 +49,7 @@ export function EditCreateBtn({type, item}: {type:string, item?:any}) {
                     <UserForm user={item ? item : null}/>
                 ) : type === 'categories' ? (
                     // Renderizar componente formulario Categoria
-                    <div>Categorias</div>
+                    <CategoryForm category={item ? item : null}/>
                 ) : (
                     // Palabras
                     <div>Palabras</div>
