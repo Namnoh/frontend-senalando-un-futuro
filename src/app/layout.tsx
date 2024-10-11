@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import { ThemeProvider } from "@/components/themeToggle/theme-provider";
 import { fredoka } from './fonts/fonts';
+import HeaderOptions from "@/components/headerOptions";
+import Footer from "@/components/footer/footer";
 
 export const metadata: Metadata = {
   title: "Señalando Un Futuro",
@@ -30,10 +32,16 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col h-full">
-              <main className="flex-grow">
-                {children}
-              </main>
+            <div className="flex flex-col h-screen md:flex-row">
+              <HeaderOptions />
+              <div className={`flex flex-col flex-grow`}>
+                <main className="flex-grow">
+                  {children}
+                </main>
+                <div className="w-full">
+                  <Footer />
+                </div>
+              </div>
             </div>
           </ThemeProvider>
       </body>
