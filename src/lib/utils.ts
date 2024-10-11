@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 export function getParamsTitle(params:string): TitleProp {
   const [idTitleString, nameTitleCodificado] = params ? params.split('-') : [];
   const idTitle = Number(idTitleString);
-  const nameTitle = decodeURIComponent(nameTitleCodificado);
+  const nameTitle = decodeURIComponent(nameTitleCodificado).toUpperCase();
   
   const level:TitleProp = { idTitle, nameTitle }
   return level;
