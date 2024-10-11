@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
     "@radix-ui/react-avatar": "^1.1.0",
@@ -21,6 +22,7 @@
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.1",
@@ -38,11 +40,13 @@
     "react": "^18",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18",
+    "react-hook-form": "^7.53.0",
     "sass": "^1.79.4",
     "sass-loader": "^16.0.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
-    "workbox-webpack-plugin": "^7.1.0"
+    "workbox-webpack-plugin": "^7.1.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",
