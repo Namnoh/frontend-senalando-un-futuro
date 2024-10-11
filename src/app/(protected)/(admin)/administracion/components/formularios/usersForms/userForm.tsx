@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -35,6 +36,20 @@ export function UserForm({user}:{user?:Usuario}) {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                {user ? (
+                    <FormItem>
+                        <FormLabel>ID</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Jhon" disabled={true} value={user?.idUsuario}/>
+                            </FormControl>
+                            <FormDescription>
+                                No puedes editar este campo.
+                            </FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                ) : (
+                    ''
+                )}
                 <FormField
                     control={form.control}
                     name="nombreUsuario"
