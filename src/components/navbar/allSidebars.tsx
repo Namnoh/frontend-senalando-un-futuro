@@ -4,7 +4,7 @@ import { Sidebar, MobileNav, SidebarSkeleton, MobileNavSkeleton } from "@/compon
 import { getSidebarLinks } from "@/services/sidebar.service";
 import { useEffect, useState } from "react";
 
-export default function AllSidebars({actualRoute, isMobile} : {actualRoute:string, isMobile:boolean}) {
+export default function AllSidebars({actualRoute, isMobile} : {actualRoute:string, isMobile:boolean | undefined}) {
     // Estado para almacenar los enlaces
     const [links, setLinks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
