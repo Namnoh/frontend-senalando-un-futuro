@@ -16,7 +16,7 @@ export default function Sidebar({actualRoute, links}:{actualRoute:string, links:
     
 
     return (
-        <aside className="fixed w-16 h-screen border-r flex flex-col items-center gap-5">
+        <aside className="fixed w-16 h-screen border-r flex flex-col items-center gap-5 bg-background">
             <Sheet>
                 {/* Sidebar Cerrada */}
                 <div className="flex flex-col items-center gap-5 h-screen">

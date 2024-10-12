@@ -1,4 +1,3 @@
-import * as React from "react"
 import Link from "next/link";
 import { Vista } from "@/interfaces/vistaInterface";
 import { DynamicIcon } from "../customUI/dynamicLucideIcon";
@@ -10,18 +9,23 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
         <>
             <div className="flex flex-col gap-5">
                 {links.map((l) => {
-                    const isActualRoute = actualRoute.includes(l.hrefVista);
+                    let isActualRoute = false;
+                    if (actualRoute === '/' && l.iconoVista === 'Home') {
+                        isActualRoute = true;
+                    } else if (l.iconoVista !== 'Home' && actualRoute.startsWith(l.hrefVista)) {
+                        isActualRoute = true;
+                    }
                     return (
                             <Link
                                 key={l.idVista}
                                 href={l.hrefVista}
-                                className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-accent-800 hover:bg-accent-50
-                                ${isActualRoute ? 'bg-accent text-accent-foreground' : 'text-foreground'}`} 
+                                className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-primary-800 hover:bg-primary-50
+                                ${isActualRoute ? 'bg-primary text-primary-foreground' : 'text-foreground'}`} 
                             >
                                 <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
                                 <span
                                     className="absolute rounded-md px-2 py-1 ml-6 text-nowrap
-                                    bg-accent-100 text-text-foreground text-sm
+                                    bg-primary-100 text-text-foreground text-sm
                                     invisible opacity-20 -translate-x-3 transition-all w-50
                                     group-hover:visible group-hover:opacity-100 group-hover:translate-x-10
                                     "
@@ -42,14 +46,19 @@ export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
     return (
         <>
             {links.map((l) => {
-                const isActualRoute = actualRoute.includes(l.hrefVista);
+                let isActualRoute = false;
+                if (actualRoute === '/' && l.iconoVista === 'Home') {
+                    isActualRoute = true;
+                } else if (l.iconoVista !== 'Home' && actualRoute.startsWith(l.hrefVista)) {
+                    isActualRoute = true;
+                }
                 return (
                     
                     <Link
                         key={l.idVista}
                         href={l.hrefVista}
-                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-accent-800 hover:bg-accent-50
-                            ${isActualRoute ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
+                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-primary-800 hover:bg-primary-50
+                            ${isActualRoute ? 'bg-primary text-primary-foreground' : 'text-foreground'}`}
                     >
                         <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
                         {l.tituloVista}

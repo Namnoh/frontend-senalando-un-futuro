@@ -116,7 +116,7 @@ export function UserForm({user}:{user?:Usuario}) {
                 <div className="flex flex-row sm:justify-between w-full">
                     <Button type="submit" variant="default" className="text-background">{!user ? 'Crear Registro' : 'Actualizar Registro'}</Button>
                     <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
+                        <Button type="button" variant="secondary">Cancelar</Button>
                     </DialogClose>
                 </div>
             </form>
