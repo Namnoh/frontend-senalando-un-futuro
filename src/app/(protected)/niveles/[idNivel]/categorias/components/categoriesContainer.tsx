@@ -1,8 +1,6 @@
-'use client'
 import { getCategoriesFrom } from '@/services/categories.service';
 import { TitleProp } from '@/interfaces/commonInterfaces';
 import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
-import * as React from 'react';
 
 export default async function CategoriesContainer({level}: {level:TitleProp}) {
     const categories = await getCategoriesFrom(level.idTitle);

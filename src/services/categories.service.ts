@@ -31,3 +31,8 @@ export async function getCategoriesFrom(idNivel:number) {
     const categoryList = categories.filter(category => category.idNivel === Number(idNivel));
     return categoryList;
 }
+
+export async function getCategoryTitle(id:number):Promise<string>{
+    const name = await categories.find(c => c.idCategoria == id )?.nombreCategoria; 
+    return name ?? '';
+}
