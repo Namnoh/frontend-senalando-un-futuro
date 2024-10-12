@@ -1,21 +1,3 @@
-import { Categoria } from "@/interfaces/categoriaInterface";
-import { Palabra } from "@/interfaces/palabraInterface";
-import { Usuario } from "@/interfaces/usuarioInterface";
-
-type CrudItem = Usuario | Categoria | Palabra;
-
-export function isUsuario(item: CrudItem): item is Usuario {
-    return 'idUsuario' in item;
-}
-
-export function isCategoria(item: CrudItem): item is Categoria {
-    return 'idCategoria' in item;
-}
-
-export function isPalabra(item: CrudItem): item is Palabra {
-    return 'idPalabra' in item;
-}
-
 // const VALID_TYPES = ['usuario', 'categoria', 'palabra'];
 // TODO: Hacer servicio general para las peticiones
 // export async function deleteItem(id:number, type:string) {
