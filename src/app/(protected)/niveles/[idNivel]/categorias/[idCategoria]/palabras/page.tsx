@@ -21,7 +21,7 @@ export default async function GeneralContainer({params}:any) {
                     </CustomHeader>
                 </div>
                 {/* Palabras */}
-                <Suspense fallback={<CategoriesContainerSkeleton />}>
+                <Suspense fallback={<CategoriesContainerSkeleton length={5} />}>
                     <WordsContainer level={level} category={cat}/>
                 </Suspense>
             </div>

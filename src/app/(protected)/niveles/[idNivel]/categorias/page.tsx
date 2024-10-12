@@ -16,7 +16,7 @@ export default async function Categorias({params}:any) {
                     </CustomHeader>
                 </div>
                 {/* Categorías */}
-                <Suspense fallback={<CategoriesContainerSkeleton />}>
+                <Suspense fallback={<CategoriesContainerSkeleton length={4} />}>
                     <CategoriesContainer level={level}/>
                 </Suspense>
             </div>
