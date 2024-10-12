@@ -14,7 +14,7 @@ import { EditCreateBtn } from "./editCreateBtn";
 import { Usuario } from "@/interfaces/usuarioInterface";
 import { Categoria } from "@/interfaces/categoriaInterface";
 import { Palabra } from "@/interfaces/palabraInterface";
-import { isCategoria, isPalabra, isUsuario } from "@/services/crud.service";
+import { isCategoria, isPalabra, isUsuario } from "@/services/common.service";
 
 type CrudOptionsProp = {
     item?: Usuario | Categoria | Palabra;

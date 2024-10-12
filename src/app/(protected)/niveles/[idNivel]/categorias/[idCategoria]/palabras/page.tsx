@@ -7,6 +7,7 @@ import { getParamsTitle } from '@/lib/utils';
 
 export default async function GeneralContainer({params}:any) {
     const level = getParamsTitle(params.idNivel);
+    console.log(params);
     const cat = getParamsTitle(params.idCategoria);
     
     return (
@@ -18,7 +19,7 @@ export default async function GeneralContainer({params}:any) {
                 <Header level={level} nombreCategoria={cat.nameTitle} />
                 {/* Palabras */}
                 <Suspense fallback={<CategoriesContainerSkeleton />}>
-                    <WordsContainer idCategoria={cat.idTitle} idNivel={level.idTitle}/>
+                    <WordsContainer level={level} category={cat}/>
                 </Suspense>
             </div>
         </div>
