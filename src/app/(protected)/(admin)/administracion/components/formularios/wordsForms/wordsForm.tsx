@@ -86,7 +86,7 @@ export function WordForm({word}:{word?:Palabra}) {
                     name="videoPalabra"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Fondo</FormLabel>
+                            <FormLabel>Video</FormLabel>
                             <FormControl>
                                 <Input placeholder="Enlace de video" {...field} />
                             </FormControl>

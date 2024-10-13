@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import CrudOptions from "../components/crudOptions";
+import ActionOptions from "../components/actionOptions";
 import { Usuario } from "@/interfaces/usuarioInterface";
 import FilterAscDesc from "@/components/customUI/table/filterAscDesc";
 
@@ -84,7 +84,7 @@ export const columns: ColumnDef<Usuario>[] = [
         cell: ({ row }) => {
             const item = row.original
             return (
-                <CrudOptions item={item} />
+                <ActionOptions item={item} />
             )
         },
     },

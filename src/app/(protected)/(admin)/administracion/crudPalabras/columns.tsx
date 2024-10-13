@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import CrudOptions from "../components/crudOptions";
+import ActionOptions from "../components/actionOptions";
 import { Palabra } from "@/interfaces/palabraInterface";
 import FilterAscDesc from "@/components/customUI/table/filterAscDesc";
 
@@ -94,7 +94,7 @@ export const columns: ColumnDef<Palabra>[] = [
         cell: ({ row }) => {
             const item = row.original
             return (
-                <CrudOptions item={item} />
+                <ActionOptions item={item} />
             )
         },
     },

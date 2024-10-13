@@ -16,11 +16,11 @@ import { Categoria } from "@/interfaces/categoriaInterface";
 import { Palabra } from "@/interfaces/palabraInterface";
 import { isCategoria, isPalabra, isUsuario } from "@/services/common.service";
 
-type CrudOptionsProp = {
+type ActionOptionsProp = {
     item?: Usuario | Categoria | Palabra;
 }
 
-export default function CrudOptions({item}: CrudOptionsProp) {
+export default function ActionOptions({item}: ActionOptionsProp) {
     let itemId: number = 0;
     let type: string = '';
     if (item) {

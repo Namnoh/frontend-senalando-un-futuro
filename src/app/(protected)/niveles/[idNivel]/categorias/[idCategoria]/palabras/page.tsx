@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import WordsContainer from './components/wordsContainer';
-import { CategoriesContainerSkeleton } from '../../components/categoriesContainerSkeleton';
+import { MiniCardGalerySkeleton } from '@/components/customUI/skeletons/miniCardGalerySkeleton';
 import Bg from './components/bg';
 import { getParamsTitle } from '@/lib/utils';
 import CustomHeader from '@/components/customUI/customHeader';
@@ -21,7 +21,7 @@ export default async function GeneralContainer({params}:any) {
                     </CustomHeader>
                 </div>
                 {/* Palabras */}
-                <Suspense fallback={<CategoriesContainerSkeleton length={5} />}>
+                <Suspense fallback={<MiniCardGalerySkeleton length={5} />}>
                     <WordsContainer level={level} category={cat}/>
                 </Suspense>
             </div>

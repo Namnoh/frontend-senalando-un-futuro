@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import CategoriesContainer  from './components/categoriesContainer';
-import { CategoriesContainerSkeleton } from './components/categoriesContainerSkeleton';
+import { MiniCardGalerySkeleton } from '@/components/customUI/skeletons/miniCardGalerySkeleton';
 import styles from "@/app/styles/home.module.scss"
 import { getParamsTitle } from '@/lib/utils';
 import CustomHeader from '@/components/customUI/customHeader';
@@ -16,7 +16,7 @@ export default async function Categorias({params}:any) {
                     </CustomHeader>
                 </div>
                 {/* Categorías */}
-                <Suspense fallback={<CategoriesContainerSkeleton length={4} />}>
+                <Suspense fallback={<MiniCardGalerySkeleton length={4} />}>
                     <CategoriesContainer level={level}/>
                 </Suspense>
             </div>
