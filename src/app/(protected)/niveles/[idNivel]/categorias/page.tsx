@@ -16,6 +16,7 @@ export default async function Categorias({params}:any) {
                     </CustomHeader>
                 </div>
                 {/* Categorías */}
+                {/* TODO: talvez tenga que elimnar el suspense o el fallback */}
                 <Suspense fallback={<MiniCardGalerySkeleton length={4} />}>
                     <CategoriesContainer level={level}/>
                 </Suspense>

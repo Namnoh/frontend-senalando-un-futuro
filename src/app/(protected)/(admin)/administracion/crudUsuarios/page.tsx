@@ -3,7 +3,7 @@
 import { getAllUsers } from "@/services/users.service";
 import { columns } from "./columns";
 import { DataTable } from '@/components/customUI/table/data-table';
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Usuario } from '@/interfaces/usuarioInterface';
 
 import { TableSkeleton } from "@/components/customUI/skeletons/tableSkeleton";
