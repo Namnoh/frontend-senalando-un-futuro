@@ -37,6 +37,6 @@ export async function getUserProgress(): Promise<UserProgress> {
 }
 
 export async function getLevelTitle(id:number):Promise<string>{
-    const name = await mockLevels.find(l => l.id == id )?.nombreNivel; 
+    const name = await mockLevels.find(l => l.id == id )?.nombreNivel.toLowerCase(); 
     return name?.split(' ')[1] ?? '';
 }

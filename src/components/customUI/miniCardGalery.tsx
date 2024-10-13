@@ -32,11 +32,11 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
     if (item) {
         if (isCategoria(item)) {
             newItem = { itemId:item.idCategoria, itemName:item.nombreCategoria, itemIcon:item.iconoCategoria, itemStatus:item.status }
-            enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${item.idCategoria}-${encodeURIComponent(item.nombreCategoria)}/palabras`;
+            enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${item.idCategoria}-${encodeURIComponent(item.nombreCategoria).toLowerCase()}/palabras`;
             isPalabraSection = false;
         } else if (isPalabra(item)) {
             newItem = { itemId:item.idPalabra, itemName:item.nombrePalabra, itemIcon:item?.iconoPalabra, itemStatus:item.status }
-            enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${category?.idTitle}-${encodeURIComponent(category!.nameTitle)}/palabras/${newItem.itemId}`;
+            enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${category?.idTitle}-${encodeURIComponent(category!.nameTitle).toLowerCase()}/palabras/${newItem.itemId}`;
             isPalabraSection = true;
         } else {
             throw new Error('Tipo de item no reconocido');

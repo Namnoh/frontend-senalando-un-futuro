@@ -33,6 +33,6 @@ export async function getCategoriesFrom(idNivel:number) {
 }
 
 export async function getCategoryTitle(id:number):Promise<string>{
-    const name = await categories.find(c => c.idCategoria == id )?.nombreCategoria; 
+    const name = await categories.find(c => c.idCategoria == id )?.nombreCategoria.toLowerCase(); 
     return name ?? '';
 }
