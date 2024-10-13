@@ -1,20 +1,17 @@
 'use client'
 
-import { useMediaQuery } from "@/hooks/uiHooks"
-import CRUD from "./components/crud"
-import { LoaderCircle } from "lucide-react"
+import { useMediaQuery } from "@/hooks/uiHooks";
+import CRUD from "./components/crud";
+import SimpleLoading from "@/components/customUI/simpleLoading";
 
 export default function AdministracionPage() {
-    const isMobile = useMediaQuery('(max-width: 767px)')
+    const isMobile = useMediaQuery('(max-width: 767px)');
 
     return (
         <>
             {isMobile === undefined ? (
                 <>
-                    <div className="flex h-full w-full items-center justify-center p-10 text-2xl text-center">
-                        Cargando... {' '}
-                        <LoaderCircle className="animate-spin text-primary"/>
-                    </div>
+                    <SimpleLoading />
                 </>
             ) : (
                 <>

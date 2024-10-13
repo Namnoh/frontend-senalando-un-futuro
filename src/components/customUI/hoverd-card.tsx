@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { Nivel, UserProgress } from "@/interfaces/levelinterface"
 import { getLevel, getUserProgress } from "@/services/level.service"
 import { DynamicIcon } from "@/components/customUI/dynamicLucideIcon"
+import SimpleLoading from './simpleLoading'
 
 interface HoverCardProps {
     levelId: number
@@ -47,7 +48,7 @@ export function HoverCard({ levelId, link }: HoverCardProps) {
     }, [levelId])
 
     if (isLoading) {
-        return <div className="w-full md:w-1/3 p-4" aria-live="polite">Cargando...</div>
+        return <SimpleLoading />
     }
 
     if (error || !levelData || !userProgress) {

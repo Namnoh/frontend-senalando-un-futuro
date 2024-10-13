@@ -5,6 +5,7 @@ import { HoverCard } from "@/components/customUI/hoverd-card"
 import styles from "@/app/styles/home.module.scss"
 import { getUserProgress } from "@/services/level.service"
 import { UserProgress } from "@/interfaces/levelinterface"
+import SimpleLoading from '@/components/customUI/simpleLoading'
 
 const niveles = [
     { 
@@ -44,7 +45,7 @@ export default function NivelesPage() {
     }, [])
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-screen">Cargando...</div>
+        return <SimpleLoading />
     }
 
     if (error) {
