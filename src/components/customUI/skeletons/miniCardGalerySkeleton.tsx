@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function CategoriesContainerSkeleton({length}: {length:number}) {
+export function MiniCardGalerySkeleton({length}: {length:number}) {
     return (
         <div className='flex flex-wrap justify-center gap-5 w-2/3'>
             {Array.from({length: length}).map((_, index) => (
