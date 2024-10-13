@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import { ThemeProvider } from "@/components/themeToggle/theme-provider";
 import { fredoka } from './fonts/fonts';
-import HeaderOptions from "@/components/headerOptions";
+import HeaderOptions from "@/components/customUI/headerOptions";
 import Footer from "@/components/footer/footer";
 
 export const metadata: Metadata = {

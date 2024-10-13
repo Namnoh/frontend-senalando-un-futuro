@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { AllSidebars } from "@/components/navbar/";
 // import { showSidebar } from '@/services/sidebar.service';
 import { useMediaQuery } from '@/hooks/uiHooks';
-import BackButton from '@/components/backButton';
+import BackButton from '@/components/customUI/backButton';
 
 export default function HeaderOptions() {
 const actualRoute = usePathname();
