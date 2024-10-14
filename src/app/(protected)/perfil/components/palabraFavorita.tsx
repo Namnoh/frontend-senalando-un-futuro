@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { DynamicIcon } from '@/components/customUI/dynamicLucideIcon'
 import { getWordsFrom } from '@/services/words.service'
 import type { Palabra } from '@/interfaces/palabraInterface'
 import { Button } from "@/components/ui/button"
@@ -30,7 +31,7 @@ export default function WordList({ categoryId = 1 }: { categoryId?: number }) {
                     className="h-auto py-4 flex flex-col items-center justify-center hover:bg-primary-300 bg-primary-100"
                     onClick={() => handleWordClick(word)}
                 >
-                    {React.createElement(word.iconoPalabra, { className: "w-8 h-8 mb-2 text-black" })}
+                    <DynamicIcon name={word.iconoPalabra} classes='text-black'/>
                     <span className="text-sm font-medium text-black">{word.nombrePalabra}</span>
                 </Button>
             ))}
