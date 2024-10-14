@@ -12,7 +12,7 @@ const views: Vista[] = [
     {idVista:2 ,hrefVista: "/", iconoVista: 'Home', tituloVista: 'Inicio',},
     {idVista:3 ,hrefVista: "/niveles", iconoVista: 'GraduationCap', tituloVista: 'Niveles',},
     {idVista:4 ,hrefVista: "/sobreNosotros", iconoVista: 'Info', tituloVista: 'Sobre Nosotros',},
-    {idVista:5 ,hrefVista: "#", iconoVista: 'User', tituloVista: 'Perfil',},
+    {idVista:5 ,hrefVista: "/perfil", iconoVista: 'User', tituloVista: 'Perfil',},
     {idVista:6 ,hrefVista: "/administracion", iconoVista: 'CirclePlus', tituloVista: 'Administración',},
     {idVista:7 ,hrefVista: "/login", iconoVista: 'LogIn', tituloVista: 'Iniciar Sesión',},
     {idVista:8 ,hrefVista: "/register", iconoVista: 'ClipboardPen', tituloVista: 'Registrarse',},
