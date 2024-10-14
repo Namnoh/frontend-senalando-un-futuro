@@ -14,6 +14,9 @@ import { SearchPalabra } from '@/interfaces/commonInterfaces';
 import { getWordsFromInput } from '@/services/words.service';
 import Link from 'next/link';
 import { SetStateAction, useEffect, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+
+const WAIT_BETWEEN_CHANGE = 400;
 
 export default function SearchModal({filteredItems, setFilteredItems}:{filteredItems:SearchPalabra[], setFilteredItems:React.Dispatch<SetStateAction<SearchPalabra[]>>}) {
     const [searchTerm, setSearchTerm] = useState(''); // Estado para el valor de búsqueda
@@ -21,15 +24,17 @@ export default function SearchModal({filteredItems, setFilteredItems}:{filteredI
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Filtrar los ítems basados en lo que el usuario escribe
-    const filterItems = async () => {
+    const filterItems = useDebouncedCallback(async (currentSearchTerm) => {
+        if (currentSearchTerm === '') {return setFilteredItems([])}
         setIsLoading(true);
-        const wordList = await getWordsFromInput(searchTerm);
+        const wordList = await getWordsFromInput(currentSearchTerm);
         setFilteredItems(wordList);
         setIsLoading(false);
-    };
+    }, WAIT_BETWEEN_CHANGE);
 
     useEffect(() => {
-        searchTerm === '' ? setFilteredItems([]) : filterItems();
+        // searchTerm === '' ? setFilteredItems([]) : filterItems(searchTerm);
+        filterItems(searchTerm)
     }, [searchTerm])
     
     return (
@@ -56,9 +61,8 @@ export default function SearchModal({filteredItems, setFilteredItems}:{filteredI
                         <ul className='h-full w-full flex flex-col lg:gap-5 justify-between'>
                             {filteredItems.length > 0 ? (
                                 filteredItems.map((item, index) => (
-                                    <>
+                                    <div key={index}>
                                         <Link
-                                            key={index}
                                             href={`/niveles/${item.idNivel}-${encodeURI(item.nombreNivel)}/categorias/${item.idCategoria}-${encodeURI(item.nombreCategoria)}/palabras/${item.idPalabra}`}
                                             className='group'
                                         >
@@ -72,8 +76,8 @@ export default function SearchModal({filteredItems, setFilteredItems}:{filteredI
                                                 <span className='h-auto lg:w-1/5 capitalize break-words'>{item.nombreNivel}</span>
                                             </li>
                                         </Link>
-                                        <Separator />
-                                    </>
+                                        <Separator className='lg:hidden'/>
+                                    </div>
                                 ))
                             ) : (
                                 <li>No se encontraron resultados</li>
