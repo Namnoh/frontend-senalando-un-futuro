@@ -13,7 +13,7 @@ const mockUserProgress: UserProgress = {
 export async function getLevel(levelId: number): Promise<Nivel | null> {
     return new Promise((resolve) => {
         setTimeout(() => {
-            let level = mockLevels.find(level => level.id === levelId);
+            const level = mockLevels.find(level => level.id === levelId);
             if (level) {
                 if (level.id === 1) {
                     // El primer nivel nunca debe estar bloqueado
@@ -34,4 +34,9 @@ export async function getUserProgress(): Promise<UserProgress> {
         resolve(mockUserProgress)
         }, 500)
     })
+}
+
+export async function getLevelTitle(id:number):Promise<string>{
+    const name = await mockLevels.find(l => l.id == id )?.nombreNivel.toLowerCase(); 
+    return name?.split(' ')[1] ?? '';
 }

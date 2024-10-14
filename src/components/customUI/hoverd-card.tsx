@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ProgressCircle } from '@/app/(protected)/niveles/components/progress-circle'
 import { CardContent } from '@/app/(protected)/niveles/components/content-card'
 import { useLevelData } from '@/app/(protected)/niveles/components/use-level'
+import SimpleLoading from './simpleLoading'
 
 interface HoverCardProps {
     levelId: number
@@ -17,7 +18,7 @@ export function HoverCard({ levelId, link }: HoverCardProps) {
     const { levelData, userProgress, isLoading, error } = useLevelData(levelId)
 
     if (isLoading) {
-        return <div className="w-full md:w-1/3 p-4" aria-live="polite">Cargando...</div>
+        return <SimpleLoading />
     }
 
     if (error || !levelData || !userProgress) {

@@ -1,7 +1,7 @@
 'use client'
 import { ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 export default function BackButton({actualRoute, isMobile}: {actualRoute:string, isMobile:(boolean | undefined)}) {
     const router = useRouter();

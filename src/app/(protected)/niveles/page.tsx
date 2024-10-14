@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react'
 import styles from "@/app/styles/home.module.scss"
 import { getUserProgress } from "@/services/level.service"
 import { UserProgress } from "@/interfaces/levelinterface"
+import SimpleLoading from '@/components/customUI/simpleLoading'
 import { HoverCard } from '@/components/customUI/hoverd-card'
 
 const niveles = [
     { 
         id: 1,
-        enlace: `/niveles/1-${encodeURIComponent('basico')}/categorias`
+        enlace: `/niveles/1-${encodeURIComponent('básico')}/categorias`
     },
     { 
         id: 2,
@@ -17,7 +18,7 @@ const niveles = [
     },
     { 
         id: 3,
-        enlace: `/niveles/3-${encodeURIComponent('Intermedio')}/categorias`
+        enlace: `/niveles/3-${encodeURIComponent('Avanzado')}/categorias`
     },
 ]
 
@@ -44,7 +45,7 @@ export default function NivelesPage() {
     }, [])
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-screen">Cargando...</div>
+        return <SimpleLoading />
     }
 
     if (error) {
@@ -61,7 +62,7 @@ export default function NivelesPage() {
                     </div>
                 </div>
                 <main className="flex-grow flex flex-col items-center p-4 sm:p-6 md:p-8 lg:p-10">
-                    <div className="flex flex-col md:flex-row gap-6 w-full max-w-7xl">
+                    <div className="flex flex-col md:items-center lg:flex-row gap-6 w-full max-w-7xl">
                         {niveles.map((nivel) => (
                             <HoverCard 
                                 key={nivel.id}

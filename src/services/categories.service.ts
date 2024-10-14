@@ -9,6 +9,15 @@ const categories:Categoria[] = [
     {idCategoria: 5, nombreCategoria: "Ejemplo", descripcionCategoria:'', iconoCategoria: 'Home', bgCategoria: 'a', idNivel: 2, status: 1},
 ]
 
+// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
+export async function getAllCategories() {
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
+    // const categories = await fetch("BASE_URI+`/products`);
+    // const categoryList = await categories.json();
+    const categoryList = categories;
+    return categoryList;
+}
+
 export async function getCategory(idCategoria:number) {
     // TODO: Revisar qué pasa cuando la petición se demora
     // await new Promise((resolve) => setTimeout(resolve, 3000))
@@ -21,4 +30,9 @@ export async function getCategoriesFrom(idNivel:number) {
     // await new Promise((resolve) => setTimeout(resolve, 3000))
     const categoryList = categories.filter(category => category.idNivel === Number(idNivel));
     return categoryList;
+}
+
+export async function getCategoryTitle(id:number):Promise<string>{
+    const name = await categories.find(c => c.idCategoria == id )?.nombreCategoria.toLowerCase(); 
+    return name ?? '';
 }
