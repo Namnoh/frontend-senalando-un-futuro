@@ -15,7 +15,7 @@ export default function FirstOptions({refreshData, type}: { refreshData: () => v
         <div className="flex justify-center mt-8 gap-5">
             <TooltipProvider>
                 <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger asChild>
                         <Dialog>
                             <EditCreateBtn type={type}/>
                         </Dialog>
@@ -27,7 +27,7 @@ export default function FirstOptions({refreshData, type}: { refreshData: () => v
             </TooltipProvider>
             <TooltipProvider>
                 <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger asChild>
                         <Dialog>
                             <Button onClick={refreshData} variant='ghost' className=""> <RefreshCcw className="h-6 w-6"/> </Button>
                         </Dialog>
@@ -39,4 +39,4 @@ export default function FirstOptions({refreshData, type}: { refreshData: () => v
             </TooltipProvider>
         </div>
     )
-}
+};

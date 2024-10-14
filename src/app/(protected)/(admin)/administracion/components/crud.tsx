@@ -1,11 +1,16 @@
 'use client'
 
-import React, { useState, useCallback } from "react"
-import { Tabs, TabsContent } from "@/components/ui/tabs"
-import SelectionTabs from "./selectionTabs"
-import CrudCategorias from "../crudCategorias/page"
-import CrudPalabras from "../crudPalabras/page"
-import CrudUsuarios from "../crudUsuarios/page"
+import React, { useState, useCallback } from "react";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import SelectionTabs from "./selectionTabs";
+import CrudCategorias from "../crudCategorias/page";
+import CrudPalabras from "../crudPalabras/page";
+import CrudUsuarios from "../crudUsuarios/page";
+
+// import { lazy } from "react";
+// const CrudCategorias  = lazy(() => import("../crudCategorias/page"));
+// const CrudPalabras = lazy(() => import("../crudPalabras/page"));
+// const CrudUsuarios = lazy(() => import("../crudUsuarios/page"));
 
 export default function CRUD() {
     const [loadedTabs, setLoadedTabs] = useState<Set<string>>(new Set())

@@ -9,7 +9,7 @@ type TableSkeletonProps = {
 }
 export function TableSkeleton({ search, columns, clear, selectedRows, pagination }: TableSkeletonProps) {
     return (
-        <>
+        <div className='container mx-auto py-10 lg:min-w-[800px]'>
             <div className='flex items-center py-4'>
                 {search ? <Skeleton className='h-9 w-full max-w-sm' /> : ''}
                 {columns ? <Skeleton className='h-9 w-24 ml-auto' /> : ''}
@@ -38,6 +38,6 @@ export function TableSkeleton({ search, columns, clear, selectedRows, pagination
                     <div className='flex gap-5'> <Skeleton className='h-7 w-20'/> <Skeleton className='h-7 w-20'/> </div>
                 : ''}
             </div>
-        </>
+        </div>
     )
 };
