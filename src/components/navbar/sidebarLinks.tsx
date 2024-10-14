@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Vista } from "@/interfaces/vistaInterface";
 import { DynamicIcon } from "../customUI/dynamicLucideIcon";
+import SearchButton from "./searchModal/searchButton";
+import React from "react";
 
 // SIDEBAR CUANDO ESTÁ CERRADA
 
@@ -16,23 +18,26 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                         isActualRoute = true;
                     }
                     return (
-                            <Link
-                                key={l.idVista}
-                                href={l.hrefVista}
-                                className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-primary-800 hover:bg-primary-50
-                                ${isActualRoute ? 'bg-primary text-primary-foreground' : 'text-foreground'}`} 
-                            >
-                                <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
-                                <span
-                                    className="absolute rounded-md px-2 py-1 ml-6 text-nowrap
-                                    bg-primary-100 text-text-foreground text-sm
-                                    invisible opacity-20 -translate-x-3 transition-all w-50
-                                    group-hover:visible group-hover:opacity-100 group-hover:translate-x-10
-                                    "
+                        <React.Fragment key={l.idVista}>
+                            {l.idVista === 1 ? (<SearchButton l={l}/>) : (
+                                <Link
+                                    href={l.hrefVista}
+                                    className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-primary-800 hover:bg-primary-50
+                                    ${isActualRoute ? 'bg-primary text-primary-foreground' : 'text-foreground'}`} 
                                 >
-                                    {l.tituloVista}
-                                </span>
-                            </Link>
+                                    <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
+                                    <span
+                                        className="absolute rounded-md px-2 py-1 ml-6 text-nowrap
+                                        bg-primary-100 text-text-foreground text-sm
+                                        invisible opacity-20 -translate-x-3 transition-all w-50
+                                        group-hover:visible group-hover:opacity-100 group-hover:translate-x-10
+                                        "
+                                    >
+                                        {l.tituloVista}
+                                    </span>
+                                </Link>
+                            )}
+                        </React.Fragment>
                     )
                 })}
             </div>
@@ -53,16 +58,21 @@ export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                     isActualRoute = true;
                 }
                 return (
-                    
-                    <Link
-                        key={l.idVista}
-                        href={l.hrefVista}
-                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-primary-800 hover:bg-primary-50
-                            ${isActualRoute ? 'bg-primary text-primary-foreground' : 'text-foreground'}`}
-                    >
-                        <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
-                        {l.tituloVista}
-                    </Link>
+                    <React.Fragment key={l.idVista}>
+                        {l.idVista === 1 ? (
+                            <SearchButton l={l} isOpen={true}/>
+                        ) : (
+                            <Link
+                                key={l.idVista}
+                                href={l.hrefVista}
+                                className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-base hover:text-primary-800 hover:bg-primary-50
+                                    ${isActualRoute ? 'bg-primary text-primary-foreground' : 'text-foreground'}`}
+                            >
+                                <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
+                                {l.tituloVista}
+                            </Link>
+                        )}
+                    </React.Fragment>
                 )
             })}
         </>

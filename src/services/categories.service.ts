@@ -32,7 +32,13 @@ export async function getCategoriesFrom(idNivel:number) {
     return categoryList;
 }
 
-export async function getCategoryTitle(id:number):Promise<string>{
-    const name = await categories.find(c => c.idCategoria == id )?.nombreCategoria.toLowerCase(); 
+export async function getCategoryTitle(idCategoria:number):Promise<string>{
+    const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 
     return name ?? '';
+}
+
+export async function getCategoryBasics(idCategoria:number):Promise<[number | undefined, string | undefined]>{
+    const id = await categories.find(c => c.idCategoria == idCategoria )?.idCategoria;
+    const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 
+    return id ? [id, name] : [undefined, undefined];
 }

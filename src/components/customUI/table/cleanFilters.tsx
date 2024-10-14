@@ -19,7 +19,7 @@ export default function CleanFilters<TData>({table}: {table:Table<TData>}) {
     return (
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger className={`${!isFiltering ? 'cursor-default' : ''}`}>
+                <TooltipTrigger asChild className={`${!isFiltering ? 'cursor-default' : ''}`}>
                     <Button
                         variant="outline"
                         onClick={cleanFilters}
