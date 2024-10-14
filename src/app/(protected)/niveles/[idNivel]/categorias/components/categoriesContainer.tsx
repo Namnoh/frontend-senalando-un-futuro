@@ -1,19 +1,17 @@
-'use client'
-
 import { getCategoriesFrom } from '@/services/categories.service';
 import { TitleProp } from '@/interfaces/commonInterfaces';
 import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Categoria } from '@/interfaces/categoriaInterface';
-import { MiniCardGalerySkeleton } from '@/components/customUI/skeletons/miniCardGalerySkeleton';
+// import { useCallback, useEffect, useMemo, useState } from 'react';
+// import { Categoria } from '@/interfaces/categoriaInterface';
+// import { MiniCardGalerySkeleton } from '@/components/customUI/skeletons/miniCardGalerySkeleton';
 
-const CACHE_DURATION = 5 * 60 * 1000 // 5 minutos en milisegundos
-const CACHE_KEY = 'users_cache'
+// const CACHE_DURATION = 5 * 60 * 1000 // 5 minutos en milisegundos
+// const CACHE_KEY = 'users_cache'
 
-interface CacheData {
-    data: Categoria[]
-    expiry: number
-}
+// interface CacheData {
+//     data: Categoria[]
+//     expiry: number
+// }
 
 export default async function CategoriesContainer({level}: {level:TitleProp}) {
     const categories = await getCategoriesFrom(level.idTitle);

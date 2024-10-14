@@ -44,19 +44,23 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
     }
 
     return (
-        <Link
-            href={enlace}
-            className='group'
-        >
-            <div className={`flex items-center justify-center border-2 border-accent-100 rounded-2xl p-5 relative shadow-md ${isCategoria(item) ? 'bg-background' : 'bg-white'}`}>
-                <DynamicIcon name={newItem.itemIcon} classes={iconClasses}/>
-                <ProgressBadge status={newItem.itemStatus}/>
-                <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
-                <div className='absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl'>
-                    <p>{newItem.itemName}</p>
+        <div className="max-w-[104px] lg:max-w-[120px]">
+            <Link
+                href={enlace}
+                className='group'
+            >
+                <div className={`flex items-center justify-center border-2 border-accent-100 rounded-2xl p-5 relative shadow-md ${isCategoria(item) ? 'bg-background' : 'bg-white'}`}>
+                    <DynamicIcon name={newItem.itemIcon} classes={iconClasses}/>
+                    <ProgressBadge status={newItem.itemStatus}/>
+                    <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
+                    <div
+                        className='absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-all pointer-events-none lg:pointer-events-auto'
+                    >
+                        <p>{newItem.itemName}</p>
+                    </div>
                 </div>
-            </div>
-            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'}`}>{newItem.itemName}</p>
-        </Link>
+            </Link>
+            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-all max-h-16 overflow-scroll`}>{newItem.itemName}</p>
+        </div>
     )
 }
