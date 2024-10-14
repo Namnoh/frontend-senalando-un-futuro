@@ -14,6 +14,7 @@ const nextConfig = {
       //   }
       // ]
     },
+    productionBrowserSourceMaps: false, // Deshabilita los source maps en producción
 };
 
 const configWithPWA = withPWA({

@@ -1,6 +1,5 @@
 import { Categoria } from '@/interfaces/categoriaInterface';
 
-
 const categories:Categoria[] = [
     {idCategoria: 1, nombreCategoria: "Abecedario", descripcionCategoria:'', iconoCategoria: 'ArrowDownAZ', bgCategoria: 'https://plus.unsplash.com/premium_photo-1666739032615-ecbd14dfb543?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', idNivel: 1, status: 0},
     {idCategoria: 2, nombreCategoria: "Animales", descripcionCategoria:'', iconoCategoria: 'Cat', bgCategoria: 'https://amazonianproject.org/wp-content/uploads/2017/11/Rainforest_5.jpg', idNivel: 1, status: .55},
@@ -32,7 +31,13 @@ export async function getCategoriesFrom(idNivel:number) {
     return categoryList;
 }
 
-export async function getCategoryTitle(id:number):Promise<string>{
-    const name = await categories.find(c => c.idCategoria == id )?.nombreCategoria.toLowerCase(); 
+export async function getCategoryTitle(idCategoria:number):Promise<string>{
+    const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 
     return name ?? '';
+}
+
+export async function getCategoryBasics(idCategoria:number):Promise<[number | undefined, string | undefined]>{
+    const id = await categories.find(c => c.idCategoria == idCategoria )?.idCategoria;
+    const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 
+    return id ? [id, name] : [undefined, undefined];
 }

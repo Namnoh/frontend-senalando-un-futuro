@@ -9,9 +9,6 @@ import { Usuario } from '@/interfaces/usuarioInterface';
 import { TableSkeleton } from "@/components/customUI/skeletons/tableSkeleton";
 import FirstOptions from "../components/firstOptions";
 
-
-
-
 export default function CrudUsuarios({ onLoad }: { onLoad?: () => void }) {
     const [data, setData] = useState<Usuario[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -31,7 +28,6 @@ export default function CrudUsuarios({ onLoad }: { onLoad?: () => void }) {
                 setIsLoading(false)
             }
         }
-
         fetchUsers()
     }, [onLoad, lastUpdated])
 

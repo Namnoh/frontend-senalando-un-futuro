@@ -40,3 +40,15 @@ export async function getLevelTitle(id:number):Promise<string>{
     const name = await mockLevels.find(l => l.id == id )?.nombreNivel.toLowerCase(); 
     return name?.split(' ')[1] ?? '';
 }
+
+export async function getLevelData(idNivel:number) {
+    // await new Promise((resolve) => setTimeout(resolve, 3000))
+    const level = mockLevels.find(level => level.id === Number(idNivel));
+    return level;
+}
+
+export async function getLevelBasics(idNivel:number):Promise<[number | undefined, string | undefined]>{
+    const id = await mockLevels.find(level => level.id == idNivel )?.id;
+    const name = await mockLevels.find(level => level.id == idNivel )?.nombreNivel.toLowerCase(); 
+    return id ? [id, name] : [undefined, undefined];
+}
