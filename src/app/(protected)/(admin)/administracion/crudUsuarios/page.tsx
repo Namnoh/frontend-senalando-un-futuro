@@ -28,7 +28,6 @@ export default function CrudUsuarios({ onLoad }: { onLoad?: () => void }) {
                 setIsLoading(false)
             }
         }
-
         fetchUsers()
     }, [onLoad, lastUpdated])
 

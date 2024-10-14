@@ -44,7 +44,7 @@ export default function CRUD() {
         } else {
             setActiveTab(currentTab)
         }
-    }, [])
+    }, [activeTab, tabParams])
     return (
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full h-full flex flex-col items-center justify-center">
             <SelectionTabs activeTab={activeTab} />
