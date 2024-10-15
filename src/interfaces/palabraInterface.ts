@@ -1,8 +1,8 @@
 export interface Palabra {
     idPalabra: number;
     nombrePalabra: string;
-    iconoPalabra: string;
+    iconPalabra: string;
     videoPalabra: string;
-    status: boolean;
+    idNivel: number;
     idCategoria: number;
 }

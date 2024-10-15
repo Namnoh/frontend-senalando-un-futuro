@@ -17,7 +17,6 @@ type newItem = {
     itemId : number,
     itemName : string,
     itemIcon : string,
-    itemStatus : boolean | number;
 }
 
 export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGaleryProps) => {
@@ -25,17 +24,18 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
         itemId: 0,
         itemName: '',
         itemIcon: '',
-        itemStatus: false,
     }
     let enlace = '';
     let isPalabraSection = false;
+    
     if (item) {
         if (isCategoria(item)) {
-            newItem = { itemId:item.idCategoria, itemName:item.nombreCategoria, itemIcon:item.iconoCategoria, itemStatus:item.status }
+            newItem = { itemId:item.idCategoria, itemName:item.nombreCategoria, itemIcon:item.iconoCategoria }
             enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${item.idCategoria}-${encodeURIComponent(item.nombreCategoria).toLowerCase()}/palabras`;
             isPalabraSection = false;
         } else if (isPalabra(item)) {
-            newItem = { itemId:item.idPalabra, itemName:item.nombrePalabra, itemIcon:item?.iconoPalabra, itemStatus:item.status }
+            console.log(item)
+            newItem = { itemId:item.idPalabra, itemName:item.nombrePalabra, itemIcon:item.iconPalabra }
             enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${category?.idTitle}-${encodeURIComponent(category!.nameTitle).toLowerCase()}/palabras/${newItem.itemId}`;
             isPalabraSection = true;
         } else {
@@ -51,7 +51,7 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
             >
                 <div className={`flex items-center justify-center border-2 border-accent-100 rounded-2xl p-5 relative shadow-md ${isCategoria(item) ? 'bg-background' : 'bg-white'}`}>
                     <DynamicIcon name={newItem.itemIcon} classes={iconClasses}/>
-                    <ProgressBadge status={newItem.itemStatus}/>
+                    {/* <ProgressBadge status={newItem.itemStatus}/> */}
                     <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
                     <div
                         className='absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-all pointer-events-none lg:pointer-events-auto'

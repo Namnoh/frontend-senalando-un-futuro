@@ -7,7 +7,7 @@ const mockLevels: Nivel[] = [
 ]
 
 const mockUserProgress: UserProgress = {
-  completedLevels: [1] // El usuario ha completado el nivel 1
+    completedLevels: [1] // El usuario ha completado el nivel 1
 }
 
 export async function getLevel(levelId: number): Promise<Nivel | null> {
