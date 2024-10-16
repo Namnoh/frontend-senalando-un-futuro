@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { SearchPalabra } from '@/interfaces/commonInterfaces';
-import { getWordsFromInput } from '@/services/words.service';
 import Link from 'next/link';
 import { SetStateAction, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -27,7 +26,11 @@ export default function SearchModal({filteredItems, setFilteredItems}:{filteredI
     const filterItems = useDebouncedCallback(async (currentSearchTerm) => {
         if (currentSearchTerm === '') {return setFilteredItems([])}
         setIsLoading(true);
-        const wordList = await getWordsFromInput(currentSearchTerm);
+        const response = await fetch(`/api/words/getWordsFromInput/${currentSearchTerm}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch words');
+        };
+        const wordList = await response.json();
         setFilteredItems(wordList);
         setIsLoading(false);
     }, WAIT_BETWEEN_CHANGE);
