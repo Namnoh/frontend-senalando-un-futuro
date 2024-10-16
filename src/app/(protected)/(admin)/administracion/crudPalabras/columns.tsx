@@ -50,7 +50,7 @@ export const columns: ColumnDef<Palabra>[] = [
         },
     },
     {
-        accessorKey: "iconoPalabra",
+        accessorKey: "iconPalabra",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
@@ -70,11 +70,11 @@ export const columns: ColumnDef<Palabra>[] = [
         },
     },
     {
-        accessorKey: "status",
+        accessorKey: "idNivel",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
-                    Estado
+                    ID Nivel
                 </FilterAscDesc>
             )
         },

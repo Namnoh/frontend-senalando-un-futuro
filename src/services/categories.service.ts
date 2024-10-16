@@ -1,3 +1,5 @@
+'use server'
+
 import { Categoria } from '@/interfaces/categoriaInterface';
 
 const categories:Categoria[] = [
@@ -10,26 +12,34 @@ const categories:Categoria[] = [
 
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllCategories() {
-    // await new Promise((resolve) => setTimeout(resolve, 3000))
-    // const categories = await fetch("BASE_URI+`/products`);
-    // const categoryList = await categories.json();
-    const categoryList = categories;
-    return categoryList;
-}
+    try {
+        const response = await fetch(`${process.env.API_URL}/categories/`, {
+            method: 'GET',
+        });
+        if (!response.ok) {
+            throw new Error(`Error al obtener las categorias: ${response.statusText}`);
+        };
+        const categories = await response.json();
+        return categories;
+    } catch (error) {
+        console.error("Error en getAllCategories:", error);
+        return[];
+    };
+};
 
 export async function getCategory(idCategoria:number) {
     try {
         const response = await fetch(`${process.env.API_URL}/categories/${idCategoria}`);
         if (!response.ok) {
             throw new Error(`Error al obtener la categoría: ${response.statusText}`);
-        }
+        };
         const category = await response.json();
         return category;
     } catch (error) {
         console.error("Error en getCategory:", error);
         return[];
-    }
-}
+    };
+};
 
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getCategoriesFrom(idNivel:number) {
@@ -43,15 +53,8 @@ export async function getCategoriesFrom(idNivel:number) {
     } catch (error) {
         console.error("Error en getCategoriesFrom:", error);
         return[];
-    }
-}
-
-// // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
-// export async function getCategoriesFrom(idNivel:number) {
-//     // await new Promise((resolve) => setTimeout(resolve, 3000))
-//     const categoryList = categories.filter(category => category.idNivel === Number(idNivel));
-//     return categoryList;
-// }
+    };
+};
 
 export async function getCategoryTitle(idCategoria:number):Promise<string>{
     const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 

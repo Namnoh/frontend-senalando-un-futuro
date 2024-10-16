@@ -1,7 +1,9 @@
+'use server'
+
 import { Palabra } from '@/interfaces/palabraInterface';
 import { SearchPalabra } from '@/interfaces/commonInterfaces';
 import { normalizeString } from '@/lib/utils';
-import { getCategory, getCategoryBasics, getCategoryTitle } from './categories.service';
+import { getCategory, getCategoryBasics } from './categories.service';
 import { getLevelBasics, getLevelData } from './level.service';
 
 const words:Palabra[] = [
@@ -15,14 +17,7 @@ const words:Palabra[] = [
     // {idPalabra: 8, nombrePalabra: "Conejo", iconoPalabra: 'Rabbit', videoPalabra: '', status:false, idCategoria: 1,},
     // {idPalabra: 9, nombrePalabra: "Ardilla", iconoPalabra: 'Squirrel', videoPalabra: '', status:true, idCategoria: 1,},
     // {idPalabra: 10, nombrePalabra: "Tortuga", iconoPalabra: 'Turtle', videoPalabra: '', status:true, idCategoria: 1,},
-]
-
-// // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
-// export async function getWordsFrom(idCategoria:number) {
-//     // await new Promise((resolve) => setTimeout(resolve, 3000))
-//     const wordList = words.filter(word => word.idCategoria === Number(idCategoria));
-//     return wordList;
-// }
+];
 
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getWordsFrom(idCategoria:number) {
@@ -36,14 +31,24 @@ export async function getWordsFrom(idCategoria:number) {
     } catch (error) {
         console.error("Error en getCategoriesFrom:", error);
         return[];
-    }
-}
+    };
+};
 
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllWords():Promise<Palabra[]> {
-    // await new Promise((resolve) => setTimeout(resolve, 3000))
-    const wordsList = words;
-    return wordsList;
+    try {
+        const response = await fetch(`${process.env.API_URL}/words/`, {
+            method: 'GET',
+        });
+        if (!response.ok) {
+            throw new Error(`Error al obtener las palabras: ${response.statusText}`);
+        };
+        const words = await response.json();
+        return words;
+    } catch (error) {
+        console.error("Error en getAllWords:", error);
+        return[];
+    };
 };
 
 export async function getWordTitle(idPalabra:number):Promise<string>{

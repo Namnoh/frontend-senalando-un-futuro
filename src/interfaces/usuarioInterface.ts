@@ -3,5 +3,6 @@ export interface Usuario {
     nombreUsuario: string;
     apellidoUsuario: string;
     correoUsuario: string;
+    contrasenaUsuario: number;
     idRol: number;
 }
