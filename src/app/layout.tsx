@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/themeToggle/theme-provider";
 import { fredoka } from './fonts/fonts';
 import HeaderOptions from "@/components/customUI/headerOptions";
 import Footer from "@/components/footer/footer";
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: "Señalando Un Futuro",
@@ -37,6 +38,7 @@ export default function RootLayout({
               <div className={`flex flex-col flex-grow md:ml-16`}>
                 <main className="flex-grow">
                   {children}
+                  <Toaster />
                 </main>
                 <div className="w-full">
                   <Footer />

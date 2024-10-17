@@ -1,3 +1,5 @@
+'use client';
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,12 +17,21 @@ import { Usuario } from "@/interfaces/usuarioInterface";
 import { Categoria } from "@/interfaces/categoriaInterface";
 import { Palabra } from "@/interfaces/palabraInterface";
 import { isCategoria, isPalabra, isUsuario } from "@/services/common.service";
+import { useState } from "react";
 
 type ActionOptionsProp = {
     item?: Usuario | Categoria | Palabra;
 }
 
 export default function ActionOptions({item}: ActionOptionsProp) {
+    const [isModOpen, setIsModOpen] = useState(false);
+    const [isDelOpen, setIsDelOpen] = useState(false)
+
+    const closeDialog = () => {
+        setIsModOpen(false);
+        setIsDelOpen(false);
+    };
+    
     let itemId: number = 0;
     let type: string = '';
     if (item) {
@@ -45,23 +56,23 @@ export default function ActionOptions({item}: ActionOptionsProp) {
                     <MoreHorizontal className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="">
+            <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                <Dialog>
+                <Dialog open={isModOpen} onOpenChange={setIsModOpen}>
                     <DropdownMenuItem
                         onSelect={(e) => e.preventDefault()}
                         className="hover:bg-accent hover:text-white"
                     >
-                        <EditCreateBtn type={type} item={item}/>
+                        <EditCreateBtn type={type} item={item} closeDialog={closeDialog}/>
                     </DropdownMenuItem>
                 </Dialog>
                 <DropdownMenuSeparator />
-                <Dialog>
+                <Dialog open={isDelOpen} onOpenChange={setIsDelOpen}>
                     <DropdownMenuItem
                         onSelect={(e) => e.preventDefault()}
                         className="focus:bg-destructive-400 hover:bg-destructive-400 focus:text-white hover:text-white"
                     >
-                        <DeleteBtn id={itemId} type={type}/>
+                        <DeleteBtn id={itemId} type={type} closeDialog={closeDialog}/>
                     </DropdownMenuItem>
                 </Dialog>
             </DropdownMenuContent>

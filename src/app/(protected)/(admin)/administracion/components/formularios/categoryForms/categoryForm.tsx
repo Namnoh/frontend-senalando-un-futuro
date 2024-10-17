@@ -19,8 +19,46 @@ import { formSchema } from "./categoryFormSchema";
 import { Categoria } from "@/interfaces/categoriaInterface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogClose } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
 
-export function CategoryForm({category}:{category?:Categoria}) {
+export function CategoryForm({category, closeDialog}:{category?:Categoria, closeDialog:() => void}) {
+    const [ isLoading, setIsLoading ] = useState(false)
+    const { toast } = useToast();
+    // Handle Submit
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            setIsLoading(true)
+            const response = await fetch(`/api/crud/categories/${category ? category.idCategoria : '' }`, {
+                method: category ? 'PATCH' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error al ${category ? 'actualizar' : 'crear'} la categoria: ${response.statusText}`);
+            }
+            toast({
+                title: "Éxito",
+                description: `Categoría ${category ? 'actualizada' : 'creada' } correctamente`,
+                variant: "success"
+            });
+            closeDialog();
+        } catch (error) {
+            console.error("Error en onSubmit:", error);
+            toast({
+                title: "Error",
+                description: "Hubo un problema al procesar la solicitud",
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // Se define el formulario
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -29,7 +67,6 @@ export function CategoryForm({category}:{category?:Categoria}) {
             descripcionCategoria: category ? category.descripcionCategoria : '' ,
             iconoCategoria: category ? category.iconoCategoria : '' ,
             bgCategoria: category ? category.bgCategoria : '' ,
-            status: category ? category.status : 0 ,
             idNivel: category ? category.idNivel : undefined,
         },
     })
@@ -57,13 +94,10 @@ export function CategoryForm({category}:{category?:Categoria}) {
                     name="nombreCategoria"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nombre*</FormLabel>
+                            <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Animales" {...field} />
                             </FormControl>
-                            {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}
@@ -86,7 +120,7 @@ export function CategoryForm({category}:{category?:Categoria}) {
                     name="iconoCategoria"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Icono</FormLabel>
+                            <FormLabel>Icono <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Nombre o enlace" {...field} />
                             </FormControl>
@@ -101,25 +135,7 @@ export function CategoryForm({category}:{category?:Categoria}) {
                         <FormItem>
                             <FormLabel>Fondo</FormLabel>
                             <FormControl>
-                                <Input placeholder="hhttps://imagenejemplo.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Estado</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="number"
-                                    step="0.01"
-                                    placeholder="Entre 0 y 1"
-                                    {...field}
-                                />
+                                <Input placeholder="https://imagen-ejemplo.com" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -130,8 +146,8 @@ export function CategoryForm({category}:{category?:Categoria}) {
                     name="idNivel"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>ID Nivel</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                            <FormLabel>ID Nivel <span className="text-red-500">*</span></FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value ? field.value.toString() : undefined}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Seleccione un Nivel" />
@@ -148,7 +164,11 @@ export function CategoryForm({category}:{category?:Categoria}) {
                     )}
                 />
                 <div className="flex flex-row sm:justify-between w-full">
-                    <Button type="submit" variant="default" className="text-background">{!category ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                    { isLoading ? (
+                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                    ) : (
+                        <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!category ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                    )}
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cancelar</Button>
                     </DialogClose>
@@ -156,10 +176,4 @@ export function CategoryForm({category}:{category?:Categoria}) {
             </form>
         </Form>
     )
-}
-
-// Handle Submit
-function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: crear lógica de creación de usuario
-    console.log(values)
-}
+};

@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from "@/components/ui/button"
 import {
     DialogClose,
@@ -8,11 +10,42 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { useToast } from "@/hooks/use-toast";
+import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
-export function DeleteBtn({id, type}: {id:number, type:string}) {
-    function handleRemoveItem(id:number) {
-        console.log(id);
-        console.log(type);
+export function DeleteBtn({id, type, closeDialog}: {id:number, type:string, closeDialog:() => void}) {
+    const [ isLoading, setIsLoading ] = useState(false)
+    const { toast } = useToast();
+
+    async function handleRemoveItem(id:number) {
+        try {
+            setIsLoading(true)
+            const response = await fetch(`/api/crud/${type}/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Error al eliminar el registro: ${response.statusText}`);
+            }
+            toast({
+                title: "Éxito",
+                description: "Registro eliminado correctamente",
+                variant: "success"
+            });
+        } catch (error) {
+            console.error("Error en onSubmit:", error);
+            toast({
+                title: "Error",
+                description: "Hubo un problema al procesar la solicitud",
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+            closeDialog();
+        }
     }
     return (
         <>
@@ -27,7 +60,11 @@ export function DeleteBtn({id, type}: {id:number, type:string}) {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="flex flex-row sm:justify-between w-full">
-                    <Button type="submit" onClick={() => handleRemoveItem(id)} variant="destructive">Eliminar Permanentemente</Button>
+                    { isLoading ? (
+                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                    ) : (
+                        <Button type="submit" onClick={() => handleRemoveItem(id)} variant="destructive">Eliminar Permanentemente</Button>
+                    )}
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cancelar</Button>
                     </DialogClose>

@@ -1,4 +1,4 @@
-'use server'
+import 'server-only';
 
 import { Palabra } from '@/interfaces/palabraInterface';
 import { SearchPalabra } from '@/interfaces/commonInterfaces';
@@ -6,34 +6,32 @@ import { normalizeString } from '@/lib/utils';
 import { getCategory, getCategoryBasics } from './categories.service';
 import { getLevelBasics, getLevelData } from './level.service';
 
-const words:Palabra[] = [
-    // {idPalabra: 1, nombrePalabra: "PerroAKLSHDFKLASLKJDFHALSKHDFKJLAHSDFHALSHDFLAHSLDKFHLKSHDFLKASDLKJFHASKDHFLKJASDFLKJHASLKJDFHALKSWJDHFLKASDFLKJHASDKJFHALKSJDHFKJJAH", iconoPalabra: 'Dog', videoPalabra: '', status:true, idCategoria: 2,},
-    // {idPalabra: 2, nombrePalabra: "Gato", iconoPalabra: 'Cat', videoPalabra: '', status:false, idCategoria: 2,},
-    // {idPalabra: 3, nombrePalabra: "Conejo", iconoPalabra: 'Rabbit', videoPalabra: '', status:false, idCategoria: 2,},
-    // {idPalabra: 4, nombrePalabra: "Ardilla", iconoPalabra: 'Squirrel', videoPalabra: '', status:true, idCategoria: 2,},
-    // {idPalabra: 5, nombrePalabra: "Tortuga", iconoPalabra: 'Turtle', videoPalabra: '', status:false, idCategoria: 2,},
-    // {idPalabra: 6, nombrePalabra: "Perro", iconoPalabra: 'Dog', videoPalabra: '', status:false, idCategoria: 1,},
-    // {idPalabra: 7, nombrePalabra: "Gato", iconoPalabra: 'Cat', videoPalabra: '', status:false, idCategoria: 1,},
-    // {idPalabra: 8, nombrePalabra: "Conejo", iconoPalabra: 'Rabbit', videoPalabra: '', status:false, idCategoria: 1,},
-    // {idPalabra: 9, nombrePalabra: "Ardilla", iconoPalabra: 'Squirrel', videoPalabra: '', status:true, idCategoria: 1,},
-    // {idPalabra: 10, nombrePalabra: "Tortuga", iconoPalabra: 'Turtle', videoPalabra: '', status:true, idCategoria: 1,},
-];
+// * INICIO DE CRUD PALABRAS
 
-// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
-export async function getWordsFrom(idCategoria:number) {
+// CREATE
+export async function createWord(word:Palabra) {
     try {
-        const response= await fetch(`${process.env.API_URL}/words/getAllByCategory/${idCategoria}`);
+        const response = await fetch(`${process.env.API_URL}/words/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(word),
+        });
         if (!response.ok) {
-            throw new Error(`Error al obtener las palabras: ${response.statusText}`);
-        }
-        const words = await response.json();
-        return words;
+            const errorData = await response.json();
+            throw new Error(`Error al crear la palabra: ${errorData.message || response.statusText}`);
+        };
+        const palabra = await response.json();
+        return {success:true, data:palabra};
     } catch (error) {
-        console.error("Error en getCategoriesFrom:", error);
-        return[];
+        console.error("Error en createWord:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
     };
 };
 
+// READ
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllWords():Promise<Palabra[]> {
     try {
@@ -51,20 +49,79 @@ export async function getAllWords():Promise<Palabra[]> {
     };
 };
 
+// UPDATE
+export async function updateWord(word: Palabra, idPalabra:number) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/words/${idPalabra}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(word),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al actualizar la palabra: ${errorData.message || response.statusText}`);
+        };
+        const palabra = await response.json();
+        return { success:true, data:palabra };
+    } catch (error) {
+        console.error("Error en updateWord:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// DELETE
+export async function deleteWord(idWord:number) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/words/${idWord}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al eliminar la palabra: ${errorData.message || response.statusText}`);
+        };
+        const palabra = await response.json();
+        return {success:true, data:palabra};
+    } catch (error) {
+        console.error("Error en deleteWord:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// * FIN DE CRUD PALABRAS
+
+// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
+export async function getWordsFrom(idCategoria:number) {
+    try {
+        const response= await fetch(`${process.env.API_URL}/words/getAllByCategory/${idCategoria}`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener las palabras: ${response.statusText}`);
+        }
+        const words = await response.json();
+        return words;
+    } catch (error) {
+        console.error("Error en getCategoriesFrom:", error);
+        return[];
+    };
+};
+
 export async function getWordTitle(idPalabra:number):Promise<string>{
+    const words = await getAllWords();
     const name = await words.find(c => c.idPalabra == idPalabra )?.nombrePalabra.toLowerCase(); 
     return name ?? '';
-}
+};
 
-export async function getWordBasics(idPalabra:number):Promise<[number | undefined, string | undefined]>{
+export async function getWordBasics(words:Palabra[], idPalabra:number):Promise<[number | undefined, string | undefined]>{
     const id = await words.find(w => w.idPalabra == idPalabra )?.idPalabra;
     const name = await words.find(w => w.idPalabra == idPalabra )?.nombrePalabra.toLowerCase(); 
     return id ? [id, name] : [undefined, undefined];
-}
+};
 
 export async function getWordsFromInput(input:string):Promise<SearchPalabra[]> {
-    // await new Promise((resolve) => setTimeout(resolve, 3000))
-
+    const words = await getAllWords();
     const filteredWords = words.filter((word: Palabra) => {
         const normalizedWord = normalizeString(word.nombrePalabra).toLowerCase();
         const normalizedInput = normalizeString(input).toLowerCase();
@@ -73,10 +130,11 @@ export async function getWordsFromInput(input:string):Promise<SearchPalabra[]> {
 
     const wordList: SearchPalabra[] = await Promise.all(
         filteredWords.map(async (word: Palabra) => {
-            const wordBasics = await getWordBasics(word.idPalabra);
+            const wordBasics = await getWordBasics(words, word.idPalabra);
             const category = await getCategory(word.idCategoria);
-            const categoryBasics = await getCategoryBasics(category!.idCategoria);
+            const categoryBasics = await getCategoryBasics(category);
             const level = await getLevelData(category!.idNivel);
+            // TODO: ARREGLAR CONJUNTO A LA LLAMADA DE API LOS DATOS DEL NIVEL
             const levelBasics = await getLevelBasics(level!.id);
             return {
                 idPalabra: wordBasics[0],

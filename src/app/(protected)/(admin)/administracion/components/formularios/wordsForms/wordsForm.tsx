@@ -19,21 +19,57 @@ import { formSchema } from "./wordFormSchema";
 import { Palabra } from "@/interfaces/palabraInterface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogClose } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { LoaderCircle } from "lucide-react";
 
-export function WordForm({word}:{word?:Palabra}) {
+export function WordForm({word, closeDialog}:{word?:Palabra, closeDialog:() => void}) {
+    const [ isLoading, setIsLoading ] = useState(false)
+    const { toast } = useToast();
+    // Handle Submit
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            setIsLoading(true)
+            const response = await fetch(`/api/crud/words/${word ? word.idPalabra : '' }`, {
+                method: word ? 'PATCH' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error al ${word ? 'actualizar' : 'crear'} la palabra: ${response.statusText}`);
+            }
+            toast({
+                title: "Éxito",
+                description: `Palabra ${word ? 'actualizada' : 'creada' } correctamente`,
+                variant: "success"
+            });
+            closeDialog();
+        } catch (error) {
+            console.error("Error en onSubmit:", error);
+            toast({
+                title: "Error",
+                description: "Hubo un problema al procesar la solicitud",
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // Se define el formulario
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             nombrePalabra: word ? word.nombrePalabra : '' ,
-            iconoPalabra: word ? word.iconoPalabra : '' ,
+            iconPalabra: word ? word.iconPalabra : '' ,
             videoPalabra: word ? word.videoPalabra : '' ,
-            status: word ? word.status : false ,
             idCategoria: word ? word.idCategoria : undefined,
+            idNivel: word ? word.idNivel : undefined,
         },
     })
-
 
     return (
         <Form {...form}>
@@ -57,23 +93,20 @@ export function WordForm({word}:{word?:Palabra}) {
                     name="nombrePalabra"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nombre*</FormLabel>
+                            <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Gato" {...field} />
                             </FormControl>
-                            {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <FormField
                     control={form.control}
-                    name="iconoPalabra"
+                    name="iconPalabra"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Icono</FormLabel>
+                            <FormLabel>Icono <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Nombre o enlace" {...field} />
                             </FormControl>
@@ -86,39 +119,9 @@ export function WordForm({word}:{word?:Palabra}) {
                     name="videoPalabra"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Video</FormLabel>
+                            <FormLabel>Video <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Enlace de video" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem className="space-y-3">
-                            <FormLabel>Notify me about...</FormLabel>
-                            <FormControl>
-                                <RadioGroup
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value.toString()}
-                                    className="flex flex-col space-y-1"
-                                    >
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="true" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">Completada</FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-3 space-y-0">
-                                            <FormControl>
-                                                <RadioGroupItem value="false" />
-                                            </FormControl>
-                                            <FormLabel className="font-normal">No Completada</FormLabel>
-                                        </FormItem>
-                                </RadioGroup>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -129,16 +132,16 @@ export function WordForm({word}:{word?:Palabra}) {
                     name="idCategoria"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>ID Nivel</FormLabel>
+                            <FormLabel>ID Categoria <span className="text-red-500">*</span></FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione un Nivel" />
+                                        <SelectValue placeholder="Seleccione una Categoría" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value='1'>1 - Abecedario</SelectItem>
-                                    <SelectItem value='2'>2 - Animales</SelectItem>
+                                    <SelectItem value='1'>1 - Animales</SelectItem>
+                                    <SelectItem value='2'>2 - Abecedario</SelectItem>
                                     <SelectItem value='3'>3 - Saludos</SelectItem>
                                 </SelectContent>
                             </Select>
@@ -146,8 +149,34 @@ export function WordForm({word}:{word?:Palabra}) {
                         </FormItem>
                     )}
                 />
+                <FormField
+                    control={form.control}
+                    name="idNivel"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>ID Nivel <span className="text-red-500">*</span></FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Seleccione un Nivel" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value='1'>1 - Básico</SelectItem>
+                                    <SelectItem value='2'>2 - Intermedio</SelectItem>
+                                    <SelectItem value='3'>3 - Avanzado</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 <div className="flex flex-row sm:justify-between w-full">
-                    <Button type="submit" variant="default" className="text-background">{!word ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                    { isLoading ? (
+                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                    ) : (
+                        <Button type="submit" variant="default" className="text-background">{!word ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                    )}
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cancelar</Button>
                     </DialogClose>
@@ -155,10 +184,4 @@ export function WordForm({word}:{word?:Palabra}) {
             </form>
         </Form>
     )
-}
-
-// Handle Submit
-function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: crear lógica de creación de usuario
-    console.log(values)
 }

@@ -1,6 +1,8 @@
-'use server'
+import 'server-only';
 
 import { Categoria } from '@/interfaces/categoriaInterface';
+import { TitleProp } from '@/interfaces/commonInterfaces';
+import { getLevelTitle } from './level.service';
 
 const categories:Categoria[] = [
     // {idCategoria: 1, nombreCategoria: "Abecedario", descripcionCategoria:'', iconoCategoria: 'ArrowDownAZ', bgCategoria: 'https://plus.unsplash.com/premium_photo-1666739032615-ecbd14dfb543?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', idNivel: 1, status: 0},
@@ -10,6 +12,32 @@ const categories:Categoria[] = [
     // {idCategoria: 5, nombreCategoria: "Ejemplo", descripcionCategoria:'', iconoCategoria: 'Home', bgCategoria: 'a', idNivel: 2, status: 1},
 ]
 
+// * INICIO CRUD CATEGORIA
+
+// CREATE
+export async function createCategory(category:Categoria) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/categories/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(category),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al crear la categoria: ${errorData.message || response.statusText}`);
+        };
+        const categoria = await response.json();
+        return {success:true, data:categoria};
+    } catch (error) {
+        console.error("Error en createCategory:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// READ
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllCategories() {
     try {
@@ -26,6 +54,51 @@ export async function getAllCategories() {
         return[];
     };
 };
+
+// UPDATE
+export async function updateCategory(category: Categoria, idCategoria:number) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/categories/${idCategoria}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(category),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al actualizar la categoria: ${errorData.message || response.statusText}`);
+        };
+        const categoria = await response.json();
+        return {success:true, data:categoria};
+    } catch (error) {
+        console.error("Error en createCategory:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// DELETE
+export async function deleteCategory(idCategoria:number) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/categories/${idCategoria}`, {
+            method: 'DELETE',
+        });
+        console.log()
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al eliminar la categoria: ${errorData.message || response.statusText}`);
+        };
+        const categoria = await response.json();
+        return {success:true, data:categoria};
+    } catch (error) {
+        console.error("Error en deleteCategory:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// * FIN CRUD CATEGORIA
 
 export async function getCategory(idCategoria:number) {
     try {
@@ -59,10 +132,10 @@ export async function getCategoriesFrom(idNivel:number) {
 export async function getCategoryTitle(idCategoria:number):Promise<string>{
     const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 
     return name ?? '';
-}
+};
 
-export async function getCategoryBasics(idCategoria:number):Promise<[number | undefined, string | undefined]>{
-    const id = await categories.find(c => c.idCategoria == idCategoria )?.idCategoria;
-    const name = await categories.find(c => c.idCategoria == idCategoria )?.nombreCategoria.toLowerCase(); 
+export async function getCategoryBasics(category:Categoria):Promise<[number | undefined, string | undefined]>{
+    const id = await category.idCategoria;
+    const name = await category.nombreCategoria.toLowerCase(); 
     return id ? [id, name] : [undefined, undefined];
-}
+};

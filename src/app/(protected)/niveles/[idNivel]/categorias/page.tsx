@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import CategoriesContainer  from './components/categoriesContainer';
 import { MiniCardGalerySkeleton } from '@/components/customUI/skeletons/miniCardGalerySkeleton';
 import styles from "@/app/styles/home.module.scss"
-import { getParamsTitle } from '@/lib/utils';
+import { getParamsTitle } from '@/services/actions.services';
 import CustomHeader from '@/components/customUI/customHeader';
 
 export default async function Categorias({params}:any) {

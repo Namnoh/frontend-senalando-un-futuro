@@ -5,4 +5,6 @@ export interface Usuario {
     correoUsuario: string;
     contrasenaUsuario: number;
     idRol: number;
-}
+};
+
+export type NuevoUsuario = Omit<Usuario, 'contrasenaUsuario'>;

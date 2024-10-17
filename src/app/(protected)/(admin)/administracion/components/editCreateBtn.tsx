@@ -15,7 +15,7 @@ type AllTextContent = {
     title: 'Crear Registro' | 'Editar Registro',
 }
 
-export function EditCreateBtn({type, item}: {type:string, item?:any}) {
+export function EditCreateBtn({type, closeDialog, item}: {type:string, closeDialog:() => void, item?:any}) {
     let textContent: AllTextContent;
 
     if (!item) {
@@ -47,13 +47,13 @@ export function EditCreateBtn({type, item}: {type:string, item?:any}) {
                 {/* Contenido Formulario */}
                 {type === 'users' ? (
                     // Renderizar componente formulario Usuario
-                    <UserForm user={item ? item : null}/>
+                    <UserForm user={item ? item : null} closeDialog={closeDialog}/>
                 ) : type === 'categories' ? (
                     // Renderizar componente formulario Categoria
-                    <CategoryForm category={item ? item : null}/>
+                    <CategoryForm category={item ? item : null} closeDialog={closeDialog}/>
                 ) : (
                     // Palabras
-                    <WordForm word={item ? item : null}/>
+                    <WordForm word={item ? item : null} closeDialog={closeDialog}/>
                 )}
             </DialogContent>
         </>

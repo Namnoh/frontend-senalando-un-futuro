@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import WordsContainer from './components/wordsContainer';
 import { MiniCardGalerySkeleton } from '@/components/customUI/skeletons/miniCardGalerySkeleton';
 import Bg from './components/bg';
-import { getParamsTitle } from '@/lib/utils';
+import { getParamsTitle } from '@/services/actions.services';
 import CustomHeader from '@/components/customUI/customHeader';
 
 export default async function GeneralContainer({params}:any) {

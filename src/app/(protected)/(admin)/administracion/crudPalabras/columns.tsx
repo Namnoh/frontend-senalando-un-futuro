@@ -70,21 +70,21 @@ export const columns: ColumnDef<Palabra>[] = [
         },
     },
     {
-        accessorKey: "idNivel",
-        header: ({ column, table }) => {
-            return (
-                <FilterAscDesc table={table} column={column}>
-                    ID Nivel
-                </FilterAscDesc>
-            )
-        },
-    },
-    {
         accessorKey: "idCategoria",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
                     ID Categoria
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
+        accessorKey: "idNivel",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    ID Nivel
                 </FilterAscDesc>
             )
         },
