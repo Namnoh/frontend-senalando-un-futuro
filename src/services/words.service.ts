@@ -33,10 +33,11 @@ export async function createWord(word:Palabra) {
 
 // READ
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
-export async function getAllWords():Promise<Palabra[]> {
+export async function getAllWords(cache?:RequestCache):Promise<Palabra[]> {
     try {
         const response = await fetch(`${process.env.API_URL}/words/`, {
             method: 'GET',
+            cache: cache ?? 'default'
         });
         if (!response.ok) {
             throw new Error(`Error al obtener las palabras: ${response.statusText}`);
@@ -121,7 +122,10 @@ export async function getWordBasics(words:Palabra[], idPalabra:number):Promise<[
 };
 
 export async function getWordsFromInput(input:string):Promise<SearchPalabra[]> {
-    const words = await getAllWords();
+    // ? Usar el no-store de forma temporal, para cuando agreguemos palabras funcione esto.
+    const noStore : RequestCache = 'no-store';
+    const words = await getAllWords(noStore);
+
     const filteredWords = words.filter((word: Palabra) => {
         const normalizedWord = normalizeString(word.nombrePalabra).toLowerCase();
         const normalizedInput = normalizeString(input).toLowerCase();
