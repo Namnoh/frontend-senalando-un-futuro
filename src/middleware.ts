@@ -4,6 +4,14 @@ export { withAuth } from "next-auth/middleware";
 
 function middleware(request: NextRequest) {
     const pathName = request.nextUrl.pathname;
+    const token = request.cookies.get('next-auth.session-token')?.value;
+    const isAuth = !!token;
+
+    // Redirect authenticated users away from login and register pages
+    if (isAuth && (pathName === '/login' || pathName === '/register')) {
+        return NextResponse.redirect(new URL('/', request.url));
+    }
+
     if (pathName.startsWith('/niveles')) {
         // const isMatch = /^\/niveles\/\d+$/.test(pathName);
         const levelMatch = pathName.match(/^\/niveles\/(\d+)/);
@@ -39,11 +47,19 @@ function middleware(request: NextRequest) {
 // Exportar el middleware envuelto con withAuth de NextAuth
 export default withAuth(middleware, {
     callbacks: {
-        authorized: ({ token }) => !!token
+        authorized: ({ token, req }) => {
+            const path = req.nextUrl.pathname;
+            // Allow access to login and register pages for unauthenticated users
+            if (path === '/login' || path === '/register') {
+                return true;
+            }
+            // Require authentication for other protected routes
+            return !!token;
+        }
     },
 });
 
 // * Estas son las rutas en las que se ejecutaría el middleware anterior
 export const config = {
-    matcher: ['/niveles', '/perfil', '/administracion/:path*']
+    matcher: ['/niveles/:path*', '/perfil', '/administracion/:path*', '/login', '/register']
 };

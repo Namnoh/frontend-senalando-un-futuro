@@ -33,7 +33,7 @@ export default function NivelesPage() {
             setIsLoading(true)
             setError(null)
             try {
-                const response = await fetch(`/api/level/fetchUserProgress/${3}`);
+                const response = await fetch(`/api/level/fetchUserProgress/${44}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch userProgress');
                 };
