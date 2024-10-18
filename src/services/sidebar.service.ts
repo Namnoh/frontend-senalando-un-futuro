@@ -4,7 +4,6 @@ import { Vista } from "@/interfaces/vistaInterface";
 const guestPaths = ['/login', '/register'];
 const commonPaths = ['/', '/sobreNosotros'];
 // const loggedPaths= ['/login', '/register'];
-const isAuth = true;
 
 // Links Sidebar
 const views: Vista[] = [
@@ -21,6 +20,7 @@ const views: Vista[] = [
 
 // TODO: Obtener links según rol de usuario 
 export async function getSidebarLinks():Promise<Vista[]> {
+    const isAuth = true;
     // await new Promise((resolve) => setTimeout(resolve, 3000))
     const viewsList = views.filter(v => {
         const isGuestPath = guestPaths.includes(v.hrefVista);
