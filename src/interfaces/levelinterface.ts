@@ -4,10 +4,14 @@ export interface Nivel {
     descripcionNivel: string
     iconoNivel: string,
     statusNivel: number
-    progreso: number
     bloqueado: boolean
 }
 
 export interface UserProgress {
-    completedLevels: number[]
+    idProgreso : number  
+    categoriasProgreso : Record<string, any> ,      
+    palabrasProgreso : Record<string, any>
+    porcentajeNivel : number
+    idNivel : number 
+    idUsuario : number         
 }

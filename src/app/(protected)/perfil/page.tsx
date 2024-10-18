@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { perfilService } from '@/services/perfil.service'
-import { getLevel, getUserProgress } from '@/services/level.service'
+import { getLevel } from '@/services/common.service'
 import { perfil } from '@/interfaces/perfilinterface'
 import { Nivel, UserProgress } from '@/interfaces/levelinterface'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -13,6 +13,7 @@ import CambiarContrasena from './components/cambiarContrasena'
 import Email from './components/email'
 import PalabraFavorita from './components/palabraFavorita'
 import Progreso from './components/progreso'
+
 
 export default function PerfilPage() {
     const [perfil, setPerfil] = useState<perfil | null>(null)
@@ -26,15 +27,18 @@ export default function PerfilPage() {
             try {
                 const perfilData = await perfilService.obtenerPerfil()
                 setPerfil(perfilData)
-
+                const response = await fetch(`/api/level/fetchUserProgress/${3}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch userProgress');
+                };
+                const progressData = await response.json();
                 const nivelesData = await Promise.all([
-                    getLevel(1),
-                    getLevel(2),
-                    getLevel(3),
+                    getLevel(1,progressData.idUsuario),
+                    getLevel(2,progressData.idUsuario),
+                    getLevel(3,progressData.idUsuario)
                 ])
                 setNiveles(nivelesData.filter((nivel): nivel is Nivel => nivel !== null))
-
-                const progressData = await getUserProgress()
+                
                 setUserProgress(progressData)
             } catch (error) {
                 console.error("Error al cargar los datos:", error)

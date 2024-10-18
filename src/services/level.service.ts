@@ -1,54 +1,45 @@
+import 'server-only';
 import { Nivel, UserProgress } from '@/interfaces/levelinterface'
 
 const mockLevels: Nivel[] = [
-    {id: 1, nombreNivel: "Nivel Básico",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nAbecedario \nNumeros \nColores` , iconoNivel: 'BookOpen',statusNivel: 1,progreso: 90,bloqueado: false},
-    {id: 2,nombreNivel: "Nivel Intermedio",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nAbecedario \nNumeros \nColores`,iconoNivel: 'Book',statusNivel: 2,progreso: 0,bloqueado: true},
-    {id: 3,nombreNivel: "Nivel Avanzado",descripcionNivel: "Domina técnicas avanzadas", iconoNivel: 'GraduationCap', statusNivel: 3, progreso: 0,  bloqueado: true }
+    {id: 1, nombreNivel: "Nivel Básico",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nAbecedario \nNumeros \nColores` , iconoNivel: 'BookOpen',statusNivel: 1,bloqueado: false},
+    {id: 2,nombreNivel: "Nivel Intermedio",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nAbecedario \nNumeros \nColores`,iconoNivel: 'Book',statusNivel: 2,bloqueado: true},
+    {id: 3,nombreNivel: "Nivel Avanzado",descripcionNivel: "Domina técnicas avanzadas", iconoNivel: 'GraduationCap', statusNivel: 3,  bloqueado: true }
 ]
 
-const mockUserProgress: UserProgress = {
-    completedLevels: [1] // El usuario ha completado el nivel 1
+// Función para obtener el progreso del usuario
+export async function fetchUserProgress(idUsuario: number): Promise<UserProgress> {
+    try {
+        console.log(idUsuario)
+        const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`); 
+        console.log(response)
+        if (!response.ok) {
+            throw new Error('Error al obtener el progreso del usuario');
+        }
+        const data: UserProgress = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error en fetchUserProgress:', error);
+        throw error; // Lanza el error para que el componente pueda manejarlo
+    }
 }
 
-export async function getLevel(levelId: number): Promise<Nivel | null> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            const level = mockLevels.find(level => level.id === levelId);
-            if (level) {
-                if (level.id === 1) {
-                    // El primer nivel nunca debe estar bloqueado
-                    level.bloqueado = false;
-                } else {
-                    // Buscar el nivel anterior solo si no es el primer nivel
-                    const nivelAnterior = mockLevels.find(n => n.id === level.id - 1);
-                    level.bloqueado = nivelAnterior ? nivelAnterior.progreso < 100 : true;
-                }
-            }
-            resolve(level || null);
-        }, 500);
-    });
-}
-export async function getUserProgress(): Promise<UserProgress> {
-    return new Promise((resolve) => {
-    setTimeout(() => {
-        resolve(mockUserProgress)
-        }, 500)
-    })
-}
 
+
+// Función para obtener el nombre del nivel
 export async function getLevelTitle(id:number):Promise<string>{
     const name = await mockLevels.find(l => l.id == id )?.nombreNivel.toLowerCase(); 
     return name?.split(' ')[1] ?? '';
 }
 
-export async function getLevelData(idNivel:number) {
-    // await new Promise((resolve) => setTimeout(resolve, 3000))
-    const level = mockLevels.find(level => level.id === Number(idNivel));
-    return level;
+
+// Función para obtener los datos de un nivel específico
+export async function getLevelData(idNivel: number): Promise<Nivel | undefined> {
+    return mockLevels.find(level => level.id === idNivel);
 }
 
-export async function getLevelBasics(idNivel:number):Promise<[number | undefined, string | undefined]>{
-    const id = await mockLevels.find(level => level.id == idNivel )?.id;
-    const name = await mockLevels.find(level => level.id == idNivel )?.nombreNivel.toLowerCase(); 
-    return id ? [id, name] : [undefined, undefined];
+// Función para obtener el ID y el nombre de un nivel
+export async function getLevelBasics(idNivel: number): Promise<[number | undefined, string | undefined]> {
+    const level = mockLevels.find(level => level.id === idNivel);
+    return level ? [level.id, level.nombreNivel.toLowerCase()] : [undefined, undefined];
 }

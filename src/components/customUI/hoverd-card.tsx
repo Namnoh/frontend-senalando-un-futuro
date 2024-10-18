@@ -7,16 +7,19 @@ import { ProgressCircle } from '@/app/(protected)/niveles/components/progress-ci
 import { CardContent } from '@/app/(protected)/niveles/components/content-card'
 import { useLevelData } from '@/app/(protected)/niveles/components/use-level'
 import SimpleLoading from './simpleLoading'
+import { UserProgress } from '@/interfaces/levelinterface'
 
 interface HoverCardProps {
     levelId: number
     link?: string
+    bloqueado: boolean; // Nueva propiedad añadida
+    userProgress : UserProgress  
 }
 
-export function HoverCard({ levelId, link }: HoverCardProps) {
+export function HoverCard({ levelId, link, bloqueado, userProgress }: HoverCardProps) { 
     const [isHovered, setIsHovered] = useState(false)
-    const { levelData, userProgress, isLoading, error } = useLevelData(levelId)
-
+    const { levelData, isLoading, error } = useLevelData(levelId, userProgress.idUsuario)
+    const full = levelId < userProgress.idNivel ? 100 : null; 
     if (isLoading) {
         return <SimpleLoading />
     }
@@ -25,7 +28,7 @@ export function HoverCard({ levelId, link }: HoverCardProps) {
         return <div className="w-full md:w-1/3 p-4 text-red-500" aria-live="assertive">{error || 'Error desconocido'}</div>
     }
 
-    const isLocked = levelData.bloqueado
+    const isLocked = bloqueado; // Utiliza la prop bloqueado directamente
     const colorClasses = getColorClasses(levelData.statusNivel, isLocked)
 
     const cardContent = (
@@ -37,7 +40,7 @@ export function HoverCard({ levelId, link }: HoverCardProps) {
         onMouseLeave={() => setIsHovered(false)}
         >
         <ProgressCircle 
-            progress={isLocked ? 0 : levelData.progreso}
+            progress={isLocked ? 0 : (full ?? userProgress.porcentajeNivel)}
             colorClasses={colorClasses}
             isLocked={isLocked}
         />
@@ -72,7 +75,7 @@ function getColorClasses(status: number, isLocked: boolean) {
             hover: 'hover:bg-gray-300',
             progress: '#6b7280',
             trailColor: '#d1d5db'
-            }
+        }
     }
     switch (status) {
         case 1:

@@ -1,37 +1,36 @@
-import { useState, useEffect } from 'react'
-import { Nivel, UserProgress } from "@/interfaces/levelinterface"
-import { getLevel, getUserProgress } from "@/services/level.service"
+import { useState, useEffect } from 'react';
+import { Nivel, UserProgress } from "@/interfaces/levelinterface";
+import { getLevel } from '@/services/common.service';
 
-export function useLevelData(levelId: number) {
-    const [levelData, setLevelData] = useState<Nivel | null>(null)
-    const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+export function useLevelData(levelId: number, userId: number) {
+    const [levelData, setLevelData] = useState<Nivel | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    
 
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true)
-            setError(null)
+            setIsLoading(true);
+            setError(null);
             try {
-                const [levelData, progressData] = await Promise.all([
-                getLevel(levelId),
-                getUserProgress()
-                ])
-                if (levelData) {
-                setLevelData(levelData)
-                setUserProgress(progressData)
+                // Usar getLevel pasando levelId y userId
+                const levelDataResponse = await getLevel(levelId, userId);
+
+                if (levelDataResponse) {
+                    setLevelData(levelDataResponse);
                 } else {
-                setError('No se encontró el nivel')
+                    setError('No se encontró el nivel');
                 }
             } catch (err) {
-                setError('Error al cargar los datos')
-                console.error(err)
+                setError('Error al cargar los datos');
+                console.error(err);
             } finally {
-                setIsLoading(false)
+                setIsLoading(false);
             }
-        }
-        fetchData()
-    }, [levelId])
+        };
 
-    return { levelData, userProgress, isLoading, error }
+        fetchData();
+    }, [levelId, userId]); // Asegúrate de que ambos sean dependencias
+
+    return { levelData, isLoading, error };
 }

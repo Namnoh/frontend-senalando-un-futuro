@@ -16,8 +16,8 @@ export default function Progreso({ niveles, userProgress }: ProgresoProps) {
             <div className="space-y-6">
                 {niveles.map((nivel) => {
                     const isLocked = nivel.bloqueado;
-                    const progressValue = isLocked ? 0 : nivel.progreso;
-
+                    const full = nivel.id < userProgress.idNivel ? 100 : null; 
+                    const progressValue = isLocked ? 0 : (full ?? userProgress.porcentajeNivel);
                     return (
                         <div key={nivel.id} className="space-y-2">
                             {/* Icono y nombre del nivel */}
