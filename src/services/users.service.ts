@@ -1,6 +1,7 @@
 import 'server-only';
 
-import { NuevoUsuario, Usuario } from '@/interfaces/usuarioInterface';
+import { NuevoUsuario, Usuario, UsuarioRes } from '@/interfaces/usuarioInterface';
+import bcrypt from "bcrypt";
 
 // * INICIO DE CRUD USUARIOS
 
@@ -37,6 +38,43 @@ export async function createUser(newUser:NuevoUsuario) {
         };
         const user = await response.json();
         return {success:true, data:user};
+    } catch (error) {
+        console.error("Error en createUser:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+
+export async function registerUser(usuario:Usuario) {
+    try {
+        
+        // const res = await fetch(`${process.env.API_URL}/users/findByEmail/${usuario.correoUsuario}`,{
+        //     method: 'GET'
+        // });
+        // console.log(res)
+
+        // if (res.ok) {
+        //     return { success: false, error: 'El correo ya ha sido usado' };
+        // }
+
+        const hashedPassword = await bcrypt.hash(usuario.contrasenaUsuario,10)
+        const usuarioHash = {...usuario, contrasenaUsuario:hashedPassword, idRol: 1 }
+        const response = await fetch(`${process.env.API_URL}/users/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(usuarioHash)
+            
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al crear al usuario: ${errorData.message || response.statusText}`);
+        };
+        const user = await response.json();
+        const {contrasenaUsuario:_, ...usuarioCompleto} = user;
+        return {success:true, data:usuarioCompleto};
     } catch (error) {
         console.error("Error en createUser:", error);
         const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
