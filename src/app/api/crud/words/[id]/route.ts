@@ -6,7 +6,6 @@ export async function PATCH(request: Request, context:any): Promise<NextResponse
     try {
         const { params } = context;
         const word: Palabra = await request.json(); // Obtener el cuerpo de la solicitud
-        console.log(word);
         const response = await updateWord(word, Number(params.id));
         if (!response.success) {
             return NextResponse.json({ error: response.error }, { status: 500 });

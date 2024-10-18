@@ -6,7 +6,6 @@ export async function PATCH(request: Request, context:any): Promise<NextResponse
     try {
         const { params } = context;
         const category: Categoria = await request.json(); // Obtener el cuerpo de la solicitud
-        console.log(category);
         const response = await updateCategory(category, Number(params.id));
         if (!response.success) {
             return NextResponse.json({ error: response.error }, { status: 500 });

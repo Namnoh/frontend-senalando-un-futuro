@@ -19,7 +19,6 @@ function middleware(request: NextRequest) {
         const wordMatch = pathName.match(/^\/niveles\/.+\/categorias\/.+\/palabras\/(\d+)/);
         // ? Idea de lógica: verificar nivel, si hay nivel, verificar categoría | si no hay, redirigir a categorías de nivel | si hay categoria, redirigir a palabras del nivel y categoría
         if (!pathName.endsWith('/categorias') && !pathName.endsWith('/palabras') && levelMatch && !categoryMatch && !wordMatch) {
-            console.log(levelMatch)
             const number = Number(levelMatch[1]);
             // ? Creo que acá podría usar la lógica de Object Literal para simplificar el proceso y código
             switch (number) {
@@ -33,9 +32,6 @@ function middleware(request: NextRequest) {
                     return NextResponse.redirect(new URL(`/niveles/`, request.url));
             }
         } else if (pathName.includes('/categorias') && !pathName.endsWith('/palabras') && levelMatch && categoryMatch && !wordMatch) {
-            console.log(levelMatch)
-            console.log(`PathName: ${pathName}`);
-            console.log(categoryMatch);
             // TODO: mejorar lógica y además ver si es factible arreglar la url a la correcta antes de redirigir
             return NextResponse.redirect(new URL(`/niveles/${levelMatch[1]}/categorias/${categoryMatch[1]}/palabras`, request.url));
         }

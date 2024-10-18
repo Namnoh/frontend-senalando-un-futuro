@@ -34,7 +34,6 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
             enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${item.idCategoria}-${encodeURIComponent(item.nombreCategoria).toLowerCase()}/palabras`;
             isPalabraSection = false;
         } else if (isPalabra(item)) {
-            console.log(item)
             newItem = { itemId:item.idPalabra, itemName:item.nombrePalabra, itemIcon:item.iconPalabra }
             enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${category?.idTitle}-${encodeURIComponent(category!.nameTitle).toLowerCase()}/palabras/${newItem.itemId}`;
             isPalabraSection = true;

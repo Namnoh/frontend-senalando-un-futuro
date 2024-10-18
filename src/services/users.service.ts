@@ -113,8 +113,6 @@ export async function updateUser(user: NuevoUsuario, idUsuario:number) {
             const errorData = await response.json();
             throw new Error(`Error al actualizar el usuario: ${errorData.message || response.statusText}`);
         };
-        console.log("UPDATE USER: ")
-        console.log(response)
         return { success:true, data:response };
     } catch (error) {
         console.error("Error en updateUser:", error);
@@ -128,8 +126,7 @@ export async function deleteUser(idUsuario:number) {
     try {
         const response = await fetch(`${process.env.API_URL}/users/${idUsuario}`, {
             method: 'DELETE',
-        });
-        console.log()
+        });   
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(`Error al eliminar el usuario categoria: ${errorData.message || response.statusText}`);
