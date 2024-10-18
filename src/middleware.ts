@@ -45,5 +45,5 @@ export { default } from "next-auth/middleware";
 
 // * Estas son las rutas en las que se ejecutaría el middleware anterior
 export const config = {
-    matcher: ['/niveles', '/perfil', '/administracion']
+    matcher: ['/niveles', '/perfil', '/administracion/:path*']
 };
