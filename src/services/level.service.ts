@@ -10,9 +10,7 @@ const mockLevels: Nivel[] = [
 // Función para obtener el progreso del usuario
 export async function fetchUserProgress(idUsuario: number): Promise<UserProgress> {
     try {
-        console.log(idUsuario)
-        const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`); 
-        console.log(response)
+        const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`);
         if (!response.ok) {
             throw new Error('Error al obtener el progreso del usuario');
         }
@@ -23,8 +21,6 @@ export async function fetchUserProgress(idUsuario: number): Promise<UserProgress
         throw error; // Lanza el error para que el componente pueda manejarlo
     }
 }
-
-
 
 // Función para obtener el nombre del nivel
 export async function getLevelTitle(id:number):Promise<string>{
