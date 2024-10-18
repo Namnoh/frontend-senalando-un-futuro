@@ -11,10 +11,10 @@ export async function PATCH(request: Request, context:any): Promise<NextResponse
         if (!response.success) {
             return NextResponse.json({ error: response.error }, { status: 500 });
         };
-        return NextResponse.json(response.data, { status: 201 }); // Retornar el usuario creado con código de estado 201
+        return NextResponse.json(response.data, { status: 201 });
     } catch (error) {
         console.error("Error en POST:", error);
-        return NextResponse.json({ error: 'No se pudo crear la categoria.' }, { status: 500 }); // Manejo de errores
+        return NextResponse.json({ error: 'No se pudo actualizar la categoria.' }, { status: 500 }); // Manejo de errores
     }
 };
 
@@ -25,7 +25,7 @@ export async function DELETE(request: Request, context:any): Promise<NextRespons
         if (!response.success) {
             return NextResponse.json({ error: response.error }, { status: 500 });
         };
-        return NextResponse.json(response.data, { status: 201 }); // Retornar el usuario creado con código de estado 201
+        return NextResponse.json(response.data, { status: 201 });
     } catch (error) {
         console.error("Error en POST:", error);
         return NextResponse.json({ error: 'No se pudo eliminar la categoria.' }, { status: 500 }); // Manejo de errores

@@ -30,8 +30,8 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             setIsLoading(true)
-            const response = await fetch('/api/crud/users', {
-                method: 'POST',
+            const response = await fetch(`/api/crud/users/${user ? user.idUsuario : '' }`, {
+                method: user ? 'PATCH' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -39,11 +39,11 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
             });
 
             if (!response.ok) {
-                throw new Error(`Error al crear usuario: ${response.statusText}`);
+                throw new Error(`Error al ${user ? 'actualizar' : 'crear'} usuario: ${response.statusText}`);
             }
             toast({
                 title: "Éxito",
-                description: "Usuario creado correctamente",
+                description: `Usuario ${user ? 'actualizado' : 'creado' } correctamente`,
                 variant: "success"
             })
             closeDialog()

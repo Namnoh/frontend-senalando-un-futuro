@@ -31,7 +31,6 @@ export default function CRUD() {
     }, [tabParams, pathName, replace]);
 
     useEffect(() => {
-        console.log(loadedTabs);
         if (isInitialMount.current) {
             isInitialMount.current = false;
             if (!tabParams.get('tab')) {
