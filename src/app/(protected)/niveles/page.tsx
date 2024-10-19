@@ -6,6 +6,8 @@ import { UserProgress } from "@/interfaces/levelinterface"
 import SimpleLoading from '@/components/customUI/simpleLoading'
 import { HoverCard } from '@/components/customUI/hoverd-card'
 import { getLevel } from '@/services/common.service'
+import { SessionProvider } from 'next-auth/react'
+import HeaderLevels from './components/headerLevels'
 
 const niveles = [
     { 
@@ -33,7 +35,7 @@ export default function NivelesPage() {
             setIsLoading(true)
             setError(null)
             try {
-                const response = await fetch(`/api/level/fetchUserProgress/${3}`);
+                const response = await fetch(`/api/level/fetchUserProgress/${44}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch userProgress');
                 };
@@ -63,28 +65,29 @@ export default function NivelesPage() {
     }
 
     return (
-        <div className={styles.backgroundImage}>   
-            <div className="flex flex-col min-h-screen">
-                <div className="relative">
-                    <div className="flex flex-col items-center p-8 space-y-8">
-                        <h2 className="text-2xl mt-7 md:mt-0 sm:text-2xl font-semibold text-center">Bienvenido Miau Venegas</h2>
-                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold text-center text-secondary bg-background">Niveles</h1>
+        <SessionProvider>
+            <div className={styles.backgroundImage}>   
+                <div className="flex flex-col min-h-screen">
+                    <div className="relative">
+                        <div className="flex flex-col items-center p-8 space-y-8">
+                            <HeaderLevels />
+                        </div>
                     </div>
+                    <main className="flex-grow flex flex-col items-center p-4 sm:p-6 md:p-8 lg:p-10">
+                        <div className="flex flex-col md:items-center lg:flex-row gap-6 w-full max-w-7xl">
+                            {niveles.map((nivel, index) => (
+                                <HoverCard 
+                                    key={nivel.id}
+                                    levelId={nivel.id}
+                                    link={nivel.enlace}
+                                    bloqueado={nivelesBloqueados[index]} 
+                                    userProgress = {userProgress}
+                                />
+                            ))}
+                        </div>
+                    </main>
                 </div>
-                <main className="flex-grow flex flex-col items-center p-4 sm:p-6 md:p-8 lg:p-10">
-                    <div className="flex flex-col md:items-center lg:flex-row gap-6 w-full max-w-7xl">
-                        {niveles.map((nivel, index) => (
-                            <HoverCard 
-                                key={nivel.id}
-                                levelId={nivel.id}
-                                link={nivel.enlace}
-                                bloqueado={nivelesBloqueados[index]} 
-                                userProgress = {userProgress}
-                            />
-                        ))}
-                    </div>
-                </main>
             </div>
-        </div> 
+        </SessionProvider>
     )
 }

@@ -19,8 +19,6 @@ export default function RegisterPage() {
   const onSubmit = handleSubmit(async (data) => {
 
     if (data.contrasenaUsuario != data.confirmPassword) {
-      console.log(data.contrasenaUsuario)
-      console.log(data.confirmPassword)
       return alert("Las contraseñas no son iguales")
     }
     

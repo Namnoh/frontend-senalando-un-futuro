@@ -10,7 +10,6 @@ export async function POST(request: Request): Promise<NextResponse> {
         const { confirmPassword, ...usuario } = userRegister;
         
         const response = await registerUser(usuario);
-        console.log(response)
         if (!response.success) {
             return NextResponse.json({ error: response.error }, { status: 500 });
         };

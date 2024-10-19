@@ -25,7 +25,6 @@ export default function LoginPage() {
   const router = useRouter();
 
   const onSubmit = handleSubmit(async(data) =>{
-    console.log(data)
     const res = await signIn('credentials',{
       email: data.correoUsuario,
       password: data.contrasenaUsuario,

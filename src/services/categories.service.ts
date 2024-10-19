@@ -84,7 +84,6 @@ export async function deleteCategory(idCategoria:number) {
         const response = await fetch(`${process.env.API_URL}/categories/${idCategoria}`, {
             method: 'DELETE',
         });
-        console.log()
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(`Error al eliminar la categoria: ${errorData.message || response.statusText}`);

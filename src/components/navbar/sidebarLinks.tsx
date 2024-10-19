@@ -3,6 +3,7 @@ import { Vista } from "@/interfaces/vistaInterface";
 import { DynamicIcon } from "../customUI/dynamicLucideIcon";
 import SearchButton from "./searchModal/searchButton";
 import React from "react";
+import SignOutBtn from "./signOutBtn";
 
 // SIDEBAR CUANDO ESTÁ CERRADA
 
@@ -10,7 +11,7 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
     return (
         <>
             <div className="flex flex-col gap-5">
-                {links.map((l) => {
+                {links.map((l:Vista) => {
                     let isActualRoute = false;
                     if (actualRoute === '/' && l.iconoVista === 'Home') {
                         isActualRoute = true;
@@ -19,7 +20,11 @@ export const ClosedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                     }
                     return (
                         <React.Fragment key={l.idVista}>
-                            {l.idVista === 1 ? (<SearchButton l={l}/>) : (
+                            {l.idVista === 1 ? (
+                                <SearchButton l={l}/>
+                            ) : ( l.idVista === 9 ) ? (
+                                <SignOutBtn l={l}/>
+                            ) : (
                                 <Link
                                     href={l.hrefVista}
                                     className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-primary-800 hover:bg-primary-50
@@ -61,6 +66,8 @@ export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                     <React.Fragment key={l.idVista}>
                         {l.idVista === 1 ? (
                             <SearchButton l={l} isOpen={true}/>
+                        ) : ( l.idVista === 9 ) ? (
+                            <SignOutBtn l={l}/>
                         ) : (
                             <Link
                                 key={l.idVista}

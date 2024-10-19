@@ -25,7 +25,7 @@ const mockLevels: Nivel[] = [
 export async function getLevel(levelId: number, idUsuario: number): Promise<Nivel | null> {
     try {
         // Primero obtenemos el progreso del usuario
-        const response = await fetch(`/api/level/fetchUserProgress/${3}`);
+        const response = await fetch(`/api/level/fetchUserProgress/${44}`);
         if (!response.ok) {
             throw new Error('Failed to fetch userProgress');
         };
