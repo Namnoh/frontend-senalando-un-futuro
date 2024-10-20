@@ -39,7 +39,8 @@ export function CategoryForm({category, closeDialog}:{category?:Categoria, close
             });
     
             if (!response.ok) {
-                throw new Error(`Error al ${category ? 'actualizar' : 'crear'} la categoria: ${response.statusText}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Error al ${category ? 'actualizar' : 'crear'} la categoria: ${response.statusText}`);
             }
             toast({
                 title: "Éxito",
@@ -49,9 +50,11 @@ export function CategoryForm({category, closeDialog}:{category?:Categoria, close
             closeDialog();
         } catch (error) {
             console.error("Error en onSubmit:", error);
+            // Aquí capturamos el mensaje del error para mostrarlo
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
             toast({
                 title: "Error",
-                description: "Hubo un problema al procesar la solicitud",
+                description: errorMessage,
                 variant: "destructive",
             });
         } finally {

@@ -39,7 +39,8 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
             });
 
             if (!response.ok) {
-                throw new Error(`Error al ${user ? 'actualizar' : 'crear'} usuario: ${response.statusText}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Error al ${user ? 'actualizar' : 'crear'} el usuario: ${response.statusText}`);
             }
             toast({
                 title: "Éxito",
@@ -49,11 +50,12 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
             closeDialog()
         } catch (error) {
             console.error("Error en onSubmit:", error);
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
             toast({
                 title: "Error",
-                description: "Hubo un problema al procesar la solicitud",
+                description: errorMessage,
                 variant: "destructive",
-            })
+            });
         } finally {
             setIsLoading(false);
         }

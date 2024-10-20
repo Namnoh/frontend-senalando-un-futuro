@@ -39,7 +39,8 @@ export function WordForm({word, closeDialog}:{word?:Palabra, closeDialog:() => v
             });
     
             if (!response.ok) {
-                throw new Error(`Error al ${word ? 'actualizar' : 'crear'} la palabra: ${response.statusText}`);
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Error al ${word ? 'actualizar' : 'crear'} la palabra: ${response.statusText}`);
             }
             toast({
                 title: "Éxito",
@@ -49,9 +50,10 @@ export function WordForm({word, closeDialog}:{word?:Palabra, closeDialog:() => v
             closeDialog();
         } catch (error) {
             console.error("Error en onSubmit:", error);
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
             toast({
                 title: "Error",
-                description: "Hubo un problema al procesar la solicitud",
+                description: errorMessage,
                 variant: "destructive",
             });
         } finally {
