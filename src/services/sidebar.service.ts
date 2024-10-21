@@ -1,10 +1,9 @@
 import { Vista } from "@/interfaces/vistaInterface";
 
-
 // Links donde no mostrar la navbar
 const guestPaths = ['/login', '/register'];
 const commonPaths = ['/', '/sobreNosotros'];
-const authenticatedPaths = ['/perfil', '/administracion', '/logOut'];
+const adminPaths = ['/administracion'];
 
 // Links Sidebar
 const views: Vista[] = [
@@ -20,20 +19,21 @@ const views: Vista[] = [
 ]
 
 // TODO: Obtener links según rol de usuario 
-export async function getSidebarLinks(isAuth:boolean): Promise<Vista[]> {
-
-    return views.filter(v => {
+export async function getSidebarLinks(isAuth:boolean, isAdmin:boolean): Promise<Vista[]> {
+    const filteredViews = views.filter(v => {
         const isGuestPath = guestPaths.includes(v.hrefVista);
         const isCommonPath = commonPaths.includes(v.hrefVista);
-        const isAuthPath = authenticatedPaths.includes(v.hrefVista);
+        const isAdminPath = adminPaths.includes(v.hrefVista);
 
-        if (isAuth) {
-            return !isGuestPath || isCommonPath || isAuthPath;
-        } else {
+        if (!isAuth) {
             return isGuestPath || isCommonPath;
-        }
+        } else if (isAuth) {
+            if (isAdmin) { return !isGuestPath; }
+            return !isGuestPath && !isAdminPath;
+        } return false;
     });
-}
+    return filteredViews;
+};
 
 // Función para mostrar la navbar dependiendo del path
 // export const showSidebar = (props:{pathName:string}) => {

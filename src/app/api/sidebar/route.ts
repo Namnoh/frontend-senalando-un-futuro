@@ -8,7 +8,8 @@ export async function GET(): Promise<NextResponse> {
     try {
         const session = await getServerSession(authOptions);
         const isAuth = !!session;
-        const fetchedLinks = await getSidebarLinks(isAuth)
+        const isAdmin = session?.user.idRol === 2 ? true : false;
+        const fetchedLinks = await getSidebarLinks(isAuth, isAdmin)
         return NextResponse.json(fetchedLinks);
     } catch (error) {
         console.error("Error en GET:", error);
