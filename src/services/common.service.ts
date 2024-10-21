@@ -1,5 +1,5 @@
 import { Categoria } from "@/interfaces/categoriaInterface";
-import { Nivel } from "@/interfaces/levelinterface";
+import { Nivel, UserProgress } from "@/interfaces/levelinterface";
 import { Palabra } from "@/interfaces/palabraInterface";
 import { Usuario } from "@/interfaces/usuarioInterface";
 
@@ -22,15 +22,8 @@ const mockLevels: Nivel[] = [
     {id: 3,nombreNivel: "Nivel Avanzado",descripcionNivel: "Domina técnicas avanzadas", iconoNivel: 'GraduationCap', statusNivel: 3,  bloqueado: true }
 ]
 
-export async function getLevel(levelId: number, idUsuario: number): Promise<Nivel | null> {
+export async function getLevel(levelId: number, userProgress: UserProgress): Promise<Nivel | null> {
     try {
-        // Primero obtenemos el progreso del usuario
-        const response = await fetch(`/api/level/fetchUserProgress/${44}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch userProgress');
-        };
-        const userProgress = await response.json();
-        
         const level = mockLevels.find(level => level.id === levelId);
         
         if (level) {

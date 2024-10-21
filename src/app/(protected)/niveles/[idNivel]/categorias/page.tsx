@@ -11,7 +11,6 @@ export default async function Categorias({params}:any) {
     const level = await getParamsTitle(params.idNivel, 'level');
     // * ESTO ES PARA UTILIZAR EL SESSION DEL LADO DEL SERVIDOR
     const session = await getServerSession(authOptions)
-    console.log(session);
     return(
         <div className={`${styles.backgroundImage} flex min-h-full`}>
             <div className="flex flex-col flex-grow items-center gap-20" >
