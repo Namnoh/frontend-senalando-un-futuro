@@ -110,7 +110,7 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
                     name="apellidoUsuario"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Apellido <span className="text-red-500">*</span></FormLabel>
+                            <FormLabel>Apellidos <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Doe" {...field} />
                             </FormControl>
