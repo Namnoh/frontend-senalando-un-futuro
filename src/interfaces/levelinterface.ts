@@ -9,10 +9,21 @@ export interface Nivel {
     bloqueado: boolean
 }
 
+export type CategoriaProgreso = {
+    idCategoria: number;
+    nombreCategoria: string;
+    progresoCategoria: number;
+}
+
+export type PalabraProgreso = {
+    idPalabra: number;
+    nombrePalabra: string;
+}
+
 export interface UserProgress {
     idProgreso : number  
-    categoriasProgreso : Record<string, unknown> ,      
-    palabrasProgreso : Record<string, unknown>
+    categoriasProgreso : Record<string, CategoriaProgreso> ,      
+    palabrasProgreso : Record<string, PalabraProgreso>
     porcentajeNivel : number
     idNivel : number
     nivel?: Nivel;
