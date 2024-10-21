@@ -23,7 +23,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
 
-export function WordForm({word, closeDialog}:{word?:Palabra, closeDialog:() => void}) {
+export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeDialog:() => void, refreshData: () => void}) {
     const [ isLoading, setIsLoading ] = useState(false)
     const { toast } = useToast();
     // Handle Submit
@@ -47,6 +47,7 @@ export function WordForm({word, closeDialog}:{word?:Palabra, closeDialog:() => v
                 description: `Palabra ${word ? 'actualizada' : 'creada' } correctamente`,
                 variant: "success"
             });
+            refreshData();
             closeDialog();
         } catch (error) {
             console.error("Error en onSubmit:", error);

@@ -23,7 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 
-export function CategoryForm({category, closeDialog}:{category?:Categoria, closeDialog:() => void}) {
+export function CategoryForm({category, closeDialog, refreshData}:{category?:Categoria, closeDialog:() => void, refreshData: () => void}) {
     const [ isLoading, setIsLoading ] = useState(false)
     const { toast } = useToast();
     // Handle Submit
@@ -47,6 +47,7 @@ export function CategoryForm({category, closeDialog}:{category?:Categoria, close
                 description: `Categoría ${category ? 'actualizada' : 'creada' } correctamente`,
                 variant: "success"
             });
+            refreshData();
             closeDialog();
         } catch (error) {
             console.error("Error en onSubmit:", error);
