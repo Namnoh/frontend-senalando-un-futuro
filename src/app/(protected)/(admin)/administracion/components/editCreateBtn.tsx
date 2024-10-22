@@ -15,7 +15,7 @@ type AllTextContent = {
     title: 'Crear Registro' | 'Editar Registro',
 }
 
-export function EditCreateBtn({type, closeDialog, item, refreshData}: {type:string, closeDialog:() => void, item?:any, refreshData: () => void}) {
+export function EditCreateBtn({type, closeDialog, item, refreshData}: {type:string, closeDialog:() => void, item?:any, refreshData?: () => void}) {
     let textContent: AllTextContent;
 
     if (!item) {

@@ -15,7 +15,7 @@ export default function CrudCategorias({ onLoad }: { onLoad?: () => void }) {
     const [error, setError] = useState<Error | null>(null);
     const cacheRef = useRef<{ data: Categoria[], timestamp: number } | null>(null);
 
-    const fetchUsers = useCallback(async (forceRefresh = false) => {
+    const fetchCategories = useCallback(async (forceRefresh = false) => {
         const now = Date.now();
         if (!forceRefresh && cacheRef.current && now - cacheRef.current.timestamp < CACHE_TIME) {
             setData(cacheRef.current.data);
@@ -40,11 +40,11 @@ export default function CrudCategorias({ onLoad }: { onLoad?: () => void }) {
     }, [onLoad]);
 
     useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
+        fetchCategories();
+    }, [fetchCategories]);
 
     const refreshData = () => {
-        fetchUsers(true);
+        fetchCategories(true);
     };
 
     if (error) {

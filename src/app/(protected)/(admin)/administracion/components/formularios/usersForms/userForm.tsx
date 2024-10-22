@@ -23,7 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 
-export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeDialog:() => void, refreshData: () => void}) {
+export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeDialog:() => void, refreshData?: () => void}) {
     const [ isLoading, setIsLoading ] = useState(false)
     const { toast } = useToast();
     // Handle Submit
@@ -47,7 +47,7 @@ export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeD
                 description: `Usuario ${user ? 'actualizado' : 'creado' } correctamente`,
                 variant: "success"
             });
-            refreshData();
+            if (refreshData) { refreshData(); };
             closeDialog();
         } catch (error) {
             console.error("Error en onSubmit:", error);
