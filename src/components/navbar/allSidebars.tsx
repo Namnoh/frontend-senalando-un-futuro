@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default function AllSidebars({actualRoute, isMobile} : {actualRoute:string, isMobile:boolean | undefined}) {
     // Estado para almacenar los enlaces
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const [links, setLinks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showSkeleton, setShowSkeleton] = useState(false);
