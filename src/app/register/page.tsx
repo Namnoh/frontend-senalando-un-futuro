@@ -7,7 +7,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import styles from "@/app/styles/auth.module.scss"
-
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -93,6 +93,9 @@ export default function RegisterPage() {
     }
   }
 
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl: "/niveles" })
+  }
   return (
     <div className={styles.backgroundImageRegister}>
       <div className="flex flex-col lg:flex-row items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap min-h-screen p-4">
@@ -196,7 +199,7 @@ export default function RegisterPage() {
                 </span>
               </div>
             </div>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
               <svg
                 className="mr-2 h-4 w-4"
                 aria-hidden="true"
