@@ -1,12 +1,13 @@
 'use client'
 
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import styles from "@/app/styles/auth.module.scss";
-import { signIn } from "next-auth/react"
+import styles from "@/app/styles/auth.module.scss"
+
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -18,7 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Loader2 } from "lucide-react"
 
 const formSchema = z.object({
   nombreUsuario: z.string().min(2, {
@@ -45,6 +47,9 @@ const formSchema = z.object({
 
 export default function RegisterPage() {
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [registerError, setRegisterError] = useState<string | null>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,31 +62,35 @@ export default function RegisterPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await fetch('/api/auth/register/', { 
-      method: 'POST',
-      body: JSON.stringify({
-        nombreUsuario: values.nombreUsuario,
-        apellidoUsuario: values.apellidoUsuario,
-        correoUsuario: values.correoUsuario,
-        contrasenaUsuario: values.contrasenaUsuario
-      }),
-      headers: {
-        'Content-Type': 'application/json'
+    setIsLoading(true)
+    setRegisterError(null)
+
+    try {
+      const res = await fetch('/api/auth/register/', { 
+        method: 'POST',
+        body: JSON.stringify({
+          nombreUsuario: values.nombreUsuario,
+          apellidoUsuario: values.apellidoUsuario,
+          correoUsuario: values.correoUsuario,
+          contrasenaUsuario: values.contrasenaUsuario
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!res.ok) {
+        throw new Error("Error en el registro")
       }
-    })
 
-    if (!res.ok) {
-      console.error("Error en el registro")
-      return
+      const resJSON = await res.json()
+      console.log(resJSON)
+      router.push('/login')
+    } catch (error) {
+      setRegisterError("Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.")
+    } finally {
+      setIsLoading(false)
     }
-
-    const resJSON = await res.json()
-    console.log(resJSON)
-    router.push('/login')
-  }
-
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/niveles" })
   }
 
   return (
@@ -162,7 +171,19 @@ export default function RegisterPage() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">Registrarse</Button>
+                {registerError && (
+                  <div className="text-red-500 text-sm">{registerError}</div>
+                )}
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Registrando...
+                    </>
+                  ) : (
+                    "Registrarse"
+                  )}
+                </Button>
               </form>
             </Form>
             <div className="relative my-4">
@@ -175,7 +196,7 @@ export default function RegisterPage() {
                 </span>
               </div>
             </div>
-            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
+            <Button variant="outline" className="w-full">
               <svg
                 className="mr-2 h-4 w-4"
                 aria-hidden="true"
@@ -188,20 +209,20 @@ export default function RegisterPage() {
               >
                 <path
                   fill="currentColor"
-                  d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+                  d="M488 261.8C488 403.3 391.1 504  248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
                 ></path>
               </svg>
               Registrarse con Google
             </Button>
           </CardContent>
-          {/* <CardFooter className="flex justify-center">
+          <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
               ¿Ya tienes una cuenta?{" "}
               <Link href="/login" className="text-primary hover:underline">
                 Inicia sesión
               </Link>
             </p>
-          </CardFooter> */}
+          </CardFooter>
         </Card>
         <div className="hidden md:block bg-white outline w-[500px] h-[500px] rounded-full"></div>
       </div>

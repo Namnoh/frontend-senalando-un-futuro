@@ -7,13 +7,12 @@ import { signIn } from "next-auth/react"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import styles from "@/app/styles/auth.module.scss";
+import styles from "@/app/styles/auth.module.scss"
 
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +27,7 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card"
+import { Loader2 } from "lucide-react"
 
 const formSchema = z.object({
   correoUsuario: z.string().email({
@@ -41,6 +41,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const router = useRouter()
   const [loginError, setLoginError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,16 +52,25 @@ export default function LoginPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await signIn('credentials', {
-      email: values.correoUsuario,
-      password: values.contrasenaUsuario,
-      redirect: false,
-    })
+    setIsLoading(true)
+    setLoginError(null)
 
-    if (res?.error) {
-      setLoginError(res.error)
-    } else {
-      router.push('/niveles')
+    try {
+      const res = await signIn('credentials', {
+        email: values.correoUsuario,
+        password: values.contrasenaUsuario,
+        redirect: false,
+      })
+
+      if (res?.error) {
+        setLoginError(res.error)
+      } else {
+        router.push('/niveles')
+      }
+    } catch (error) {
+      setLoginError("Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -110,8 +120,15 @@ export default function LoginPage() {
                 {loginError && (
                   <div className="text-red-500 text-sm">{loginError}</div>
                 )}
-                <Button type="submit" className="w-full">
-                  Iniciar sesión
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Iniciando sesión...
+                    </>
+                  ) : (
+                    "Iniciar sesión"
+                  )}
                 </Button>
               </form>
             </Form>
