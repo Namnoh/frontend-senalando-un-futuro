@@ -3,6 +3,7 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
+import { Usuario } from "@/interfaces/usuarioInterface";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -52,7 +53,6 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    
     async signIn({ user, }) {
       const email = user.email;
 
@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
       const userData = await response.json();
 
       if (response.ok) {
-
+        user.id = userData.idUsuario;
         return true;
       } else if (response.status === 404) {
         const nameParts = (user.name || "").trim().split(" ");
@@ -93,6 +93,8 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (createResponse.ok) {
+          const usuario : Usuario = await createResponse.json()
+          user.id = usuario.idUsuario
           return true; 
         } else {
           console.error("Error creando el usuario:", await createResponse.json());
