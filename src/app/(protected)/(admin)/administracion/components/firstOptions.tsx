@@ -22,7 +22,7 @@ export default function FirstOptions({refreshData, type}: { refreshData: () => v
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                            <EditCreateBtn type={type} closeDialog={closeDialog}/>
+                            <EditCreateBtn type={type} closeDialog={closeDialog} refreshData={refreshData}/>
                         </Dialog>
                     </TooltipTrigger>
                     <TooltipContent sideOffset={-100} className='mt-1'>

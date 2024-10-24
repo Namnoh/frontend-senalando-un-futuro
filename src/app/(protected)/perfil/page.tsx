@@ -13,6 +13,7 @@ import CambiarContrasena from './components/cambiarContrasena'
 import Email from './components/email'
 import PalabraFavorita from './components/palabraFavorita'
 import Progreso from './components/progreso'
+import { useProgressContext } from '@/contexts/userProgressContext'
 
 
 export default function PerfilPage() {
@@ -20,26 +21,25 @@ export default function PerfilPage() {
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
     const [niveles, setNiveles] = useState<Nivel[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const { progress } = useProgressContext();
 
     useEffect(() => {
         const cargarDatos = async () => {
             setIsLoading(true)
             try {
+                if (progress === null) {
+                    throw new Error('El progreso del usuario no está disponible');
+                }
                 const perfilData = await perfilService.obtenerPerfil()
                 setPerfil(perfilData)
-                const response = await fetch(`/api/level/fetchUserProgress/${44}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch userProgress');
-                };
-                const progressData = await response.json();
                 const nivelesData = await Promise.all([
-                    getLevel(1,progressData.idUsuario),
-                    getLevel(2,progressData.idUsuario),
-                    getLevel(3,progressData.idUsuario)
+                    getLevel(1,progress),
+                    getLevel(2,progress),
+                    getLevel(3,progress)
                 ])
                 setNiveles(nivelesData.filter((nivel): nivel is Nivel => nivel !== null))
                 
-                setUserProgress(progressData)
+                setUserProgress(progress)
             } catch (error) {
                 console.error("Error al cargar los datos:", error)
             } finally {

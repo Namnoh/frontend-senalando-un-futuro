@@ -15,7 +15,7 @@ export default function CrudPalabras({ onLoad }: { onLoad?: () => void }) {
     const [error, setError] = useState<Error | null>(null);
     const cacheRef = useRef<{ data: Palabra[], timestamp: number } | null>(null);
 
-    const fetchUsers = useCallback(async (forceRefresh = false) => {
+    const fetchWords = useCallback(async (forceRefresh = false) => {
         const now = Date.now();
         if (!forceRefresh && cacheRef.current && now - cacheRef.current.timestamp < CACHE_TIME) {
             setData(cacheRef.current.data);
@@ -40,11 +40,11 @@ export default function CrudPalabras({ onLoad }: { onLoad?: () => void }) {
     }, [onLoad]);
 
     useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
+        fetchWords();
+    }, [fetchWords]);
 
     const refreshData = () => {
-        fetchUsers(true);
+        fetchWords(true);
     };
 
     if (error) {

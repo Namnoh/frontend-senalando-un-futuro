@@ -23,7 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 
-export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => void}) {
+export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeDialog:() => void, refreshData?: () => void}) {
     const [ isLoading, setIsLoading ] = useState(false)
     const { toast } = useToast();
     // Handle Submit
@@ -39,21 +39,24 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
             });
 
             if (!response.ok) {
-                throw new Error(`Error al ${user ? 'actualizar' : 'crear'} usuario: ${response.statusText}`);
-            }
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Error al ${user ? 'actualizar' : 'crear'} el usuario: ${response.statusText}`);
+            };
             toast({
                 title: "Éxito",
                 description: `Usuario ${user ? 'actualizado' : 'creado' } correctamente`,
                 variant: "success"
-            })
-            closeDialog()
+            });
+            if (refreshData) { refreshData(); };
+            closeDialog();
         } catch (error) {
             console.error("Error en onSubmit:", error);
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
             toast({
                 title: "Error",
-                description: "Hubo un problema al procesar la solicitud",
+                description: errorMessage,
                 variant: "destructive",
-            })
+            });
         } finally {
             setIsLoading(false);
         }
@@ -108,7 +111,7 @@ export function UserForm({user, closeDialog}:{user?:Usuario, closeDialog:() => v
                     name="apellidoUsuario"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Apellido <span className="text-red-500">*</span></FormLabel>
+                            <FormLabel>Apellidos <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Doe" {...field} />
                             </FormControl>

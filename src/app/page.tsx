@@ -6,7 +6,6 @@ import  Link  from "next/link";
 import Image from "next/image";
 import ScrollPrompt from "@/components/customUI/scroll-prompt"
 import AnimatedSection from "@/components/customUI/animated-section"
-import Footer from '@/components/footer/footer';
 
 const HomePage = () => {
   return (

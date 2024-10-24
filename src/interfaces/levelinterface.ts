@@ -1,3 +1,5 @@
+import { User } from "next-auth"
+
 export interface Nivel {
     id: number
     nombreNivel: string
@@ -7,11 +9,24 @@ export interface Nivel {
     bloqueado: boolean
 }
 
+export type CategoriaProgreso = {
+    idCategoria: number;
+    nombreCategoria: string;
+    progresoCategoria: number;
+}
+
+export type PalabraProgreso = {
+    idPalabra: number;
+    nombrePalabra: string;
+}
+
 export interface UserProgress {
     idProgreso : number  
-    categoriasProgreso : Record<string, any> ,      
-    palabrasProgreso : Record<string, any>
+    categoriasProgreso : Record<string, CategoriaProgreso> ,      
+    palabrasProgreso : Record<string, PalabraProgreso>
     porcentajeNivel : number
-    idNivel : number 
+    idNivel : number
+    nivel?: Nivel;
     idUsuario : number         
+    usuario?: User;
 }

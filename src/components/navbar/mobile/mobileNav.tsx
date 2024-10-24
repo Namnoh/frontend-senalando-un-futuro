@@ -2,17 +2,11 @@ import * as React from "react"
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
 import { Button } from "../../ui/button";
 import { Menu } from "lucide-react";
-import {
-    Card,
-    // CardContent,
-    // CardDescription,
-    // CardHeader,
-    CardTitle,
-} from "../../ui/card";
 import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { OpenedSidebarLinks } from "../sidebarLinks";
-import Link from "next/link";
+import ProfileCard from "../profileCard";
+
 
 export default function MobileNav({actualRoute, links}:{actualRoute:string, links:any}) {
     const isWordsSection = actualRoute.endsWith('/palabras');
@@ -40,20 +34,7 @@ export default function MobileNav({actualRoute, links}:{actualRoute:string, link
                     <ModeToggle />
                 </div>
                 <div className="mt-auto">
-                        <Link href={'/'}>
-                            <Card>
-                                <div className="flex items-center p-3">
-                                    <Avatar className="w-14 h-14"> 
-                                        <AvatarImage className="w-full h-full object-cover rounder-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2TgOv9CMmsUzYKCcLGWPvqcpUk6HXp2mnww&s" alt="Logo" />
-                                        <AvatarFallback>AI</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-grow flex-col items-center justify-center">
-                                        <CardTitle>Miau Venegas</CardTitle>
-                                        <span className="text-sm">miau.venegas@duocuc.cl</span>
-                                    </div>
-                                </div>
-                            </Card>
-                        </Link>
+                    <ProfileCard />
                 </div>
             </SheetContent>
         </Sheet>

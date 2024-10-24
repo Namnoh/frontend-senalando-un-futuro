@@ -10,6 +10,46 @@ const mockLevels: Nivel[] = [
 // Función para obtener el progreso del usuario
 export async function fetchUserProgress(idUsuario: number): Promise<UserProgress> {
     try {
+        const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`, {
+            method: 'GET',
+            cache: 'no-store'
+        });
+        if (!response.ok) {
+            throw new Error('Error al obtener el progreso del usuario');
+        }
+        const data: UserProgress = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error en fetchUserProgress:', error);
+        throw error; // Lanza el error para que el componente pueda manejarlo
+    }
+}
+// UPDATE
+export async function updateProgress(userProgress: UserProgress, idProgreso:number) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/progreso/${idProgreso}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userProgress),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al actualizar el progreso: ${errorData.message || response.statusText}`);
+        };
+        const progress: UserProgress = await response.json();
+        return { success:true, data:progress };
+    } catch (error) {
+        console.error("Error en updateWord:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// Función para actualizaar el progreso del usuario
+export async function updateUserProgress(idUsuario: number): Promise<UserProgress> {
+    try {
         const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`);
         if (!response.ok) {
             throw new Error('Error al obtener el progreso del usuario');

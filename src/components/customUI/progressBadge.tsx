@@ -1,7 +1,33 @@
-import React from 'react'
-import { BadgeCheck, CircleEllipsis } from "lucide-react";
+'use client';
 
-export default function ProgressBadge({status}: {status:any}) {
+import React from 'react';
+import { BadgeCheck, CircleEllipsis } from "lucide-react";
+import { useProgressContext } from '@/contexts/userProgressContext';
+import { CategoriaProgreso, PalabraProgreso } from '@/interfaces/levelinterface';
+
+type ProgressBadgeProps = {
+    itemId : number;
+    isPalabraSection : boolean;
+}
+
+export default function ProgressBadge({itemId, isPalabraSection}: ProgressBadgeProps) {
+    const { progress } = useProgressContext();
+    let status : number | boolean = false;
+    if (progress) {
+        if (isPalabraSection) {
+            const wordProgress = Object.values(progress.palabrasProgreso).find(
+                (palabra: PalabraProgreso) => palabra.idPalabra === itemId
+            );
+            status = wordProgress ? true : false;
+        } else {
+            const categoryProgress = Object.values(progress.categoriasProgreso).find(
+                (category: CategoriaProgreso) => Number(category.idCategoria) === itemId
+            );
+            console.log(categoryProgress)
+            status = categoryProgress ? categoryProgress?.progresoCategoria : 0;  
+        };
+    };
+
     return (
         <>
             <div className={`${status == 1 || status == true ? '' : 'hidden'} absolute -right-2 -bottom-2 bg-background rounded-full text-green-400 z-10`}>
