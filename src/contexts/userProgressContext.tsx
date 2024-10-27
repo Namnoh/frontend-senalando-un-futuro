@@ -20,7 +20,7 @@ type UserProgressContext = {
 export const UserProgressContext = createContext<UserProgressContext | null>(null);
 
 export default function UserProgressContextProvider({children} : userProgressContextProviderProps) {
-    const { data: session, status } = useSession()
+    const { data: session, status } = useSession();
     const [progress, setProgress] = useState<Progress | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
