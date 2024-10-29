@@ -1,97 +1,138 @@
 'use client'
 
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { perfilService } from '@/services/perfil.service'
-import { DynamicIcon } from "@/components/customUI/dynamicLucideIcon"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useToast } from "@/hooks/use-toast";
 
-export default function CambiarContraseña() {
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
+const formSchema = z.object({
+    currentPassword: z.string().min(1, "La contraseña actual es requerida"),
+    newPassword: z  
+    .string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
+    .regex(/[A-Z]/, { message: "La contraseña debe contener al menos una letra mayúscula." })
+    .regex(/[a-z]/, { message: "La contraseña debe contener al menos una letra minúscula." })
+    .regex(/[0-9]/, { message: "La contraseña debe contener al menos un número." })
+    .regex(/[^A-Za-z0-9]/, { message: "La contraseña debe contener al menos un carácter especial." }),
+    confirmPassword: z.string().min(1, "Confirma tu nueva contraseña"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Las nuevas contraseñas no coinciden",
+    path: ["confirmPassword"],
+})
+
+type FormValues = z.infer<typeof formSchema>
+
+export default function ChangePassword() {
+    const { data: session } = useSession()
     const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState(false)
+    const { toast } = useToast()
 
-    const handleChangePassword = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
-        setSuccess(false)
+    const form = useForm<FormValues>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        },
+    })
 
-        if (newPassword !== confirmPassword) {
-            setError('Las contraseñas no coinciden')
-            return
+    const onSubmit = async (values: FormValues) => {
+        if (!session?.user?.id) {
+        toast({
+            title: "Error",
+            description: "No se pudo obtener la información del usuario. Por favor, inicia sesión nuevamente.",
+            variant: "destructive",
+        })
+        return
         }
 
-        if (newPassword.length < 8) {
-            setError('La contraseña debe tener al menos 8 caracteres')
-            return
-        }
+    setIsLoading(true)
 
-        setIsLoading(true)
         try {
-            await perfilService.cambiarContraseña(newPassword)
-            setSuccess(true)
-            setNewPassword('')
-            setConfirmPassword('')
+        const response = await fetch('/api/perfil/changePassword', {
+            method: 'PATCH',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword
+            }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Error al cambiar la contraseña')
+        }
+
+        toast({
+            title: "Éxito",
+            description: "Tu contraseña ha sido cambiada exitosamente.",
+        })
+        form.reset()
         } catch (error) {
-            setError('Error al cambiar la contraseña. Por favor, intente de nuevo.')
+        toast({
+            title: "Error",
+            description: error instanceof Error ? error.message : 'Ocurrió un error al cambiar la contraseña.',
+            variant: "destructive",
+        })
         } finally {
-            setIsLoading(false)
+        setIsLoading(false)
         }
     }
 
-    return ( 
-        <form onSubmit={handleChangePassword} className="space-y-4">
-            <h3 className="lg:text-2xl sm:text-xl font-semibold text-black">Cambiar contraseña</h3>
-            <div className="lg:ml-10 space-y-4 w-full sm:w-auto ">
-                <Input
-                    className=" h-10 bg-gray-50 border-secondary-500"
-                    type="password"
-                    placeholder="Nueva contraseña"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
-                    minLength={8}
-                    aria-label="Nueva contraseña"
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                control={form.control}
+                name="currentPassword"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className=" sm:text-xl lg:text-xl text-lg  text-black">Contraseña Actual</FormLabel>
+                        <FormControl>
+                            <Input  className="border-black" type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
                 />
-                <Input
-                    className=" h-10 border-secondary-500 bg-gray-50"
-                    type="password"
-                    placeholder="Confirmar nueva contraseña"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    minLength={8}
-                    aria-label="Confirmar nueva contraseña"
+                <FormField
+                control={form.control}
+                name="newPassword"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className=" sm:text-xl lg:text-xl text-lg  text-black" >Nueva Contraseña</FormLabel>
+                        <FormControl>
+                            <Input className="border-black" type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
                 />
-            </div>
-            {error && (
-                <p className="text-red-500 text-sm" role="alert">
-                    <DynamicIcon name="AlertCircle" classes="w-4 h-4 inline mr-1" />
-                    {error}
-                </p>
-            )}
-            {success && (
-                <p className="text-green-500 text-sm" role="alert">
-                    <DynamicIcon name="CheckCircle" classes="w-4 h-4 inline mr-1" />
-                    Contraseña cambiada exitosamente
-                </p>
-            )}
-            <div className="flex justify-center items-center">
-                <Button 
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-48 items- bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
-                >
-                    {isLoading ? (
-                        <>
-                            <DynamicIcon name="Loader2" classes="w-4 h-4 mr-2 animate-spin" />
-                            Cambiando...
-                        </>
-                    ) : 'Cambiar Contraseña'}
+                <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className=" sm:text-xl lg:text-xl text-lg  text-black">Confirmar Nueva Contraseña</FormLabel>
+                        <FormControl>
+                            <Input  className="border-black" type="password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+                />
+                <Button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Cambiando...' : 'Cambiar Contraseña'}
                 </Button>
-            </div>
-        </form>
+            </form>
+        </Form>
     )
 }
