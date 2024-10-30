@@ -163,7 +163,7 @@ export default function LoginPage() {
           </CardContent>
           <CardFooter className="flex flex-col justify-center gap-2">
             <p>
-              <Link href="/recover" className="text-primary hover:underline">
+              <Link href="/resetPassword" className="text-primary hover:underline">
                 Recuperar contraseña
               </Link>
             </p>
