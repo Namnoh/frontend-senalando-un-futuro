@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2 } from "lucide-react";
@@ -23,7 +23,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 
@@ -45,6 +44,7 @@ export default function UpdatePasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [token, setToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -57,9 +57,9 @@ export default function UpdatePasswordPage() {
         description: "El enlace no es válido o ha expirado.",
         variant: "destructive",
       });
-      window.location.href = "/request-reset";
+      router.push("/request-reset");
     }
-  }, [searchParams, toast]);
+  }, [searchParams, toast, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,9 +73,13 @@ export default function UpdatePasswordPage() {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/auth/reset`, {
-        method: "POST",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, newPassword: values.password }),
+        body: JSON.stringify({ 
+          token, 
+          newPassword: values.password,
+          confirmPassword: values.confirmPassword
+        }),
       });
 
       const data = await response.json();
@@ -85,9 +89,9 @@ export default function UpdatePasswordPage() {
           title: "Contraseña restablecida",
           description: "Tu contraseña ha sido cambiada con éxito.",
         });
-        window.location.href = "/login";
+        router.push("/login");
       } else {
-        throw new Error(data.message || "Ha ocurrido un error");
+        throw new Error(data.error || "Ha ocurrido un error al restablecer la contraseña");
       }
     } catch (error) {
       toast({
