@@ -1,28 +1,38 @@
-// src/app/api/auth/reset/page.ts
-import { NextResponse } from 'next/server';
+// src/app/api/auth/reset/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
-  const { email } = await req.json();
-
-  if (!email) {
-    return NextResponse.json({ message: 'El correo electrónico es requerido.' }, { status: 400 });
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const response = await fetch(`${process.env.API_URL}/auth/reset-password`, {
+    const { email } = await req.json();
+
+    if (!email || typeof email !== 'string') {
+      return NextResponse.json({ error: 'El correo electrónico es requerido y debe ser una cadena válida.' }, { status: 400 });
+    }
+
+    const response = await fetch(`${process.env.API_URL}/auth/reset-password-request`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email }),
     });
-    const data = await response.json();
+
     if (!response.ok) {
-      return NextResponse.json({ message: data.message || 'Error al procesar la solicitud.' }, { status: response.status });
+      const errorData = await response.json();
+      console.error("Error al solicitar el restablecimiento de contraseña:", errorData);
+      return NextResponse.json(
+        { error: errorData.message || 'Error al procesar la solicitud de restablecimiento de contraseña.' },
+        { status: response.status }
+      );
     }
-    return NextResponse.json(data, { status: 200 });
+
+    const data = await response.json();
+    return NextResponse.json(
+      { message: data.message || 'Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.' },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('Error al enviar la solicitud al backend:', error);
-    return NextResponse.json({ message: 'Error al procesar la solicitud.' }, { status: 500 });
+    console.error('Error en la ruta API de solicitud de restablecimiento de contraseña:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }
