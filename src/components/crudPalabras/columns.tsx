@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import ActionOptions from "../components/actionOptions";
+import ActionOptions from "../../app/(protected)/(admin)/administracion/components/actionOptions";
 import { Palabra } from "@/interfaces/palabraInterface";
 import FilterAscDesc from "@/components/customUI/table/filterAscDesc";
 
