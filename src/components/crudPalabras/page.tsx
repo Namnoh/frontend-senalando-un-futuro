@@ -5,7 +5,7 @@ import { DataTable } from '@/components/customUI/table/data-table';
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Palabra } from "@/interfaces/palabraInterface";
 import { TableSkeleton } from "@/components/customUI/skeletons/tableSkeleton";
-import FirstOptions from "../components/firstOptions";
+import FirstOptions from "../../app/(protected)/(admin)/administracion/components/firstOptions";
 
 const CACHE_TIME = 5 * 60 * 1000; // 5 minutos en milisegundos
 
