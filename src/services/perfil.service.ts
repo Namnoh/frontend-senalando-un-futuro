@@ -1,27 +1,52 @@
-import { perfil } from '@/interfaces/perfilinterface'
+import { perfil } from '@/interfaces/perfilinterface';
+import { Usuario } from '@/interfaces/usuarioInterface'
+import { getSession } from 'next-auth/react';
 
 // esta vaina representa la API
-    let perfilMock: perfil = {
-        idPerfil: 1, correoUsuario: 'usuario@ejemplo.com',contrasena: 'contraseña_encriptada', nombrePerfil: 'Miau Venegas'}
-    
-    export const perfilService = {
-        obtenerPerfil: async (): Promise<perfil> => {
-        // Esto simula la llama pa la API 
-        await new Promise(resolve => setTimeout(resolve, 500))
-        return { ...perfilMock, contrasena: '' } //En el vidio vi que esta vaina hace que no se devuelva la contraseña
-        },
-    
-        actualizarPerfil: async (perfil: Partial<perfil>): Promise<perfil> => {
-        // tambien simula la llama pa la api pero pal perfil chavalin
-        await new Promise(resolve => setTimeout(resolve, 500))
-        perfilMock = { ...perfilMock, ...perfil }
-        return { ...perfilMock, contrasena: '' } 
-        },
-    
-        cambiarContraseña: async (nuevaContraseña: string): Promise<void> => {
-        // aqui se supone que se cambia la contraseña
-        await new Promise(resolve => setTimeout(resolve, 500))
-        perfilMock.contrasena = nuevaContraseña //creo que si la conectamos aqui funcionaria de pana
-        console.log('Contraseña cambiada') //y esto por que soi choro pa que muestre si se cambio
+export async function fetchUser(idUsuario: number): Promise<Usuario> {
+    try {
+        const response = await fetch(`${process.env.API_URL}/users/${idUsuario}`);
+        if (!response.ok) {
+            throw new Error('Error al obtener el progreso del usuario');
         }
+        const data: Usuario = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error en fetchUserProgress:', error);
+        throw error; // Lanza el error para que el componente pueda manejarlo
     }
+}
+export async function changePassword(userId: number, currentPassword: string, newPassword: string) {
+    try {
+        const session = await getSession();
+        if (!session) {
+            throw new Error('No hay sesión activa');
+        }
+    
+        const response = await fetch('/api/perfil/changePassword', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+                currentPassword,
+                newPassword
+            }),
+        });
+    
+        const data = await response.json();
+    
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al cambiar la contraseña');
+        }
+    
+        return { success: true };
+        } catch (error) {
+            console.error('Error en changePassword:', error);
+        return { 
+            success: false, 
+            error: error instanceof Error ? error.message : 'Error desconocido al cambiar la contraseña'
+        };
+    }
+}
