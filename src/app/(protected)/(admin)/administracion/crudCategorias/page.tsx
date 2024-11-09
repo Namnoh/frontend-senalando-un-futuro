@@ -9,7 +9,11 @@ import FirstOptions from "../components/firstOptions";
 
 const CACHE_TIME = 5 * 60 * 1000; // 5 minutos en milisegundos
 
-export default function CrudCategorias({ onLoad }: { onLoad?: () => void }) {
+interface PageProps {
+    onLoad?: () => void
+}
+
+export default function CrudCategorias({ onLoad }: PageProps = {}) {
     const [data, setData] = useState<Categoria[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
