@@ -3,11 +3,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import ActionOptions from "../components/actionOptions";
-import { Usuario } from "@/interfaces/usuarioInterface";
+import ActionOptions from "../../app/(protected)/(admin)/administracion/components/actionOptions";
+import { Categoria } from "@/interfaces/categoriaInterface";
 import FilterAscDesc from "@/components/customUI/table/filterAscDesc";
 
-export const columns: ColumnDef<Usuario>[] = [
+export const columns: ColumnDef<Categoria>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -30,7 +30,7 @@ export const columns: ColumnDef<Usuario>[] = [
         ),
     },
     {
-        accessorKey: "idUsuario",
+        accessorKey: "idCategoria",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
@@ -40,7 +40,7 @@ export const columns: ColumnDef<Usuario>[] = [
         },
     },
     {
-        accessorKey: "nombreUsuario",
+        accessorKey: "nombreCategoria",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
@@ -50,31 +50,51 @@ export const columns: ColumnDef<Usuario>[] = [
         },
     },
     {
-        accessorKey: "apellidoUsuario",
+        accessorKey: "descripcionCategoria",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
-                    Apellido
+                    Descripción
                 </FilterAscDesc>
             )
         },
     },
     {
-        accessorKey: "correoUsuario",
+        accessorKey: "iconoCategoria",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
-                    Correo
+                    Icono
                 </FilterAscDesc>
             )
         },
     },
     {
-        accessorKey: "idRol",
+        accessorKey: "bgCategoria",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
-                    ID Rol
+                    Fondo
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
+        accessorKey: "status",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    Estado
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
+        accessorKey: "idNivel",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    ID Nivel
                 </FilterAscDesc>
             )
         },
@@ -89,16 +109,3 @@ export const columns: ColumnDef<Usuario>[] = [
         },
     },
 ];
-
-// {
-//     accessorKey: "amount",
-//     header: () => <div className="text-right text-lg">Amount</div>,
-//     cell: ({ row }) => {
-//         const amount = parseFloat(row.getValue("amount"))
-//         const formatted = new Intl.NumberFormat("en-US", {
-//             style: "currency",
-//             currency: "USD",
-//         }).format(amount)
-//         return <div className="text-right font-medium">{formatted}</div>
-//     },
-// },
