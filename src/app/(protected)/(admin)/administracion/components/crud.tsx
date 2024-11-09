@@ -4,9 +4,9 @@ import styles from "@/app/styles/home.module.scss"
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import SelectionTabs from "./selectionTabs";
-import CrudCategorias from "../crudCategorias/page";
-import CrudPalabras from "../crudPalabras/page";
-import CrudUsuarios from "../crudUsuarios/page";
+import CrudCategorias from "@/components/crudCategorias/page";
+import CrudPalabras from "@/components/crudPalabras/page";
+import CrudUsuarios from "@/components/crudUsuarios/page";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function CRUD() {
