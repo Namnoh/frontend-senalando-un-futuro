@@ -23,7 +23,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 
