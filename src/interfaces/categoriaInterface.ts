@@ -4,6 +4,5 @@ export interface Categoria {
     descripcionCategoria: string;
     iconoCategoria: string;
     bgCategoria: string;
-    status: number;
     idNivel: number;
 }

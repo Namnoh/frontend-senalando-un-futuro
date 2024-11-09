@@ -1,20 +1,30 @@
 'use client'
 
 import { Sidebar, MobileNav, SidebarSkeleton, MobileNavSkeleton } from "@/components/navbar/";
-import { getSidebarLinks } from "@/services/sidebar.service";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-export default function AllSidebars({actualRoute, isMobile} : {actualRoute:string, isMobile:boolean}) {
+export default function AllSidebars({actualRoute, isMobile} : {actualRoute:string, isMobile:boolean | undefined}) {
     // Estado para almacenar los enlaces
+    const { status } = useSession();
     const [links, setLinks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showSkeleton, setShowSkeleton] = useState(false);
 
     useEffect(() => {
         const fetchLinks = async () => {
-            const fetchedLinks = await getSidebarLinks();
-            setLinks(fetchedLinks);
-            setLoading(false);
+            try {
+                const response = await fetch('/api/sidebar');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sidebar links');
+                }
+                const links = await response.json();
+                setLinks(links);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching sidebar links:', error);
+            }
+            
         };
 
         const timer = setTimeout(() => {
@@ -28,7 +38,7 @@ export default function AllSidebars({actualRoute, isMobile} : {actualRoute:strin
         return () => {
             clearTimeout(timer);
         };
-    }, []);
+    }, [status]);
 
     if (loading) {
         if (showSkeleton) {

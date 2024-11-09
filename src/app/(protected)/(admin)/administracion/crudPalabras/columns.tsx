@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import CrudOptions from "../components/crudOptions";
+import ActionOptions from "../components/actionOptions";
 import { Palabra } from "@/interfaces/palabraInterface";
 import FilterAscDesc from "@/components/customUI/table/filterAscDesc";
 
@@ -50,7 +50,7 @@ export const columns: ColumnDef<Palabra>[] = [
         },
     },
     {
-        accessorKey: "iconoPalabra",
+        accessorKey: "iconPalabra",
         header: ({ column, table }) => {
             return (
                 <FilterAscDesc table={table} column={column}>
@@ -70,16 +70,6 @@ export const columns: ColumnDef<Palabra>[] = [
         },
     },
     {
-        accessorKey: "status",
-        header: ({ column, table }) => {
-            return (
-                <FilterAscDesc table={table} column={column}>
-                    Estado
-                </FilterAscDesc>
-            )
-        },
-    },
-    {
         accessorKey: "idCategoria",
         header: ({ column, table }) => {
             return (
@@ -90,11 +80,21 @@ export const columns: ColumnDef<Palabra>[] = [
         },
     },
     {
+        accessorKey: "idNivel",
+        header: ({ column, table }) => {
+            return (
+                <FilterAscDesc table={table} column={column}>
+                    ID Nivel
+                </FilterAscDesc>
+            )
+        },
+    },
+    {
         id: "actions",
         cell: ({ row }) => {
             const item = row.original
             return (
-                <CrudOptions item={item} />
+                <ActionOptions item={item} />
             )
         },
     },

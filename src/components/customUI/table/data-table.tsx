@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
                 <DropDownOptions table={table} />
                 <CleanFilters table={table} />
             </div>
-            <div className="rounded-md border">
+            <div className="rounded-md border bg-background">
                 <Table>
                     <EncabezadoTabla table={table}/>
                     <ContenidoTabla table={table} columns={columns}/>

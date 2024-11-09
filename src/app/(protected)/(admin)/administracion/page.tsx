@@ -1,26 +1,31 @@
-import { Tabs, TabsContent } from "@/components/ui/tabs"
-import CrudPalabras from './crudPalabras/page'
-import CrudUsuarios from './crudUsuarios/page'
-import CrudCategorias from './crudCategorias/page'
-import SelectionTabs from './components/selectionTabs'
+'use client'
+
+import { useMediaQuery } from "@/hooks/uiHooks";
+import CRUD from "./components/crud";
+import SimpleLoading from "@/components/customUI/simpleLoading";
 
 export default function AdministracionPage() {
+    const isMobile = useMediaQuery('(max-width: 767px)');
+
     return (
         <>
-            <Tabs defaultValue="users" className="w-full h-full flex flex-col items-center justify-center">
-                <SelectionTabs />
-                <div className='flex-grow'>
-                    <TabsContent value="users">
-                        <CrudUsuarios />
-                    </TabsContent>
-                    <TabsContent value="categories">
-                        <CrudCategorias />
-                    </TabsContent>
-                    <TabsContent value="words">
-                        <CrudPalabras />
-                    </TabsContent>
-                </div>
-            </Tabs>
+            {isMobile === undefined ? (
+                <>
+                    <SimpleLoading />
+                </>
+            ) : (
+                <>
+                    {isMobile ? (
+                        <div className="flex h-full w-full items-center justify-center p-10 text-2xl text-center">
+                            <span>Lo sentimos, el apartado de {' '} 
+                            <span className="text-primary">administración</span> no está disponible en dispositivos {' '}
+                            <span className="text-secondary">móviles</span>.</span>
+                        </div>
+                    ) : (
+                        <CRUD />
+                    )}
+                </>
+            )}
         </>
     )
 }

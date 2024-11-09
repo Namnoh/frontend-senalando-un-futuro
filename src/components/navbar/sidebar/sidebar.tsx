@@ -11,12 +11,13 @@ import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ClosedSidebarLinks, OpenedSidebarLinks } from "../sidebarLinks";
 import Link from "next/link";
+import ProfileCard from "../profileCard";
 
 export default function Sidebar({actualRoute, links}:{actualRoute:string, links:any}) {
     
 
     return (
-        <aside className="fixed w-16 h-screen border-r flex flex-col items-center gap-5">
+        <aside className="fixed w-16 h-screen border-r flex flex-col items-center gap-5 bg-background">
             <Sheet>
                 {/* Sidebar Cerrada */}
                 <div className="flex flex-col items-center gap-5 h-screen">
@@ -52,20 +53,7 @@ export default function Sidebar({actualRoute, links}:{actualRoute:string, links:
                         <ModeToggle />
                     </div>
                     <div className="mt-auto">
-                        <Link href={'/'}>
-                            <Card>
-                                <div className="flex items-center p-4">
-                                    <Avatar className="w-14 h-14"> 
-                                        <AvatarImage className="w-full h-full object-cover rounder-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2TgOv9CMmsUzYKCcLGWPvqcpUk6HXp2mnww&s" alt="Logo" />
-                                        <AvatarFallback>AI</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-grow flex-col items-center justify-center">
-                                        <CardTitle>Miau Venegas</CardTitle>
-                                        miau.venegas@duocuc.cl
-                                    </div>
-                                </div>
-                            </Card>
-                        </Link>
+                        <ProfileCard />
                     </div>
                 </SheetContent>
             </Sheet>

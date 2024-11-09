@@ -1,10 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { HoverCard } from "@/components/customUI/hoverd-card"
 import styles from "@/app/styles/home.module.scss"
-import { getUserProgress } from "@/services/level.service"
 import { UserProgress } from "@/interfaces/levelinterface"
+import SimpleLoading from '@/components/customUI/simpleLoading'
+import { HoverCard } from '@/components/customUI/hoverd-card'
+import { getLevel } from '@/services/common.service'
+import HeaderLevels from './components/headerLevels'
+import { useSession } from 'next-auth/react'
+import { useProgressContext } from '@/contexts/userProgressContext'
 
 const niveles = [
     { 
@@ -22,29 +26,41 @@ const niveles = [
 ]
 
 export default function NivelesPage() {
-    const [userProgress, setUserProgress] = useState<UserProgress | null>(null)
+    const [userProgress, setUserProgress] = useState<UserProgress>({} as UserProgress);
+    const [nivelesBloqueados, setNivelesBloqueados] = useState<boolean[]>([true, true, true]) // Por defecto todos bloqueados
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const { progress } = useProgressContext();
 
     useEffect(() => {
-        const fetchUserProgress = async () => {
-        setIsLoading(true)
-        setError(null)
-        try {
-            const progress = await getUserProgress()
-            setUserProgress(progress)
-        } catch (err) {
-            setError('Error al cargar el progreso del usuario')
-            console.error(err)
-        } finally {
-            setIsLoading(false)
+        if (progress === null || progress === undefined) {
+            return; // No hacemos nada hasta que tengamos un valor de progress
         }
+
+        const fetchProgress = async () => {
+            setIsLoading(true)
+            setError(null)
+            try {
+                if (progress === null) {
+                    throw new Error('El progreso del usuario no está disponible');
+                }
+                setUserProgress(progress)
+                // Obtén el estado de cada nivel
+                const levelsState = await Promise.all(niveles.map(nivel => getLevel(nivel.id, progress)))
+                setNivelesBloqueados(levelsState.map(level => level ? level.bloqueado : true)); // Actualiza el estado de bloqueado de cada nivel
+            } catch (err) {
+                setError('Error al cargar el progreso del usuario')
+                console.error(err)
+            } finally {
+                setIsLoading(false)
+            }
         }
-        fetchUserProgress()
-    }, [])
+
+        fetchProgress()
+    }, [progress])
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-screen">Cargando...</div>
+        return <SimpleLoading />
     }
 
     if (error) {
@@ -56,22 +72,23 @@ export default function NivelesPage() {
             <div className="flex flex-col min-h-screen">
                 <div className="relative">
                     <div className="flex flex-col items-center p-8 space-y-8">
-                        <h2 className="text-2xl mt-7 md:mt-0 sm:text-2xl font-semibold text-center">Bienvenido Miau Venegas</h2>
-                        <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold text-center text-secondary bg-background">Niveles</h1>
+                        <HeaderLevels />
                     </div>
                 </div>
                 <main className="flex-grow flex flex-col items-center p-4 sm:p-6 md:p-8 lg:p-10">
-                <div className="flex flex-col md:items-center lg:flex-row gap-6 w-full max-w-7xl">
-                    {niveles.map((nivel) => (
-                    <HoverCard 
-                        key={nivel.id}
-                        levelId={nivel.id}
-                        link={nivel.enlace}
-                    />
-                    ))}
-                </div>
+                    <div className="flex flex-col md:items-center lg:flex-row gap-6 w-full max-w-7xl">
+                        {niveles.map((nivel, index) => (
+                            <HoverCard 
+                                key={nivel.id}
+                                levelId={nivel.id}
+                                link={nivel.enlace}
+                                bloqueado={nivelesBloqueados[index]} 
+                                userProgress = {userProgress}
+                            />
+                        ))}
+                    </div>
                 </main>
             </div>
-        </div> 
+        </div>
     )
 }

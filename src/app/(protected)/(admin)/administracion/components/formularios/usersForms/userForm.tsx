@@ -19,8 +19,49 @@ import { formSchema } from "./userFormSchema"
 import { Usuario } from "@/interfaces/usuarioInterface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogClose } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
-export function UserForm({user}:{user?:Usuario}) {
+export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeDialog:() => void, refreshData?: () => void}) {
+    const [ isLoading, setIsLoading ] = useState(false)
+    const { toast } = useToast();
+    // Handle Submit
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            setIsLoading(true)
+            const response = await fetch(`/api/crud/users/${user ? user.idUsuario : '' }`, {
+                method: user ? 'PATCH' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Error al ${user ? 'actualizar' : 'crear'} el usuario: ${response.statusText}`);
+            };
+            toast({
+                title: "Éxito",
+                description: `Usuario ${user ? 'actualizado' : 'creado' } correctamente`,
+                variant: "success"
+            });
+            if (refreshData) { refreshData(); };
+            closeDialog();
+        } catch (error) {
+            console.error("Error en onSubmit:", error);
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+            toast({
+                title: "Error",
+                description: errorMessage,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
     // Se define el formulario
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -31,7 +72,6 @@ export function UserForm({user}:{user?:Usuario}) {
             idRol: user ? user.idRol : 1,
         },
     })
-
 
     return (
         <Form {...form}>
@@ -55,7 +95,7 @@ export function UserForm({user}:{user?:Usuario}) {
                     name="nombreUsuario"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Nombre</FormLabel>
+                            <FormLabel>Nombres <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Jhon" {...field} />
                             </FormControl>
@@ -71,7 +111,7 @@ export function UserForm({user}:{user?:Usuario}) {
                     name="apellidoUsuario"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Apellido</FormLabel>
+                            <FormLabel>Apellidos <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="Doe" {...field} />
                             </FormControl>
@@ -84,7 +124,7 @@ export function UserForm({user}:{user?:Usuario}) {
                     name="correoUsuario"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Correo</FormLabel>
+                            <FormLabel>Correo <span className="text-red-500">*</span></FormLabel>
                             <FormControl>
                                 <Input placeholder="jhon.doe@gmail.com" {...field} />
                             </FormControl>
@@ -97,7 +137,7 @@ export function UserForm({user}:{user?:Usuario}) {
                     name="idRol"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Rol</FormLabel>
+                            <FormLabel>Rol <span className="text-red-500">*</span></FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                                 <FormControl>
                                     <SelectTrigger>
@@ -105,8 +145,8 @@ export function UserForm({user}:{user?:Usuario}) {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value='0'>0 - Administrador</SelectItem>
                                     <SelectItem value='1'>1 - Cliente</SelectItem>
+                                    <SelectItem value='2'>2 - Administrador</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -114,18 +154,16 @@ export function UserForm({user}:{user?:Usuario}) {
                     )}
                 />
                 <div className="flex flex-row sm:justify-between w-full">
-                    <Button type="submit" variant="default" className="text-background">{!user ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                    { isLoading ? (
+                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                    ) : (
+                        <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!user ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                    )}
                     <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
+                        <Button type="button" variant="secondary">Cancelar</Button>
                     </DialogClose>
                 </div>
             </form>
         </Form>
     )
-}
-
-// Handle Submit
-function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: crear lógica de creación de usuario
-    console.log(values)
-}
+};

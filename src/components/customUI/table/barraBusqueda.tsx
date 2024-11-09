@@ -29,7 +29,7 @@ export default function BarraBusqueda<TData>({table}:OnlyTableProp<TData>) {
             value={value}
             // value={(table.getAllColumns().filter(r => ))}
             onChange={handleInputChange}
-            className="max-w-sm"
+            className="max-w-sm bg-background"
         />
     )
 };

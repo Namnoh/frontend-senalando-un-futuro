@@ -5,3 +5,11 @@
   background-repeat: no-repeat;
   height: auto; /* Altura completa */
 }
+
+.backgroundPerfil{
+  background-image: url('/svg/Perfil.svg');
+  background-size: cover; /* O 'contain' según lo que necesites */
+  background-position: center;
+  background-repeat: no-repeat;
+  height: auto; 
+}

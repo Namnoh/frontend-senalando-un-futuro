@@ -1,16 +1,23 @@
-import React from 'react'
-import { WordCard } from './wordCard';
 import { getWordsFrom } from '@/services/words.service';
+import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
+import { TitleProp } from '@/interfaces/commonInterfaces';
+import { Palabra } from '@/interfaces/palabraInterface';
 
-export default async function WordsContainer({idCategoria, idNivel}: {idCategoria:number, idNivel:number}) {
-    const words = await getWordsFrom(idCategoria);
+export default async function WordsContainer({level, category}: {level:TitleProp, category:TitleProp}) {
+    const words = await getWordsFrom(category.idTitle);
 
     return (
         <div className='flex flex-wrap justify-center gap-5 w-2/3 mb-10'>
-            { words.map((w) =>
+            { words.map((w:Palabra) =>
                 {
                     return (
-                        <WordCard key={w.idPalabra} idNivel={idNivel} idCategoria={idCategoria} word={w} />
+                        <MiniCardGalery
+                            key={w.idPalabra}
+                            level={level}
+                            category={category}
+                            item={w}
+                            iconClasses='h-16 w-16 lg:h-20 lg:w-20 text-black'
+                        />
                     )
                 }
             )}
