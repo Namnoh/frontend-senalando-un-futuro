@@ -9,7 +9,7 @@ function middleware(request: NextRequest) {
 
     // Redirect authenticated users away from login and register pages
     if (isAuth && (pathName === '/login' || pathName === '/register')) {
-        return NextResponse.redirect(new URL('/', request.url));
+        return NextResponse.rewrite(new URL('/niveles', request.url));
     }
 
     if (pathName.startsWith('/niveles')) {
@@ -23,17 +23,17 @@ function middleware(request: NextRequest) {
             // ? Creo que acá podría usar la lógica de Object Literal para simplificar el proceso y código
             switch (number) {
                 case 1:
-                    return NextResponse.redirect(new URL(`/niveles/1-${encodeURIComponent('básico')}/categorias`, request.url));
+                    return NextResponse.rewrite(new URL(`/niveles/1-${encodeURIComponent('básico')}/categorias`, request.url));
                 case 2:
-                    return NextResponse.redirect(new URL(`/niveles/2-${encodeURIComponent('intermedio')}/categorias`, request.url));
+                    return NextResponse.rewrite(new URL(`/niveles/2-${encodeURIComponent('intermedio')}/categorias`, request.url));
                 case 3:
-                    return NextResponse.redirect(new URL(`/niveles/3-${encodeURIComponent('avanzado')}/categorias`, request.url));
+                    return NextResponse.rewrite(new URL(`/niveles/3-${encodeURIComponent('avanzado')}/categorias`, request.url));
                 default:
-                    return NextResponse.redirect(new URL(`/niveles/`, request.url));
+                    return NextResponse.rewrite(new URL(`/niveles/`, request.url));
             }
         } else if (pathName.includes('/categorias') && !pathName.endsWith('/palabras') && levelMatch && categoryMatch && !wordMatch) {
             // TODO: mejorar lógica y además ver si es factible arreglar la url a la correcta antes de redirigir
-            return NextResponse.redirect(new URL(`/niveles/${levelMatch[1]}/categorias/${categoryMatch[1]}/palabras`, request.url));
+            return NextResponse.rewrite(new URL(`/niveles/${levelMatch[1]}/categorias/${categoryMatch[1]}/palabras`, request.url));
         }
     }
     // Si no se ha realizado ninguna redirección, continuar con la solicitud original
