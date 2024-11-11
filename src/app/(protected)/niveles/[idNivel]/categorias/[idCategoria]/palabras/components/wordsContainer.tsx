@@ -11,6 +11,7 @@ export default async function WordsContainer({level, category}: {level:TitleProp
             { words.map((w:Palabra) =>
                 {
                     return (
+                        
                         <MiniCardGalery
                             key={w.idPalabra}
                             level={level}

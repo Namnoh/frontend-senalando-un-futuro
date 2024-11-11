@@ -1,7 +1,6 @@
-"use client"
+'use client'
 
-import React from 'react'
-import { Card, CardContent } from "@/components/ui/card"
+import React from "react"
 import {
   Carousel,
   CarouselContent,
@@ -9,19 +8,31 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Palabra } from "@/interfaces/palabraInterface"
+import { TitleProp } from "@/interfaces/commonInterfaces"
+import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
 
-export default function MobileCarousel() {
-  return (
-    <div className="my-4">
-      <Carousel className="w-full">
+interface MobileCarouselProps {
+  level: TitleProp
+  category: TitleProp
+  words: Palabra[]
+}
+
+export default function MobileCarousel({ level, category, words }: MobileCarouselProps) {
+  return (  
+    <div className="flex flex-wrap justify-center gap-5 w-2/3 mb-10">
+      <Carousel>
         <CarouselContent>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <CarouselItem key={index}>
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-3xl font-semibold">{index + 1}</span>
-                </CardContent>
-              </Card>
+          {words.map((word: Palabra, index: number) => (
+            <CarouselItem key={word.idPalabra} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+              <div className="p-1">
+                <MiniCardGalery
+                  level={level}
+                  category={category}
+                  item={word}
+                  iconClasses="h-12 w-12 lg:h-16 lg:w-16 text-black"
+                />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
