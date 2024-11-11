@@ -47,7 +47,7 @@ export default function ResetPasswordForm() {
           description: data.message || 'Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.',
         });
         form.reset();
-        router.push('/instruccion-reset')
+        router.push('/')
       } else {
         throw new Error(data.error || 'Ha ocurrido un error');
       }
