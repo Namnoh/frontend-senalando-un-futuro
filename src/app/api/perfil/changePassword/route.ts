@@ -37,7 +37,6 @@ export async function PATCH(request: NextRequest) {
             return NextResponse.json({ error: 'La nueva contraseña no puede ser igual a la actual' }, { status: 400 });
         }
         const nuevaContrasenaHasheada = await bcrypt.hash(newPassword, 10);
-        console.log("hasheado : ",  nuevaContrasenaHasheada)
         const response = await fetch(`${process.env.API_URL}/users/change-password/${session.user.id}`, {
             method: 'PATCH',
             headers: {
@@ -47,7 +46,6 @@ export async function PATCH(request: NextRequest) {
                 nuevaContrasena: nuevaContrasenaHasheada
             }),
         });
-        console.log(response)
         if (!response.ok) {
             const errorData = await response.json();
             console.error("Error de backend:", errorData);
