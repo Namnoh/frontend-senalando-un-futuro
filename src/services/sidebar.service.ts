@@ -34,9 +34,3 @@ export async function getSidebarLinks(isAuth:boolean, isAdmin:boolean): Promise<
     });
     return filteredViews;
 };
-
-// Función para mostrar la navbar dependiendo del path
-// export const showSidebar = (props:{pathName:string}) => {
-//     const result = !hideSidebarPaths.includes(props.pathName);
-//     return result;
-// }

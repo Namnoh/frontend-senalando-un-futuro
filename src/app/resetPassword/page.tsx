@@ -10,7 +10,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation' // Importamos useRouter para redirigir al usuario
 
+// Definir el esquema de validación con zod
 const formSchema = z.object({
   email: z.string().email({ message: 'Debe ser un correo electrónico válido' }),
 })
@@ -18,6 +20,7 @@ const formSchema = z.object({
 export default function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter() 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -26,34 +29,53 @@ export default function ResetPasswordForm() {
     },
   })
 
+  // Función para manejar el submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       const response = await fetch('/api/auth/reset', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
-      })
-
-      const data = await response.json()
-
+      });
+  
+      const data = await response.json();
+  
       if (response.ok) {
         toast({
           title: 'Correo enviado',
-          description: 'Se ha enviado un correo para restablecer tu contraseña.',
-        })
-        form.reset()
+          description: data.message || 'Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.',
+        });
+        form.reset();
+        router.push('/instruccion-reset')
       } else {
-        throw new Error(data.message || 'Ha ocurrido un error')
+        throw new Error(data.error || 'Ha ocurrido un error');
       }
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Error al enviar la solicitud',
-        variant: 'destructive',
-      })
+      if (error instanceof Error) {
+        // Si el error es "Correo electrónico no registrado"
+        if (error.message.includes('Correo electrónico no registrado')) {
+          toast({
+            title: 'Error',
+            description: 'El correo electrónico no está registrado en nuestro sistema.',
+            variant: 'destructive',
+          });
+        } else if (error.message.includes('No se pudo conectar con el servidor')) {
+          toast({
+            title: 'Error de conexión',
+            description: 'No pudimos contactar al servidor. Por favor, intenta de nuevo más tarde.',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Error',
+            description: error.message,
+            variant: 'destructive',
+          });
+        }
+      }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -89,7 +111,7 @@ export default function ResetPasswordForm() {
                     Enviando...
                   </>
                 ) : (
-                  'Enviar correo de restablecimiento'
+                  'Enviar correo'
                 )}
               </Button>
             </form>

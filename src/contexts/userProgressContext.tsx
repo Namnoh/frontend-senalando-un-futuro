@@ -76,10 +76,10 @@ export default function UserProgressContextProvider({children} : userProgressCon
     };
     
     useEffect(() => {
-        if (status === "authenticated") {
+        if (status === "authenticated" && !progress) {
             fetchProgress();
         }
-    }, [session, status])
+    }, [status, progress])
 
     if (isLoading) {
         return <SimpleLoading />

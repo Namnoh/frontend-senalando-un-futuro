@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Nivel, UserProgress } from "@/interfaces/levelinterface";
 import { getLevel } from '@/services/common.service';
 
-export function useLevelData(levelId: number, userId: number) {
+export function useLevelData(levelId: number, userId: UserProgress) {
     const [levelData, setLevelData] = useState<Nivel | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

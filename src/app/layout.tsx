@@ -5,6 +5,8 @@ import { fredoka } from './fonts/fonts';
 import HeaderOptions from "@/components/customUI/headerOptions";
 import Footer from "@/components/footer/footer";
 import { Toaster } from "@/components/ui/toaster"
+import { Suspense } from "react";
+import SimpleLoading from "@/components/customUI/simpleLoading";
 
 export const metadata: Metadata = {
   title: "Señalando Un Futuro",
@@ -37,7 +39,9 @@ export default function RootLayout({
               <HeaderOptions />
               <div className={`flex flex-col flex-grow md:ml-16`}>
                 <main className="flex-grow">
-                  {children}
+                  <Suspense fallback={<SimpleLoading />}>
+                    {children}
+                  </Suspense>
                   <Toaster />
                 </main>
                 <div className="w-full">

@@ -23,7 +23,6 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 
@@ -31,7 +30,11 @@ const formSchema = z
   .object({
     password: z
       .string()
-      .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+      .min(8, { message: "La contraseña debe tener al menos 8 caracteres" })
+      .regex(/[a-z]/, "Debe contener al menos una letra minúscula")
+      .regex(/[A-Z]/, "Debe contener al menos una letra mayúscula")
+      .regex(/[0-9]/, "Debe contener al menos un número")
+      .regex(/[^a-zA-Z0-9]/, "Debe contener al menos un carácter especial"),
     confirmPassword: z
       .string()
       .min(8, { message: "Confirmar la contraseña es obligatorio" }),
@@ -72,7 +75,7 @@ export default function UpdatePasswordPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/auth/reset`, {
+      const response = await fetch(`/api/auth/updatePassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword: values.password }),

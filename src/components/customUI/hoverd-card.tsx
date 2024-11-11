@@ -18,7 +18,7 @@ interface HoverCardProps {
 
 export function HoverCard({ levelId, link, bloqueado, userProgress }: HoverCardProps) { 
     const [isHovered, setIsHovered] = useState(false)
-    const { levelData, isLoading, error } = useLevelData(levelId, userProgress.idUsuario)
+    const { levelData, isLoading, error } = useLevelData(levelId, userProgress)
     const full = levelId < userProgress.idNivel ? 100 : null; 
     if (isLoading) {
         return <SimpleLoading />
