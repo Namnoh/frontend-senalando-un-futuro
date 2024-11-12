@@ -23,7 +23,6 @@ export default function ProgressBadge({itemId, isPalabraSection}: ProgressBadgeP
             const categoryProgress = Object.values(progress.categoriasProgreso).find(
                 (category: CategoriaProgreso) => Number(category.idCategoria) === itemId
             );
-            console.log(categoryProgress)
             status = categoryProgress ? categoryProgress?.progresoCategoria : 0;  
         };
     };

@@ -52,7 +52,6 @@ export async function registerUser(usuario:Usuario) {
         // const res = await fetch(`${process.env.API_URL}/users/findByEmail/${usuario.correoUsuario}`,{
         //     method: 'GET'
         // });
-        // console.log(res)
 
         // if (res.ok) {
         //     return { success: false, error: 'El correo ya ha sido usado' };
