@@ -20,67 +20,73 @@ interface ResponsiveComponentsProps {
     currentWordIndex: number;
 }
 
-export default function ResponsiveComponents({ level, category, words, currentWordIndex :  initialIndex }: ResponsiveComponentsProps) {
+export default function ResponsiveComponents({ level, category, words, currentWordIndex: initialIndex }: ResponsiveComponentsProps) {
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
-    const [currentIndex, setCurrentIndex] = useState(initialIndex); // Se debe usar directamente en el cuerpo del componente
+    const [currentIndex, setCurrentIndex] = useState(initialIndex); 
     const isMobile = useMediaQuery('(max-width: 767px)');
-
     useEffect(() => {
         setMounted(true);
     }, []);
 
     useEffect(() => {
-        setCurrentIndex(initialIndex);
-      }, [initialIndex]);
-    
-      const construirUrlPalabra = (palabra: Palabra) => {
+        setCurrentIndex(initialIndex); 
+    }, [initialIndex]);
+
+    // Función para construir la URL de la palabra
+    const construirUrlPalabra = (palabra: Palabra) => {
         return `/niveles/${encodeURIComponent(level.idTitle)}-${encodeURIComponent(level.nameTitle)}/categorias/${encodeURIComponent(category.idTitle)}-${encodeURIComponent(category.nameTitle)}/palabras/${encodeURIComponent(palabra.idPalabra)}-${encodeURIComponent(palabra.nombrePalabra)}`;
-      };
-    
-      const manejarNavegacion = (direccion: 'siguiente' | 'anterior') => {
-        if (!setMounted || words.length === 0) return;
-    
+    };
+
+    // Función para manejar la navegación (siguiente o anterior)
+    const manejarNavegacion = (direccion: 'siguiente' | 'anterior') => {
+        if (!mounted || words.length === 0) return;
+
         let nuevoIndice = currentIndex;
+
+        // Si es "siguiente", incrementamos el índice y lo usamos cíclicamente
         if (direccion === 'siguiente') {
-          nuevoIndice = (currentIndex + 1) % words.length;
-        } else {
-          nuevoIndice = (currentIndex - 1 + words.length) % words.length;
+            nuevoIndice = (currentIndex + 1) % words.length;
+        } else { // Si es "anterior", decrementamos el índice de manera cíclica
+            nuevoIndice = (currentIndex - 1 + words.length) % words.length;
         }
-    
-        setCurrentIndex(nuevoIndice);
+
+        // Actualizamos el índice con el valor calculado
+        setCurrentIndex(nuevoIndice); 
+
+        // Construimos la URL y redirigimos al usuario
         const nuevaPalabra = words[nuevoIndice];
         router.push(construirUrlPalabra(nuevaPalabra));
-      };
-    
-      const manejadoresDeslizamiento = useSwipeable({
+
+    };
+
+  
+    const manejadoresDeslizamiento = useSwipeable({
         onSwipedLeft: () => manejarNavegacion('siguiente'),
         onSwipedRight: () => manejarNavegacion('anterior'),
         preventScrollOnSwipe: true,
         trackMouse: true,
-      });
-    
-      if (!setMounted) {
+    });
+
+    if (!mounted) {
         return null;
-      }
+    }
 
     return (
-    <>
-        {isMobile ? (
-            <>
-            <div {...manejadoresDeslizamiento}>
-                <MobileCamera />
-                <MobileVideo />
-                <MobileCarousel level={level} category={category} words={words} currentWordIndex={currentIndex}/>
-            </div>
-            </>
-        ) : (
-            <>
-            <DesktopCamera />
-            <DesktopVideo />
-            <DesktopCarousel level={level} category={category} words={words} />
-            </>
-        )}
-    </>
+        <>
+            {isMobile ? (
+                <div {...manejadoresDeslizamiento}>
+                    <MobileCamera />
+                    <MobileVideo />
+                    <MobileCarousel level={level} category={category} words={words} currentWordIndex={currentIndex} />
+                </div>
+            ) : (
+                <>
+                    <DesktopCamera />
+                    <DesktopVideo />
+                    <DesktopCarousel level={level} category={category} words={words} />
+                </>
+            )}
+        </>
     );
 }
