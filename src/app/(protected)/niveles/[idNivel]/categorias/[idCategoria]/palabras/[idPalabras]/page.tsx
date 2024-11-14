@@ -19,7 +19,7 @@ export default async function WordsPage({params}:any) {
           <h2 className='text-5xl md:text-6xl lg:text-7xl font-medium text-white capitalize'>{palabra.nameTitle}</h2>
         </div>
         <Suspense>
-          <ResponsiveComponents level={level} category={cat} words={words}/>
+          <ResponsiveComponents level={level} category={cat} words={words} currentWordIndex={palabra.idTitle}/>
         </Suspense>
       </div>
     </div>
