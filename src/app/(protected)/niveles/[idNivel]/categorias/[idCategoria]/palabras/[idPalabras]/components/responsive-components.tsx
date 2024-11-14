@@ -6,6 +6,10 @@ import React from 'react'
 import MobileCarousel from './carrusel/mobile-carousel'
 import DesktopCarousel from './carrusel/desktop-carousel';
 import { useMediaQuery } from '@mui/material';
+import DesktopCamera from './camera/desktop-camera';
+import MobileCamera from './camera/mobile-camera';
+import DesktopVideo from './vide/desktop-video';
+import MobileVideo from './vide/mobile-video';
 
 interface ResponsiveComponentsProps {
     level: TitleProp
@@ -22,11 +26,21 @@ export default function ResponsiveComponents({ level, category, words }: Respons
         <>
             {( isMobile ? 
             (
+                <>
+                <MobileCamera />
+                <MobileVideo />
                 <MobileCarousel level={level} category={category} words={words}/>
+                
+                </>
             ) 
             : 
             (
-                <DesktopCarousel level={level} category={category} words={words}/> 
+                <>
+                <DesktopCamera/>
+                <DesktopVideo />
+                <DesktopCarousel level={level} category={category} words={words}/>
+                
+                </>
             ) 
             )}
             
