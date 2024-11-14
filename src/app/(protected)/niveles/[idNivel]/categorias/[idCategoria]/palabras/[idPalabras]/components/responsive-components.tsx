@@ -20,27 +20,27 @@ interface ResponsiveComponentsProps {
 
 export default function ResponsiveComponents({ level, category, words }: ResponsiveComponentsProps) {
 
-    let isMobile = useMediaQuery('(max-width: 767px)'); 
+    let isMobile = useMediaQuery('(max-width: 1024px)'); 
 
     return (
         <>
             {( isMobile ? 
             (
-                <>
-                <MobileCamera />
-                <MobileVideo />
-                <MobileCarousel level={level} category={category} words={words}/>
-                
-                </>
+                <div className='flex flex-col w-[320px] sm:w-[600px]'>
+                    <MobileCamera />
+                    <MobileVideo />
+                    <MobileCarousel level={level} category={category} words={words}/>
+                </div>
             ) 
             : 
             (
-                <>
-                <DesktopCamera/>
-                <DesktopVideo />
-                <DesktopCarousel level={level} category={category} words={words}/>
-                
-                </>
+                <div className='flex flex-col h-full w-full items-center justify-center gap-10'>
+                    <div className='flex flex-grow gap-2 items-center w-full justify-center'>
+                        <DesktopVideo />
+                        <DesktopCamera/>
+                    </div>
+                    <DesktopCarousel level={level} category={category} words={words}/>
+                </div>
             ) 
             )}
             

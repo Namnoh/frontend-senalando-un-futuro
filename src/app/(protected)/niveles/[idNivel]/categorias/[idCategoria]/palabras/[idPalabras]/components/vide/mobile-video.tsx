@@ -40,7 +40,7 @@ export default function MobileVideo() {
   return (
     <div className="my-4">
       <Card>
-        <CardContent>
+        <CardContent className='p-6'>
           <Input
             type="text"
             placeholder="URL Video"

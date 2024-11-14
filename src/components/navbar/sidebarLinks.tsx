@@ -67,7 +67,7 @@ export const OpenedSidebarLinks = ({actualRoute, links}:{actualRoute:string, lin
                         {l.idVista === 1 ? (
                             <SearchButton l={l} isOpen={true}/>
                         ) : ( l.idVista === 9 ) ? (
-                            <SignOutBtn l={l}/>
+                            <SignOutBtn l={l} isOpen={true}/>
                         ) : (
                             <Link
                                 key={l.idVista}

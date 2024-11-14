@@ -38,9 +38,9 @@ export default function DesktopVideo() {
   }, [])
 
   return (
-    <div className="my-8">
-      <Card className="w-full max-w-3xl mx-auto">
-        <CardContent>
+    <div className="h-full">
+      <Card className="h-full w-full max-w-3xl mx-auto">
+        <CardContent className='h-full flex flex-col items-center p-5'>
           <div className="flex gap-4 mb-4">
             <Input
               type="text"
@@ -51,7 +51,7 @@ export default function DesktopVideo() {
             />
             <Button onClick={loadVideo}>Load Video</Button>
           </div>
-          <div className="aspect-video mb-4">
+          <div className="flex-grow mb-4">
             <ReactPlayer
               ref={playerRef}
               url={videoUrl}
@@ -64,23 +64,25 @@ export default function DesktopVideo() {
               onEnded={() => setIsPlaying(false)}
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="playback-rate" className="block text-sm font-medium mb-2">
-              Playback Speed: {playbackRate.toFixed(2)}x
-            </label>
-            <Slider
-              id="playback-rate"
-              min={0.25}
-              max={2}
-              step={0.25}
-              value={[playbackRate]}
-              onValueChange={handlePlaybackRateChange}
-            />
+          <div className='flex justify-between w-full'>
+            <div className="mb-4">
+              <label htmlFor="playback-rate" className="block text-sm font-medium mb-2">
+                Playback Speed: {playbackRate.toFixed(2)}x
+              </label>
+              <Slider
+                id="playback-rate"
+                min={0.25}
+                max={2}
+                step={0.25}
+                value={[playbackRate]}
+                onValueChange={handlePlaybackRateChange}
+              />
+            </div>
+            <Button onClick={replayVideo} className="flex items-center gap-2">
+              <Repeat className="w-4 h-4" />
+              Replay
+            </Button>
           </div>
-          <Button onClick={replayVideo} className="flex items-center gap-2">
-            <Repeat className="w-4 h-4" />
-            Replay
-          </Button>
         </CardContent>
       </Card>
     </div>

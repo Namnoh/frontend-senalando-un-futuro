@@ -11,6 +11,7 @@ import {
 import { Palabra } from "@/interfaces/palabraInterface"
 import { TitleProp } from "@/interfaces/commonInterfaces"
 import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
+import CarruselList from "../carruselList"
 
 interface MobileCarouselProps {
   level: TitleProp
@@ -20,18 +21,18 @@ interface MobileCarouselProps {
 
 export default function MobileCarousel({ level, category, words }: MobileCarouselProps) {
   return (  
-    <div className="flex flex-wrap justify-center gap-5 w-2/3 mb-10">
-      <Carousel>
-        <CarouselContent>
+    <div className="flex justify-center gap-5 w-full my-10">
+      <Carousel className="flex w-[70%]">
+        <CarouselContent className="flex">
           {words.map((word: Palabra) => (
-            <CarouselItem className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
-              <div className="p-1">
-                <MiniCardGalery
+            <CarouselItem className="basis-1/2 sm:basis-1/4">
+              <div className="w-fit">
+                <CarruselList
                   key={word.idPalabra} 
                   level={level}
                   category={category}
                   item={word}
-                  iconClasses="h-12 w-12 lg:h-16 lg:w-16 text-black"
+                  iconClasses="h-10 w-10"
                 />
               </div>
             </CarouselItem>

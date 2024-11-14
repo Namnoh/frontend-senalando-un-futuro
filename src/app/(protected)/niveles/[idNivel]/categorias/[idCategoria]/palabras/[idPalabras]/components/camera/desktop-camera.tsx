@@ -8,9 +8,8 @@ export default function DesktopCamera() {
   const webcamRef = useRef<Webcam>(null)
 
   return (
-    <div className="my-8">
-      <Card className="w-full max-w-3xl mx-auto">
-        <CardContent>
+      <Card className="w-full max-w-4xl">
+        <CardContent className='p-6'>
           <div className="aspect-video">
             <Webcam
               audio={false}
@@ -20,6 +19,5 @@ export default function DesktopCamera() {
           </div>
         </CardContent>
       </Card>
-    </div>
   )
 }

@@ -10,7 +10,7 @@ export default function MobileCamera() {
   return (
     <div className="my-4">
       <Card className="w-full">
-        <CardContent>
+        <CardContent className='p-6'>
           <div className="aspect-square">
             <Webcam
               audio={false}

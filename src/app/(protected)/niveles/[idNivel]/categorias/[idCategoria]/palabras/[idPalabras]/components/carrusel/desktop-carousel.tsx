@@ -20,11 +20,11 @@ interface DesktopCarouselProps {
 
 export default function DesktopCarousel({ level, category, words }: DesktopCarouselProps) {
   return (  
-    <div className="flex flex-wrap justify-center gap-5 w-2/3 mb-10">
+    <div className="flex flex-wrap justify-center gap-5 w-2/3 mb-5">
       <Carousel>
         <CarouselContent>
           {words.map((word: Palabra) => (
-            <CarouselItem className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+            <CarouselItem className="md:basis-1/4 lg:basis-1/4">
               <div className="p-1">
                 <MiniCardGalery
                   key={word.idPalabra} 

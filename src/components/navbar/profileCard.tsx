@@ -11,7 +11,7 @@ export default function ProfileCard() {
             <Card>
                 <div className="flex items-center p-3 md:p-4">
                     <Avatar className="w-14 h-14"> 
-                        <AvatarImage className="w-full h-full object-cover rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2TgOv9CMmsUzYKCcLGWPvqcpUk6HXp2mnww&s" alt="Logo" />
+                        <AvatarImage className="w-full h-full object-cover rounded-md sm:rounded-full" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2TgOv9CMmsUzYKCcLGWPvqcpUk6HXp2mnww&s" alt="Logo" />
                         <AvatarFallback>AI</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-grow flex-col items-center justify-center">
