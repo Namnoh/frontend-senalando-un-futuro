@@ -9,6 +9,7 @@ import styles from '@/app/styles/home.module.scss'
 import SimpleLoading from '@/components/customUI/simpleLoading'
 import { useProgressContext } from '@/contexts/userProgressContext'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image';
 
 // Lazy load components
 const CambiarContrasena = lazy(() => import('./components/cambiarContrasena'))
@@ -58,7 +59,19 @@ export default function PerfilPage() {
                     <div className="relative from-orange-100 to-blue-100 p-6 pb-20">
                         <div className="flex flex-col items-center mt-12">
                             <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-md">
-                                <DynamicIcon name="User" classes="h-12 w-12 text-gray-400" />
+                                {/* <DynamicIcon name="User" classes="h-12 w-12 text-gray-400" /> */}
+                                
+                                {session?.user?.image ? (
+                                    <Image
+                                    src={session.user.image} 
+                                    alt="Perfil del usuario"
+                                    width={150} 
+                                    height={150} 
+                                    className=" rounded-full text-gray-400"
+                                    />
+                                ) : (
+                                    <DynamicIcon name="User" classes="h-12 w-12 text-gray-400" />
+                                )}
                             </div>
                             <h2 className="mt-4 text-2xl lg:text-4xl font-semibold text-primary-400">{session?.user?.name} {session?.user?.lastname}</h2>
                         </div>
