@@ -14,12 +14,21 @@ import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
 import CarruselList from "../carruselList"
 
 interface MobileCarouselProps {
-  level: TitleProp
-  category: TitleProp
-  words: Palabra[]
+  level: TitleProp;
+  category: TitleProp;
+  words: Palabra[];
+  currentWordIndex: number; 
 }
 
-export default function MobileCarousel({ level, category, words }: MobileCarouselProps) {
+export default function MobileCarousel({ level, category, words, currentWordIndex }: MobileCarouselProps) {
+
+  // Validar si el índice está en el rango y si hay palabras disponibles
+  if (!words || words.length === 0 || currentWordIndex < 0 || currentWordIndex >= words.length) {
+    return <div>No hay palabras disponibles.</div>; // Mostrar un mensaje si no hay palabras disponibles
+  }
+
+  // Obtener la palabra correspondiente al índice
+  const currentWord = words[currentWordIndex];
   return (  
     <div className="flex justify-center gap-5 w-full my-10">
       <Carousel className="flex w-[70%]">
@@ -28,7 +37,7 @@ export default function MobileCarousel({ level, category, words }: MobileCarouse
             <CarouselItem className="basis-1/2 sm:basis-1/4">
               <div className="w-fit">
                 <CarruselList
-                  key={word.idPalabra} 
+                  key={currentWord.idPalabra}
                   level={level}
                   category={category}
                   item={word}
@@ -42,5 +51,5 @@ export default function MobileCarousel({ level, category, words }: MobileCarouse
         <CarouselNext />
       </Carousel>
     </div>
-  )
+  );
 }

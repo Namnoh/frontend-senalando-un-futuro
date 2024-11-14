@@ -20,7 +20,7 @@ export default function CarruselList({level, category, item, iconClasses}: Carro
                 href={enlace}
                 className='group'
             >
-                <div className={`flex items-center justify-center h-full w-full border-2 border-accent-100 rounded-2xl p-5 relative shadow-md bg-white`}>
+                <div className={`flex items-center justify-center h-full w-full border-2 border-accent-100 rounded-2xl p-5 relative shadow-md`}>
                     <DynamicIcon name={item.iconPalabra} classes={iconClasses}/>
                     <ProgressBadge itemId={item.idPalabra} isPalabraSection={true}/>
                     <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
