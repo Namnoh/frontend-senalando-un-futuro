@@ -1,14 +1,15 @@
 "use client"
 
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState, useCallback, useEffect } from 'react'
 import ReactPlayer from 'react-player'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 import { Repeat } from "lucide-react"
+import { Palabra } from '@/interfaces/palabraInterface'
 
-export default function MobileVideo() {
+export default function MobileVideo({word}:{word:Palabra}) {
   const playerRef = useRef<ReactPlayer>(null)
   const [videoUrl, setVideoUrl] = useState<string>('')
   const [playbackRate, setPlaybackRate] = useState<number>(1)
@@ -19,15 +20,8 @@ export default function MobileVideo() {
     setPlaybackRate(newRate)
   }, [])
 
-  const handleVideoUrlChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setVideoUrl(event.target.value)
-  }, [])
-
-  const loadVideo = useCallback(() => {
-    if (playerRef.current) {
-      playerRef.current.seekTo(0)
-      setIsPlaying(true)
-    }
+  const handleVideoURL = useCallback((url: string) => {
+    setVideoUrl(url)
   }, [])
 
   const replayVideo = useCallback(() => {
@@ -37,19 +31,14 @@ export default function MobileVideo() {
     }
   }, [])
 
+  useEffect(() => {
+    handleVideoURL(word.videoPalabra)
+  }, [])
   return (
     <div className="my-4">
       <Card>
         <CardContent className='p-6'>
-          <Input
-            type="text"
-            placeholder="URL Video"
-            value={videoUrl}
-            onChange={handleVideoUrlChange}
-            className="mb-2"
-          />
-          <Button onClick={loadVideo} className="w-full mb-2">Load Video</Button>
-          <div className="aspect-video mb-2">
+          <div className="aspect-square mb-2">
             <ReactPlayer
               ref={playerRef}
               url={videoUrl}
@@ -64,7 +53,7 @@ export default function MobileVideo() {
           </div>
           <div className="mb-2">
             <label htmlFor="playback-rate" className="block text-sm font-medium mb-1">
-              Playback Speed: {playbackRate.toFixed(2)}x
+              Velocidad: {playbackRate.toFixed(2)}x
             </label>
             <Slider
               id="playback-rate"
@@ -77,7 +66,7 @@ export default function MobileVideo() {
           </div>
           <Button onClick={replayVideo} className="flex items-center gap-2 w-full">
             <Repeat className="w-4 h-4" />
-            Replay
+            Repetir
           </Button>
         </CardContent>
       </Card>

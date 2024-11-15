@@ -78,7 +78,7 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             (
                 <div className='flex flex-col w-[320px] sm:w-[600px] ' {...manejadoresDeslizamiento}>
                     <MobileCamera />
-                    <MobileVideo />
+                    <MobileVideo word={word} />
                     <MobileCarousel level={level} category={category} words={words} currentWordIndex={currentIndex}/>
                 </div>
             ) 
