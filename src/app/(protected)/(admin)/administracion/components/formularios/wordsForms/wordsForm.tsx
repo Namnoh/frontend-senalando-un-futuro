@@ -120,7 +120,7 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
                     <FormItem>
                         <FormLabel>ID</FormLabel>
                             <FormControl>
-                                <Input placeholder="Jhon" disabled={true} value={word?.idCategoria}/>
+                                <Input disabled={true} value={word?.idPalabra}/>
                             </FormControl>
                             <FormDescription>
                                 No puedes editar este campo.
