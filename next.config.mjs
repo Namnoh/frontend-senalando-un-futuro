@@ -4,6 +4,7 @@ import withPWA from "next-pwa";
 
 const nextConfig = {
   images: {
+    domains: ['lh3.googleusercontent.com'],
     // Agrega aquí el dominio de la imagen
     // remotePatterns: [
     //   {
