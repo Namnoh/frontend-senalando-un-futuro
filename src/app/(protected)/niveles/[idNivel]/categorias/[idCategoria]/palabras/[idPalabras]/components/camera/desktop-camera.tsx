@@ -18,7 +18,7 @@ export default function DesktopCamera() {
       setModel(handModel);
 
       console.log('Carga Modelo')
-      const loadedGestureModel = await tf.loadLayersModel('/web_model/model.json');
+      const loadedGestureModel = await tf.loadLayersModel(`http://localhost:3000/web_model/model.json`);
       console.log(loadedGestureModel)
       setGestureModel(loadedGestureModel);
     };
@@ -45,38 +45,60 @@ export default function DesktopCamera() {
       if (canvasRef.current) {
         canvasRef.current.width = videoWidth;
         canvasRef.current.height = videoHeight;
-      }
-
-      // Make Detections
-      const hand = await model.estimateHands(video);
-      console.log(hand)
-      if (hand.length > 0) {
-        console.log('Se detecta mano')
-        // Aquí es donde procesarías los puntos de la mano y los pasarías a tu modelo
-        const keypoints = hand[0].landmarks.flat();
-        
-        // Asegúrate de que los keypoints estén en el formato correcto para tu modelo
-        // Divide `keypoints` en 20 subconjuntos de 126 elementos cada uno
-        const reshapedKeypoints = [];
-        for (let i = 0; i < 20; i++) {
-            reshapedKeypoints.push(keypoints.slice(i * 126, (i + 1) * 126));
-        }
-        console.log('GestureModel')
-        console.log(gestureModel)
-        // Crea el tensor con la forma (1, 20, 126)
-        if (gestureModel) {
-            console.log(`KEYPOINTS: ${reshapedKeypoints} - ${reshapedKeypoints.length}`);
-            const tensor = tf.tensor3d([reshapedKeypoints], [1, 20, 126]);
-
-            // Realiza la predicción
-            const prediction = gestureModel.predict(tensor) as tf.Tensor;
-            const predictionData = await prediction.array();
-            console.log('PostPredict')
-            // Limpia los tensores para liberar memoria
-            tensor.dispose();
-            prediction.dispose();
-
-            console.log(`Prediction: ${predictionData}`);
+        // Make Detections
+        const hands = await model.estimateHands(video);
+        if (hands.length > 0) {
+          
+          // Dibujar en el canvas
+          const ctx = canvasRef.current.getContext('2d');
+          if (ctx) {
+            ctx.clearRect(0, 0, videoWidth, videoHeight);
+            ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+  
+            // Dibujar landmarks de la mano
+            hands.forEach(hand => {
+              hand.landmarks.forEach(landmark => {
+                const [x, y] = landmark;
+  
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, 3 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
+              });
+            });
+          }
+  
+          console.log('Se detecta mano')
+          // Aquí es donde procesarías los puntos de la mano y los pasarías a tu modelo
+          const keypoints = hands[0].landmarks.flat();
+          console.log(`Keypoints Reales: ${keypoints.length}`)
+          // Asegúrate de que los keypoints estén en el formato correcto para tu modelo
+          // Rellenar hasta llegar a 2520 elementos
+          const paddedKeypoints = [...keypoints];
+          while (paddedKeypoints.length < 2520) {
+              paddedKeypoints.push(0);  // Agrega ceros
+          }
+  
+          // Divide los puntos en 20 subconjuntos de 126 elementos
+          const reshapedKeypoints: number[][] = [];
+          for (let i = 0; i < 20; i++) {
+              reshapedKeypoints.push(paddedKeypoints.slice(i * 126, (i + 1) * 126));
+          }
+          // Crea el tensor con la forma (1, 20, 126)
+          if (gestureModel) {
+              console.log(`KEYPOINTS: ${reshapedKeypoints} - ${reshapedKeypoints.length}`);
+              const tensor = tf.tensor3d([reshapedKeypoints], [1, 20, 126]);
+  
+              // Realiza la predicción
+              const prediction = gestureModel.predict(tensor) as tf.Tensor;
+              const predictionData = await prediction.array();
+              console.log('PostPredict')
+              // Limpia los tensores para liberar memoria
+              tensor.dispose();
+              prediction.dispose();
+  
+              console.log(`Prediction: ${predictionData}`);
+          }
         }
       }
     }
@@ -92,7 +114,7 @@ export default function DesktopCamera() {
   return (
       <Card className="w-full max-w-4xl">
         <CardContent className='p-6'>
-          <div className="aspect-video">
+          <div className="relative aspect-video">
             <Webcam
               audio={false}
               ref={webcamRef}
@@ -100,16 +122,7 @@ export default function DesktopCamera() {
             />
             <canvas
               ref={canvasRef}
-              style={{
-                position: "absolute",
-                marginLeft: "auto",
-                marginRight: "auto",
-                left: 0,
-                right: 0,
-                textAlign: "center",
-                width: 640,
-                height: 480,
-              }}
+              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
             />
           </div>
         </CardContent>
