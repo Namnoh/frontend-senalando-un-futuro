@@ -60,6 +60,7 @@ export const authOptions: NextAuthOptions = {
 
         if (response.ok) {
             user.id = userData.idUsuario;
+
             user.email = userData.correoUsuario;
             user.idRol = userData.idRol;
             return true;
