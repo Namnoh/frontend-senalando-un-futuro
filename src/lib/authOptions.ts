@@ -18,21 +18,19 @@ export const authOptions: NextAuthOptions = {
         },
         async authorize(credentials, req): Promise<any>{
             const response = await fetch(
-            `${process.env.API_URL}/users/authorize/${credentials?.email}`,
-            {
-                method: "GET",
-            }
+                `${process.env.API_URL}/users/authorize/${credentials?.email}`,
+                {
+                    method: "GET",
+                }
             );
 
-            if (!response.ok) {
-            return null;
-            }
+            if (!response.ok) return null;
 
             const user = await response.json();
 
             const matchPassword = await bcrypt.compare(
-            credentials!.password,
-            user.contrasenaUsuario
+                credentials!.password,
+                user.contrasenaUsuario
             );
 
             if (!matchPassword) return null;
@@ -59,9 +57,9 @@ export const authOptions: NextAuthOptions = {
         const userData = await response.json();
 
         if (response.ok) {
-            user.id = userData.idUsuario;
-            user.email = userData.correoUsuario;
-            user.idRol = userData.idRol;
+                user.id = userData.idUsuario;
+                user.email = userData.correoUsuario;
+                user.idRol = userData.idRol;
             return true;
         } else if (response.status === 404) {
             const nameParts = (user.name || "").trim().split(" ");
@@ -70,36 +68,36 @@ export const authOptions: NextAuthOptions = {
             let apellidoUsuario = "";
         
             if (nameParts.length >= 4) {
-            nombreUsuario = nameParts[0];
-            apellidoUsuario = nameParts[2];
+                nombreUsuario = nameParts[0];
+                apellidoUsuario = nameParts[2];
             } else {
-            nombreUsuario = nameParts[0];
-            apellidoUsuario = nameParts.slice(1).join(" ") || "";
+                nombreUsuario = nameParts[0];
+                apellidoUsuario = nameParts.slice(1).join(" ") || "";
             }
             
             const newUser = {
-            nombreUsuario: nombreUsuario,
-            apellidoUsuario: apellidoUsuario,
-            correoUsuario: email,
-            contrasenaUsuario: "", 
-            idRol: 1, 
+                nombreUsuario: nombreUsuario,
+                apellidoUsuario: apellidoUsuario,
+                correoUsuario: email,
+                contrasenaUsuario: "", 
+                idRol: 1, 
             };
 
             const createResponse = await fetch(`${process.env.API_URL}/users`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newUser),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newUser),
             });
 
             if (createResponse.ok) {
-            const usuario : Usuario = await createResponse.json()
-            user.id = usuario.idUsuario
-            return true; 
+                const usuario : Usuario = await createResponse.json()
+                user.id = usuario.idUsuario
+                return true; 
             } else {
-            console.error("Error creando el usuario:", await createResponse.json());
-            return false; 
+                console.error("Error creando el usuario:", await createResponse.json());
+                return false;
             }
         } else {
             console.error("Error al autorizar el usuario:", userData.message);
@@ -107,24 +105,24 @@ export const authOptions: NextAuthOptions = {
         }
         },
         async jwt({ token, user, account }) {
-        if (account?.provider === "google") {
-            token.accessToken = account.access_token;
-        }
-        if (user) {
-            token.id = Number(user.id);
-            token.lastname = user.lastname;
-            token.idRol = user.idRol;
-        } 
-        return token;
+            if (account?.provider === "google") {
+                token.accessToken = account.access_token;
+            }
+            if (user) {
+                token.id = Number(user.id);
+                token.lastname = user.lastname;
+                token.idRol = user.idRol;
+            } 
+            return token;
         },
         async session({ session, token }) {
-        if (session.user) {
-            session.user.id = token.id as number;
-            session.user.lastname = token.lastname as string;
-            session.user.idRol = token.idRol as number; 
-            session.accessToken = token.accessToken;
-        }     
-        return session;
+            if (session.user) {
+                session.user.id = token.id as number;
+                session.user.lastname = token.lastname as string;
+                session.user.idRol = token.idRol as number; 
+                session.accessToken = token.accessToken;
+            }     
+            return session;
         }
     }
     ,

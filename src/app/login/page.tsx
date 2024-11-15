@@ -63,7 +63,7 @@ export default function LoginPage() {
       })
 
       if (res?.error) {
-        setLoginError(res.error)
+        setLoginError('Error en las credenciales.')
       } else {
         router.push('/niveles')
       }
