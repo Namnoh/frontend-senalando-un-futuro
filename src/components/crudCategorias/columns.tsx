@@ -80,16 +80,6 @@ export const columns: ColumnDef<Categoria>[] = [
         },
     },
     {
-        accessorKey: "status",
-        header: ({ column, table }) => {
-            return (
-                <FilterAscDesc table={table} column={column}>
-                    Estado
-                </FilterAscDesc>
-            )
-        },
-    },
-    {
         accessorKey: "idNivel",
         header: ({ column, table }) => {
             return (
