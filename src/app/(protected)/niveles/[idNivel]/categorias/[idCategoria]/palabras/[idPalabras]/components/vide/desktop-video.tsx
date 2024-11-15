@@ -1,14 +1,15 @@
 "use client"
 
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState, useCallback, useEffect } from 'react'
 import ReactPlayer from 'react-player'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Input } from "@/components/ui/input"
 import { Repeat } from "lucide-react"
+import { Palabra } from '@/interfaces/palabraInterface'
 
-export default function DesktopVideo() {
+export default function DesktopVideo({word}: {word:Palabra}) {
   const playerRef = useRef<ReactPlayer>(null)
   const [videoUrl, setVideoUrl] = useState<string>('')
   const [playbackRate, setPlaybackRate] = useState<number>(1)
@@ -19,15 +20,8 @@ export default function DesktopVideo() {
     setPlaybackRate(newRate)
   }, [])
 
-  const handleVideoUrlChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setVideoUrl(event.target.value)
-  }, [])
-
-  const loadVideo = useCallback(() => {
-    if (playerRef.current) {
-      playerRef.current.seekTo(0)
-      setIsPlaying(true)
-    }
+  const handleVideoURL = useCallback((url:string) => {
+    setVideoUrl(url)
   }, [])
 
   const replayVideo = useCallback(() => {
@@ -37,20 +31,14 @@ export default function DesktopVideo() {
     }
   }, [])
 
+  useEffect(() => {
+    handleVideoURL(word.videoPalabra)
+  }, [])
+
   return (
     <div className="h-full">
       <Card className="h-full w-full max-w-3xl mx-auto">
         <CardContent className='h-full flex flex-col items-center p-5'>
-          <div className="flex gap-4 mb-4">
-            <Input
-              type="text"
-              placeholder="URL Video"
-              value={videoUrl}
-              onChange={handleVideoUrlChange}
-              className="flex-grow"
-            />
-            <Button onClick={loadVideo}>Load Video</Button>
-          </div>
           <div className="flex-grow mb-4">
             <ReactPlayer
               ref={playerRef}
@@ -67,7 +55,7 @@ export default function DesktopVideo() {
           <div className='flex justify-between w-full'>
             <div className="mb-4">
               <label htmlFor="playback-rate" className="block text-sm font-medium mb-2">
-                Playback Speed: {playbackRate.toFixed(2)}x
+                Velocidad: {playbackRate.toFixed(2)}x
               </label>
               <Slider
                 id="playback-rate"
@@ -80,7 +68,7 @@ export default function DesktopVideo() {
             </div>
             <Button onClick={replayVideo} className="flex items-center gap-2">
               <Repeat className="w-4 h-4" />
-              Replay
+              Repetir
             </Button>
           </div>
         </CardContent>

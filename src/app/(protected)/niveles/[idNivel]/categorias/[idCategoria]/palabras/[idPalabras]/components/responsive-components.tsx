@@ -16,11 +16,12 @@ import { useRouter } from 'next/navigation';
 interface ResponsiveComponentsProps {
     level: TitleProp;
     category: TitleProp;
+    word: Palabra;
     words: Palabra[];
     currentWordIndex: number;
 }
 
-export default function ResponsiveComponents({ level, category, words, currentWordIndex: initialIndex }: ResponsiveComponentsProps) {
+export default function ResponsiveComponents({ level, category, word, words, currentWordIndex: initialIndex }: ResponsiveComponentsProps) {
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(initialIndex); 
@@ -60,7 +61,6 @@ export default function ResponsiveComponents({ level, category, words, currentWo
 
     };
 
-  
     const manejadoresDeslizamiento = useSwipeable({
         onSwipedLeft: () => manejarNavegacion('siguiente'),
         onSwipedRight: () => manejarNavegacion('anterior'),
@@ -86,7 +86,7 @@ export default function ResponsiveComponents({ level, category, words, currentWo
             (
                 <div className='flex flex-col h-full w-full items-center justify-center gap-10'>
                     <div className='flex flex-grow gap-2 items-center w-full justify-center'>
-                        <DesktopVideo />
+                        <DesktopVideo word={word} />
                         <DesktopCamera/>
                     </div>
                     <DesktopCarousel level={level} category={category} words={words}/>

@@ -12,6 +12,7 @@ export default async function WordsPage({ params }: any) {
 
   // Obtener el índice de la palabra en el array de palabras
   const currentWordIndex = words.findIndex((word: any) => word.idPalabra === palabra.idTitle);
+  const currentWord = words.find((word: any) => word.idPalabra === palabra.idTitle);
 
   return (
     <div className="relative flex h-full w-full">
@@ -21,7 +22,7 @@ export default async function WordsPage({ params }: any) {
           <h2 className='text-5xl mt-10 md:text-6xl lg:text-7xl font-medium text-defaultTextColor capitalize'>{palabra.nameTitle}</h2>
         </div>
         <Suspense>
-          <ResponsiveComponents level={level} category={cat} words={words} currentWordIndex={currentWordIndex} />
+          <ResponsiveComponents level={level} category={cat} word={currentWord} words={words} currentWordIndex={currentWordIndex} />
         </Suspense>
       </div>
     </div>
