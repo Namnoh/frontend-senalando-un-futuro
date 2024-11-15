@@ -76,10 +76,14 @@ export default function ResponsiveComponents({ level, category, word, words, cur
         <>
             {( isMobile ? 
             (
-                <div className='flex flex-col w-[320px] sm:w-[600px] ' {...manejadoresDeslizamiento}>
-                    <MobileCamera />
+                <div className='flex flex-col w-[320px] sm:w-[600px] '>
+                    <div {...manejadoresDeslizamiento}>
+                        <MobileCamera />
+                    </div>
                     <MobileVideo word={word} />
-                    <MobileCarousel level={level} category={category} words={words} currentWordIndex={currentIndex}/>
+                    <div {...manejadoresDeslizamiento}>
+                        <MobileCarousel level={level} category={category} words={words} currentWordIndex={currentIndex}/>
+                    </div>
                 </div>
             ) 
             : 

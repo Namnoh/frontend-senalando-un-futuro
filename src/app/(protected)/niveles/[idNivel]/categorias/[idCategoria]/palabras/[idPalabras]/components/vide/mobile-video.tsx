@@ -37,7 +37,7 @@ export default function MobileVideo({word}:{word:Palabra}) {
   return (
     <div className="my-4">
       <Card>
-        <CardContent className='p-6'>
+        <CardContent className='p-3'>
           <div className="aspect-square mb-2">
             <ReactPlayer
               ref={playerRef}

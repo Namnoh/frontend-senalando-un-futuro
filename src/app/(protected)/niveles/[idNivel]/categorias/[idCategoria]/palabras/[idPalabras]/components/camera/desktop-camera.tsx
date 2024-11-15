@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as handpose from '@tensorflow-models/handpose';
@@ -20,7 +22,7 @@ export default function DesktopCamera() {
         console.log('Modelo de HandPose cargado.');
 
         // Cargar modelo de gestos
-        const loadedGestureModel = await tf.loadLayersModel(`http://localhost:3000http://localhost:3000/web_model/model.json`);
+        const loadedGestureModel = await tf.loadLayersModel(`http://localhost:3000/web_model/model.json`);
         console.log('Modelo de gestos cargado:', loadedGestureModel);
         setGestureModel(loadedGestureModel);
       } catch (error) {
