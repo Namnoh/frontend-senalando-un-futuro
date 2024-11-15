@@ -8,7 +8,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import styles from "@/app/styles/auth.module.scss"
-
+import Image from "next/image";
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -37,6 +37,11 @@ const formSchema = z.object({
     message: "La contraseña debe tener al menos 8 caracteres.",
   }),
 })
+const sections = [
+  {
+    image: "/svg/videollamada.svg"
+  }]
+
 
 export default function LoginPage() {
   const router = useRouter()
@@ -175,7 +180,15 @@ export default function LoginPage() {
             </p>
           </CardFooter>
         </Card>
-        <div className="hidden md:block bg-white outline w-[500px] h-[500px] rounded-full"></div>
+        <div className="flex items-center justify-center bg-white outline outline-primary-300 shadow-xl shadow-primary-500 w-[500px] h-[500px] rounded-full">
+          <Image
+            src={sections[0].image}
+            alt="Videollamada de ejemplo"
+            width={360}
+            height={360}
+            className="object-contain rounded-bl-[20%] rounded-br-[20%] "
+          />
+        </div>
       </div>
     </div>
   )

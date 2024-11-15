@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react"
+import Image from "next/image";
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import * as z from "zod"
@@ -22,6 +23,10 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 
+const sections = [
+  {
+    image: "/svg/charlando.svg"
+  }]
 const formSchema = z.object({
   nombreUsuario: z.string().min(2, {
     message: "El nombre debe tener al menos 2 caracteres.",
@@ -226,7 +231,15 @@ export default function RegisterPage() {
             </p>
           </CardFooter>
         </Card>
-        <div className="hidden md:block bg-white outline w-[500px] h-[500px] rounded-full"></div>
+        <div className="flex items-center justify-center bg-white outline outline-primary-300 shadow-xl shadow-primary-500 w-[500px] h-[500px] rounded-full">
+          <Image
+              src={sections[0].image}
+              alt="Videollamada de ejemplo"
+              width={360}
+              height={360}
+              className="object-contain rounded-bl-[20%] rounded-br-[20%] "
+            />
+        </div>
       </div>
     </div>
   )
