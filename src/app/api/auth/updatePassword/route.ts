@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
         if (!token || !newPassword) {
             return NextResponse.json({ error: 'Token y nueva contraseña son requeridos.' }, { status: 400 });
         }
-        console.log('token enviado de la pagina ', token)
         const response = await fetch(`${process.env.API_URL}/auth/reset-password`, {
         method: 'POST',
         headers: {

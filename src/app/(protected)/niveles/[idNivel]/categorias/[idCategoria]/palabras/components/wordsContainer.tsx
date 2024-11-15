@@ -7,10 +7,11 @@ export default async function WordsContainer({level, category}: {level:TitleProp
     const words = await getWordsFrom(category.idTitle);
 
     return (
-        <div className='flex flex-wrap justify-center gap-5 w-2/3 mb-10'>
+        <div className='flex flex-wrap justify-center gap-5 gap-y-12 lg:gap-y-0 w-2/3 mb-10'>
             { words.map((w:Palabra) =>
                 {
                     return (
+                        
                         <MiniCardGalery
                             key={w.idPalabra}
                             level={level}

@@ -35,7 +35,7 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
             isPalabraSection = false;
         } else if (isPalabra(item)) {
             newItem = { itemId:item.idPalabra, itemName:item.nombrePalabra, itemIcon:item.iconPalabra }
-            enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${category?.idTitle}-${encodeURIComponent(category!.nameTitle).toLowerCase()}/palabras/${newItem.itemId}`;
+            enlace = `/niveles/${level?.idTitle}-${encodeURIComponent(level!.nameTitle)}/categorias/${category?.idTitle}-${encodeURIComponent(category!.nameTitle).toLowerCase()}/palabras/${newItem.itemId}-${encodeURIComponent(newItem.itemName).toLowerCase()}`;
             isPalabraSection = true;
         } else {
             throw new Error('Tipo de item no reconocido');

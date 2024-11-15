@@ -13,7 +13,6 @@ export async function getParamsTitle(params:string, type:string): Promise<TitleP
     } else {
         nameTitle = decodeURIComponent(nameTitleCodificado);
     }
-    
     const level:TitleProp = { idTitle, nameTitle }
     return level;
 };

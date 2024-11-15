@@ -168,14 +168,14 @@ export function CategoryForm({category, closeDialog, refreshData}:{category?:Cat
                     )}
                 />
                 <div className="flex flex-row sm:justify-between w-full">
+                    <DialogClose asChild>
+                        <Button type="button" variant="outline">Cancelar</Button>
+                    </DialogClose>
                     { isLoading ? (
                         <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
                     ) : (
                         <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!category ? 'Crear Registro' : 'Actualizar Registro'}</Button>
                     )}
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
-                    </DialogClose>
                 </div>
             </form>
         </Form>

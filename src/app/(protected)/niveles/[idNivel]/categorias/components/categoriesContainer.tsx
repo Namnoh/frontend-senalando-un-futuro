@@ -7,7 +7,7 @@ export default async function CategoriesContainer({level}: {level:TitleProp}) {
     const categories = await getCategoriesFrom(level.idTitle);
 
     return (
-        <div className='flex flex-wrap justify-center gap-5 w-2/3 mb-10'>
+        <div className='flex flex-wrap justify-center gap-5 gap-y-12 lg:gap-y-0 w-2/3 mb-10'>
             { categories.map((c:Categoria) =>
                 {
                     return (

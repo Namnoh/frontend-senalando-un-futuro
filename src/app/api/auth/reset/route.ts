@@ -43,7 +43,6 @@ export async function POST(req: NextRequest) {
 
     // Si la respuesta es exitosa, obtenemos el mensaje y lo enviamos al cliente
     const data = await response.json();
-    console.log(data.message)
     return NextResponse.json(
       { message:'Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.' },
       { status: 200 }

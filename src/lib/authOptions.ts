@@ -38,17 +38,17 @@ export const authOptions: NextAuthOptions = {
             if (!matchPassword) return null;
 
             return {
-            id: user.idUsuario,
-            name: user.nombreUsuario,
-            lastname: user.apellidoUsuario,
-            email: user.correoUsuario,
-            idRol: user.idRol
+                id: user.idUsuario,
+                name: user.nombreUsuario,
+                lastname: user.apellidoUsuario,
+                email: user.correoUsuario,
+                idRol: user.idRol
             };
         },
         }),
         GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID || "",
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
         })
     ],
     callbacks: {
@@ -60,6 +60,9 @@ export const authOptions: NextAuthOptions = {
 
         if (response.ok) {
             user.id = userData.idUsuario;
+
+            user.email = userData.correoUsuario;
+            user.idRol = userData.idRol;
             return true;
         } else if (response.status === 404) {
             const nameParts = (user.name || "").trim().split(" ");

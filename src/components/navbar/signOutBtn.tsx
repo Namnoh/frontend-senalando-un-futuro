@@ -7,7 +7,7 @@ export default function SignOutBtn({l, isOpen}:{l:Vista, isOpen?:boolean}) {
     return (
         <div
             onClick={() => signOut()}
-            className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-primary-800 hover:bg-primary-50`}
+            className={`group mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 hover:text-primary-800 hover:bg-primary-50 ${isOpen ? 'text-base' : ''}`}
         >
             <DynamicIcon name={l.iconoVista} classes={`h-5 w-5`}/>
             {isOpen ? (l.tituloVista) :

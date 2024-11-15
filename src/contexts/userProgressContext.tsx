@@ -1,32 +1,32 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { UserProgress } from "@/interfaces/levelinterface";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
 import SimpleLoading from "@/components/customUI/simpleLoading";
 
-type userProgressContextProviderProps = {
+type UserProgressContextProviderProps = {
     children: React.ReactNode;
 }
 
 type Progress = UserProgress;
 
-type UserProgressContext = {
+type UserProgressContextType = {
     progress: Progress | null;
-    updateProgress: (newUserProgress: UserProgress) => void;
+    updateProgress: (newUserProgress: UserProgress) => Promise<void>;
+    isLoading: boolean;
 }
 
-export const UserProgressContext = createContext<UserProgressContext | null>(null);
+const UserProgressContext = createContext<UserProgressContextType | null>(null);
 
-export default function UserProgressContextProvider({children} : userProgressContextProviderProps) {
+export default function UserProgressContextProvider({children} : UserProgressContextProviderProps) {
     const { data: session, status } = useSession();
     const [progress, setProgress] = useState<Progress | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Función para actualizar progreso
     const updateProgress = async (newUserProgress: UserProgress) => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
             const response = await fetch(`/api/level/updateUserProgress/${newUserProgress.idProgreso}`, {
                 method: 'PATCH',
@@ -36,8 +36,8 @@ export default function UserProgressContextProvider({children} : userProgressCon
                 body: JSON.stringify(newUserProgress),
             });
             if (!response.ok) {
-                throw new Error('Failed to fetch userProgress');
-            };
+                throw new Error(`Failed to update userProgress: ${response.statusText}`);
+            }
             toast({
                 title: "Éxito",
                 description: "Progreso actualizado correctamente",
@@ -45,57 +45,69 @@ export default function UserProgressContextProvider({children} : userProgressCon
             });
             setProgress(newUserProgress);
         } catch (err) {
-            const errorMessage = (err instanceof Error) ? err.message : 'Error desconocido';
+            const errorMessage = err instanceof Error ? err.message : 'Error desconocido al actualizar el progreso';
             toast({
                 title: "Error",
                 description: errorMessage,
                 variant: "destructive",
             });
         } finally {
-            setIsLoading(false)
-        };
+            setIsLoading(false);
+        }
     };
 
     const fetchProgress = async () => {
-        setIsLoading(true)
+        setIsLoading(true);
         try {
-            if (!session || !session.user?.id) {
-                throw new Error('No se ha iniciado sesión o no se puede obtener el ID de usuario');
+            if (!session?.user?.id) {
+                console.warn('No se ha iniciado sesión o no se puede obtener el ID de usuario');
+                return;
             }
             const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`);
             if (!response.ok) {
-                throw new Error('Failed to fetch userProgress');
-            };
+                throw new Error(`Failed to fetch userProgress: ${response.statusText}`);
+            }
             const fetchedProgress: UserProgress = await response.json();
             setProgress(fetchedProgress);
         } catch (err) {
-            console.error(err)
+            console.error('Error fetching user progress:', err);
+            toast({
+                title: "Error",
+                description: "No se pudo cargar el progreso del usuario",
+                variant: "destructive",
+            });
         } finally {
-            setIsLoading(false)
-        };
+            setIsLoading(false);
+        }
     };
     
     useEffect(() => {
-        if (status === "authenticated") {
+        if (status === "authenticated" && !progress) {
             fetchProgress();
         }
-    }, [session, status])
+    }, [status, progress]);
+
+    const contextValue = useMemo(() => ({
+        progress,
+        updateProgress,
+        isLoading
+    }), [progress, isLoading]);
 
     if (isLoading) {
-        return <SimpleLoading />
+        return <SimpleLoading />;
     }
 
     return (
-        <UserProgressContext.Provider value={{ progress, updateProgress }}>
+        <UserProgressContext.Provider value={contextValue}>
             {children}
         </UserProgressContext.Provider>
     );
-};
+}
 
-export function useProgressContext() {
+export function useProgressContext(): UserProgressContextType {
     const context = useContext(UserProgressContext);
     if (!context) {
-        throw new Error("useProgressContext debe ser utilizado dentro de UserProgressContextProvider")
-    };
+        throw new Error("useProgressContext debe ser utilizado dentro de UserProgressContextProvider");
+    }
     return context;
 }

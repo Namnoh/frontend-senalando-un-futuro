@@ -6,7 +6,6 @@ import { getParamsTitle } from '@/services/actions.services';
 import CustomHeader from '@/components/customUI/customHeader';
 
 export default async function GeneralContainer({params}:any) {
-    // TODO: Verificar si puedo evitar utilizar estas funciones y reemplazarlas con el middleware
     const level = await getParamsTitle(params.idNivel, 'level');
     const cat = await getParamsTitle(params.idCategoria, 'category');
     

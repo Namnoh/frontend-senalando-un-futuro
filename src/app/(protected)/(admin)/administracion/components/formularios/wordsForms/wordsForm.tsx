@@ -30,6 +30,19 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
     const [ requiredLevel, setRequiredLevel ] = useState<number | null>(null);
     const [ requiredCategory, setRequiredCategory ] = useState<Categoria[]>([]);
     const { toast } = useToast();
+
+    // Se define el formulario
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            nombrePalabra: word ? word.nombrePalabra : '' ,
+            iconPalabra: word ? word.iconPalabra : '' ,
+            videoPalabra: word ? word.videoPalabra : '' ,
+            idCategoria: word ? word.idCategoria : undefined,
+            idNivel: word ? word.idNivel : undefined,
+        },
+    });
+
     // Handle Submit
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
@@ -88,7 +101,7 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
     const handleCategoryOnChange = (value:string) => {
         const selectedCategory = categories.find((c:Categoria) => c.idCategoria === Number(value));
         if (selectedCategory) {
-            console.log(selectedCategory)
+            form.setValue('idNivel', selectedCategory.idNivel);
             setRequiredLevel(selectedCategory.idNivel);
         }
     };
@@ -100,18 +113,6 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
         };
     };
 
-    // Se define el formulario
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            nombrePalabra: word ? word.nombrePalabra : '' ,
-            iconPalabra: word ? word.iconPalabra : '' ,
-            videoPalabra: word ? word.videoPalabra : '' ,
-            idCategoria: word ? word.idCategoria : undefined,
-            idNivel: word ? word.idNivel : undefined,
-        },
-    });
-
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -119,7 +120,7 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
                     <FormItem>
                         <FormLabel>ID</FormLabel>
                             <FormControl>
-                                <Input placeholder="Jhon" disabled={true} value={word?.idCategoria}/>
+                                <Input disabled={true} value={word?.idPalabra}/>
                             </FormControl>
                             <FormDescription>
                                 No puedes editar este campo.
@@ -235,14 +236,14 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
                     )}
                 />
                 <div className="flex flex-row sm:justify-between w-full">
+                    <DialogClose asChild>
+                        <Button type="button" variant="outline">Cancelar</Button>
+                    </DialogClose>
                     { isLoading ? (
                         <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
                     ) : (
                         <Button type="submit" variant="default" className="text-background">{!word ? 'Crear Registro' : 'Actualizar Registro'}</Button>
                     )}
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
-                    </DialogClose>
                 </div>
             </form>
         </Form>

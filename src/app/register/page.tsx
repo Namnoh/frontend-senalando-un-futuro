@@ -84,7 +84,6 @@ export default function RegisterPage() {
       }
 
       const resJSON = await res.json()
-      console.log(resJSON)
       router.push('/login')
     } catch (error) {
       setRegisterError("Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.")
