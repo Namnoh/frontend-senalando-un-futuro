@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../backend-senalando-un-futuro"
+		},
+		{
+			"path": "../sign-language-ia"
+		},
+		{
+			"path": "../functions"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"arange",
+			"Keras",
+			"mediapipe",
+			"tensorflowjs",
+			"tfjs"
+		]
+	}
+}
