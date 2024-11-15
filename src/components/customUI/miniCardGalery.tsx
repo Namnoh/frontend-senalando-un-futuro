@@ -43,7 +43,7 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
     }
 
     return (
-        <div className="max-w-[104px] lg:min-w-[120px] lg:min-h-[120px] lg:max-w-[120px] lg:max-h-[120px]">
+        <div className="max-w-[104px] lg:min-w-[120px] lg:min-h-[120px] lg:max-w-[120px] lg:max-h-[120px] h-fit">
             <Link
                 href={enlace}
                 className='group'
@@ -53,13 +53,13 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
                     <ProgressBadge itemId={newItem.itemId} isPalabraSection={isPalabraSection}/>
                     <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
                     <div
-                        className='absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-all pointer-events-none lg:pointer-events-auto'
+                        className='flex items-center justify-center text-center absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-words pointer-events-none lg:pointer-events-auto'
                     >
                         <p>{newItem.itemName}</p>
                     </div>
                 </div>
             </Link>
-            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-all max-h-16 overflow-scroll`}>{newItem.itemName}</p>
+            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-words h-auto overflow-scroll`}>{newItem.itemName}</p>
         </div>
     )
 }

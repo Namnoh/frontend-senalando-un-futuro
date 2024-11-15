@@ -25,13 +25,13 @@ export default function CarruselList({level, category, item, iconClasses}: Carro
                     <ProgressBadge itemId={item.idPalabra} isPalabraSection={true}/>
                     <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
                     <div
-                        className='absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-all pointer-events-none lg:pointer-events-auto'
+                        className='flex items-center justify-center text-center absolute h-[90%] w-[90%] opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-words pointer-events-none lg:pointer-events-auto'
                     >
                         <p>{item.nombrePalabra}</p>
                     </div>
                 </div>
             </Link>
-            <p className={`text-center mt-2 lg:hidden text-defaultTextColor break-all max-h-16 overflow-scroll`}>{item.nombrePalabra}</p>
+            <p className={`text-center mt-2 lg:hidden text-defaultTextColor break-words max-h-16 overflow-scroll`}>{item.nombrePalabra}</p>
         </div>
     )
 }
