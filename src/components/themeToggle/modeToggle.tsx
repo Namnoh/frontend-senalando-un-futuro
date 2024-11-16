@@ -25,13 +25,13 @@ export function ModeToggle() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuItem className="hover:bg-muted hover:text-muted-800 focus:bg-muted focus:text-muted-800" onClick={() => setTheme("light")}>
-                    Light
+                    Claro
                 </DropdownMenuItem>
                 <DropdownMenuItem className="hover:bg-muted hover:text-muted-800 focus:bg-muted focus:text-muted-800" onClick={() => setTheme("dark")}>
-                    Dark
+                    Oscuro
                 </DropdownMenuItem>
                 <DropdownMenuItem className="hover:bg-muted hover:text-muted-800 focus:bg-muted focus:text-muted-800" onClick={() => setTheme("system")}>
-                    System
+                    Sistema
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

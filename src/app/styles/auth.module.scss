@@ -3,12 +3,12 @@
     background-size: cover; /* O 'contain' según lo que necesites */
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh; /* Altura completa */
+    height: auto; /* o 100vh */
 }
 .backgroundImageRegister {
     background-image: url('/svg/Register.svg');
     background-size: cover; /* O 'contain' según lo que necesites */
     background-position: center;
     background-repeat: no-repeat;
-    height: 100vh; /* Altura completa */
+    height: auto; /* o 100vh */
 }
