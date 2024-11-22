@@ -16,9 +16,16 @@
 	"settings": {
 		"cSpell.words": [
 			"arange",
+			"blendshapes",
+			"derecho",
+			"FACEMESH",
 			"hookform",
+			"imshow",
+			"jetson",
 			"Keras",
 			"mediapipe",
+			"producción",
+			"SRGB",
 			"Swipeable",
 			"tensorflowjs",
 			"tfjs"

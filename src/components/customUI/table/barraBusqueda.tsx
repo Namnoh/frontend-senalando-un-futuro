@@ -25,6 +25,7 @@ export default function BarraBusqueda<TData>({table}:OnlyTableProp<TData>) {
 
     return (
         <Input
+            name="filtrarDatos"
             placeholder="Filtrar Datos..."
             value={value}
             // value={(table.getAllColumns().filter(r => ))}

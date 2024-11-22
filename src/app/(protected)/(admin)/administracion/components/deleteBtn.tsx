@@ -27,8 +27,9 @@ export function DeleteBtn({id, type, closeDialog}: {id:number, type:string, clos
                     'Content-Type': 'application/json',
                 },
             });
-            if (!response.ok) {
-                throw new Error(`Error al eliminar el registro: ${response.statusText}`);
+            const responseData = await response.json();
+            if (!response.ok || responseData.error) {
+                throw new Error(responseData.error || `Error al eliminar el registro: ${response.statusText}`);
             }
             toast({
                 title: "Éxito",
@@ -36,10 +37,11 @@ export function DeleteBtn({id, type, closeDialog}: {id:number, type:string, clos
                 variant: "success"
             });
         } catch (error) {
-            console.error("Error en onSubmit:", error);
+            console.error("Error en delete:", (error instanceof Error) ? error.message : 'Error desconocido');
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
             toast({
                 title: "Error",
-                description: "Hubo un problema al procesar la solicitud",
+                description: errorMessage,
                 variant: "destructive",
             });
         } finally {
