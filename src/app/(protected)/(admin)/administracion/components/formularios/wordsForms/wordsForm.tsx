@@ -35,11 +35,11 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            nombrePalabra: word ? word.nombrePalabra : '' ,
-            iconPalabra: word ? word.iconPalabra : '' ,
-            videoPalabra: word ? word.videoPalabra : '' ,
-            idCategoria: word ? word.idCategoria : undefined,
-            idNivel: word ? word.idNivel : undefined,
+            nombrePalabra: word?.nombrePalabra || '' ,
+            iconPalabra: word?.iconPalabra || '' ,
+            videoPalabra: word?.videoPalabra || '' ,
+            idCategoria: word?.idCategoria || undefined,
+            idNivel: word?.idNivel || undefined,
         },
     });
 
@@ -113,139 +113,153 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
         };
     };
 
+    const handleFocus = (e: React.FocusEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLInputElement;
+        if (target.tagName === 'INPUT' && target.type === 'text') {
+            const length = target.value.length;
+            if (length >= 2) {
+                setTimeout(() => {
+                    target.setSelectionRange(length, length);
+                }, 0);
+            }
+        }
+    };
+
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                {word ? (
-                    <FormItem>
-                        <FormLabel>ID</FormLabel>
-                            <FormControl>
-                                <Input disabled={true} value={word?.idPalabra}/>
-                            </FormControl>
-                            <FormDescription>
-                                No puedes editar este campo.
-                            </FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                ) : (
-                    ''
-                )}
-                <FormField
-                    control={form.control}
-                    name="nombrePalabra"
-                    render={({ field }) => (
+        <div onFocus={handleFocus}>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {word ? (
                         <FormItem>
-                            <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Gato" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="iconPalabra"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Icono <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Nombre o enlace" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="videoPalabra"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Video <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Enlace de video" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="idCategoria"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>ID Categoria <span className="text-red-500">*</span></FormLabel>
-                            <Select
-                                onValueChange={(value) => {
-                                    field.onChange(value);
-                                    handleCategoryOnChange(value);
-                                }}
-                                value={field.value?.toString()}
-                            >
+                            <FormLabel>ID</FormLabel>
                                 <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione una Categoría" />
-                                    </SelectTrigger>
+                                    <Input disabled={true} value={word?.idPalabra}/>
                                 </FormControl>
-                                <SelectContent>
-                                    {requiredCategory.length === 0 ? (
-                                        <div>No hay categorías</div>
-                                    ) : (requiredCategory.map(category => {
-                                            return (
-                                                <SelectItem
-                                                    key={category.idCategoria}
-                                                    value={category.idCategoria.toString()}
-                                                >
-                                                    {category.idCategoria} - {category.nombreCategoria}
-                                                </SelectItem>
-                                            )
-                                        })
-                                    )}
-                                </SelectContent>
-                            </Select>
+                                <FormDescription>
+                                    No puedes editar este campo.
+                                </FormDescription>
                             <FormMessage />
                         </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="idNivel"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>ID Nivel <span className="text-red-500">*</span></FormLabel>
-                            <Select onValueChange={(value) => {
-                                    field.onChange(value);
-                                    handleLevelOnChange(value);
-                                }}
-                                defaultValue={field.value?.toString()}
-                                value={requiredLevel ? requiredLevel.toString() : undefined}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione un Nivel" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value='1' disabled={requiredLevel ? (requiredLevel === 1 ? false : true) : false}>1 - Básico</SelectItem>
-                                    <SelectItem value='2' disabled={requiredLevel ? (requiredLevel === 2 ? false : true) : false}>2 - Intermedio</SelectItem>
-                                    <SelectItem value='3' disabled={requiredLevel ? (requiredLevel === 3 ? false : true) : false}>3 - Avanzado</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <div className="flex flex-row sm:justify-between w-full">
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
-                    </DialogClose>
-                    { isLoading ? (
-                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
                     ) : (
-                        <Button type="submit" variant="default" className="text-background">{!word ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                        ''
                     )}
-                </div>
-            </form>
-        </Form>
+                    <FormField
+                        control={form.control}
+                        name="nombrePalabra"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j Gato" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="iconPalabra"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Icono <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Nombre o enlace" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="videoPalabra"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Video <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j https://video.com" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="idCategoria"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>ID Categoria <span className="text-red-500">*</span></FormLabel>
+                                <Select
+                                    onValueChange={(value) => {
+                                        field.onChange(value);
+                                        handleCategoryOnChange(value);
+                                    }}
+                                    value={field.value?.toString()}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione una Categoría" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {requiredCategory.length === 0 ? (
+                                            <div>No hay categorías</div>
+                                        ) : (requiredCategory.map(category => {
+                                                return (
+                                                    <SelectItem
+                                                        key={category.idCategoria}
+                                                        value={category.idCategoria.toString()}
+                                                    >
+                                                        {category.idCategoria} - {category.nombreCategoria}
+                                                    </SelectItem>
+                                                )
+                                            })
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="idNivel"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>ID Nivel <span className="text-red-500">*</span></FormLabel>
+                                <Select onValueChange={(value) => {
+                                        field.onChange(value);
+                                        handleLevelOnChange(value);
+                                    }}
+                                    defaultValue={field.value?.toString()}
+                                    value={requiredLevel ? requiredLevel.toString() : undefined}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione un Nivel" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value='1' disabled={requiredLevel ? (requiredLevel === 1 ? false : true) : false}>1 - Básico</SelectItem>
+                                        <SelectItem value='2' disabled={requiredLevel ? (requiredLevel === 2 ? false : true) : false}>2 - Intermedio</SelectItem>
+                                        <SelectItem value='3' disabled={requiredLevel ? (requiredLevel === 3 ? false : true) : false}>3 - Avanzado</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="flex flex-row sm:justify-between w-full">
+                        <DialogClose asChild>
+                            <Button type="button" variant="outline">Cancelar</Button>
+                        </DialogClose>
+                        { isLoading ? (
+                            <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                        ) : (
+                            <Button type="submit" variant="default" className="text-background">{!word ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                        )}
+                    </div>
+                </form>
+            </Form>
+        </div>
     )
 }

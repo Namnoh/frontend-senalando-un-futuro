@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeDialog:() => void, refreshData?: () => void}) {
     const [ isLoading, setIsLoading ] = useState(false)
@@ -65,105 +65,115 @@ export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeD
     // Se define el formulario
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            nombreUsuario: user ? user.nombreUsuario : '' ,
-            apellidoUsuario: user ? user.apellidoUsuario : '' ,
-            correoUsuario: user ? user.correoUsuario : '' ,
+        defaultValues: useMemo(() => ({
+            nombreUsuario: user ? user.nombreUsuario : '',
+            apellidoUsuario: user ? user.apellidoUsuario : '',
+            correoUsuario: user ? user.correoUsuario : '',
             idRol: user ? user.idRol : 1,
-        },
-    })
+        }), [user]) // Memoiza los valores iniciales
+    });
 
+    const handleFocus = (e: React.FocusEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLInputElement;
+        if (target.tagName === 'INPUT' && target.type === 'text') {
+            const length = target.value.length;
+            if (length >= 2) {
+                setTimeout(() => {
+                    target.setSelectionRange(length, length);
+                }, 0);
+            }
+        }
+    };
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                {user ? (
-                    <FormItem>
-                        <FormLabel>ID</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Jhon" disabled={true} value={user?.idUsuario}/>
-                            </FormControl>
-                            <FormDescription>
-                                No puedes editar este campo.
-                            </FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                ) : (
-                    ''
-                )}
-                <FormField
-                    control={form.control}
-                    name="nombreUsuario"
-                    render={({ field }) => (
+        <div onFocus={handleFocus}>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {user ? (
                         <FormItem>
-                            <FormLabel>Nombres <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Jhon" {...field} />
-                            </FormControl>
-                            {/* <FormDescription>
-                                This is your public display name.
-                            </FormDescription> */}
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="apellidoUsuario"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Apellidos <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Doe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="correoUsuario"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Correo <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="jhon.doe@gmail.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="idRol"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Rol <span className="text-red-500">*</span></FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                            <FormLabel>ID</FormLabel>
                                 <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione un Rol" />
-                                    </SelectTrigger>
+                                    <Input disabled={true} value={user?.idUsuario}/>
                                 </FormControl>
-                                <SelectContent>
-                                    <SelectItem value='1'>1 - Cliente</SelectItem>
-                                    <SelectItem value='2'>2 - Administrador</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                <FormDescription>
+                                    No puedes editar este campo.
+                                </FormDescription>
                             <FormMessage />
                         </FormItem>
-                    )}
-                />
-                <div className="flex flex-row sm:justify-between w-full">
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
-                    </DialogClose>
-                    { isLoading ? (
-                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
                     ) : (
-                        <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!user ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                        ''
                     )}
-                </div>
-            </form>
-        </Form>
+                    <FormField
+                        control={form.control}
+                        name="nombreUsuario"
+                        render={({ field }) => (
+                            <FormItem id="nombreUsuario">
+                                <FormLabel>Nombres <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j Jhon" {...field} onKeyDown={(e) => e.stopPropagation()} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="apellidoUsuario"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Apellidos <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j Doe" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="correoUsuario"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Correo <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j jhon.doe@gmail.com" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="idRol"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Rol <span className="text-red-500">*</span></FormLabel>
+                                <Select name="idRol" onValueChange={field.onChange} defaultValue={field.value?.toString()}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione un Rol" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value='1'>1 - Cliente</SelectItem>
+                                        <SelectItem value='2'>2 - Administrador</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="flex flex-row sm:justify-between w-full">
+                        <DialogClose asChild>
+                            <Button type="button" variant="outline">Cancelar</Button>
+                        </DialogClose>
+                        { isLoading ? (
+                            <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                        ) : (
+                            <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!user ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                        )}
+                    </div>
+                </form>
+            </Form>
+        </div>
     )
 };
