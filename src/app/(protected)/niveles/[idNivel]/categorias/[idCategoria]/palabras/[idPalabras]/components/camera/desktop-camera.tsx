@@ -1,5 +1,3 @@
-// pages/gesture-recognizer.tsx
-
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
@@ -11,6 +9,7 @@ import { HAND_CONNECTIONS } from '@mediapipe/hands';
 import Webcam from 'react-webcam';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { normalizeGestureWord } from '@/lib/utils';
 
 // Define los gestos en mayúsculas para mantener la consistencia
 const gestures = ["A", "B", "C", "BIEN", "BUENOS DÍAS", "COMO ESTÁS", "HOLA", "MAL"];
@@ -249,7 +248,7 @@ export default function GestureRecognizer() {
         speak(predictedGesture);
   
         // Obtener la secuencia de keypoints esperada (usando toLowerCase para coincidir con JSON)
-        const expectedKeypoints = expectedKeypointsMap[predictedGesture.toLowerCase()];
+        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGesture)];
   
         if (expectedKeypoints) {
           // Normalizar los keypoints esperados
