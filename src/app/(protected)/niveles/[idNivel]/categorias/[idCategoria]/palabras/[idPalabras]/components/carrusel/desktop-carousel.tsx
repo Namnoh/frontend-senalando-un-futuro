@@ -24,10 +24,9 @@ export default function DesktopCarousel({ level, category, words }: DesktopCarou
       <Carousel>
         <CarouselContent>
           {words.map((word: Palabra) => (
-            <CarouselItem className="md:basis-1/4 lg:basis-1/4">
+            <CarouselItem className="md:basis-1/4 lg:basis-1/4" key={word.idPalabra}>
               <div className="p-1">
                 <MiniCardGalery
-                  key={word.idPalabra} 
                   level={level}
                   category={category}
                   item={word}

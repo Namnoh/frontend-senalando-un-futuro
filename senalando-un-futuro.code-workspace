@@ -19,6 +19,7 @@
 			"blendshapes",
 			"derecho",
 			"FACEMESH",
+			"Fileset",
 			"hookform",
 			"imshow",
 			"jetson",
@@ -26,6 +27,7 @@
 			"mediapipe",
 			"producción",
 			"SRGB",
+			"Submuestreo",
 			"Swipeable",
 			"tensorflowjs",
 			"tfjs"
