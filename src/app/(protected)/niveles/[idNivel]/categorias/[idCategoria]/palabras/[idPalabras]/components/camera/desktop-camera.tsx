@@ -141,6 +141,43 @@ export default function GestureRecognizer() {
     [interpolateKeypoints]
   );
 
+  // Función para reflejar los keypoints de la mano izquierda
+  const flipHandLandmarks = (landmarks: any[]): any[] => {
+    return landmarks.map(landmark => ({
+      ...landmark,
+      x: 1 - landmark.x, // Invertir la coordenada X
+    }));
+  };
+
+  // Extraer keypoints de los resultados de Mediapipe
+  const extractKeypoints = useCallback((results: any): number[] => {
+    let leftHand = Array(21 * 3).fill(0);
+    let rightHand = Array(21 * 3).fill(0);
+
+    if (results.rightHandLandmarks && !results.leftHandLandmarks) {
+      // Solo se detecta la mano derecha
+      rightHand = results.rightHandLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+    } else if (results.leftHandLandmarks && !results.rightHandLandmarks) {
+      // Solo se detecta la mano izquierda
+      const flippedLandmarks = flipHandLandmarks(results.leftHandLandmarks);
+      rightHand = flippedLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+    } else if (results.leftHandLandmarks && results.rightHandLandmarks) {
+      // Se detectan ambas manos
+      leftHand = results.leftHandLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+      rightHand = results.rightHandLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+    }
+
+    return [...leftHand, ...rightHand];
+  }, []);
+
   // Verificar si hay manos detectadas
   const thereHand = useCallback((results: any): boolean => {
     return !!(results.leftHandLandmarks || results.rightHandLandmarks);
@@ -149,17 +186,6 @@ export default function GestureRecognizer() {
   // Función para enviar la imagen a Mediapipe Holistic
   const mediapipeDetection = useCallback(async (image: HTMLVideoElement, holistic: Holistic) => {
     await holistic.send({ image });
-  }, []);
-
-  // Extraer keypoints de los resultados de Mediapipe
-  const extractKeypoints = useCallback((results: any): number[] => {
-    const leftHand = results.leftHandLandmarks
-      ? results.leftHandLandmarks.flatMap((landmark: any) => [landmark.x, landmark.y, landmark.z])
-      : Array(21 * 3).fill(0);
-    const rightHand = results.rightHandLandmarks
-      ? results.rightHandLandmarks.flatMap((landmark: any) => [landmark.x, landmark.y, landmark.z])
-      : Array(21 * 3).fill(0);
-    return [...leftHand, ...rightHand];
   }, []);
 
   // Calcular la distancia promedio entre las secuencias de keypoints
@@ -274,7 +300,7 @@ export default function GestureRecognizer() {
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
-        // Dibujar las manos
+        // Dibujar las manos tal como son detectadas, sin invertir
         if (results.leftHandLandmarks) {
           drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, { color: '#CC0000', lineWidth: 5 });
           drawLandmarks(canvasCtx, results.leftHandLandmarks, { color: '#00FF00', lineWidth: 2 });
