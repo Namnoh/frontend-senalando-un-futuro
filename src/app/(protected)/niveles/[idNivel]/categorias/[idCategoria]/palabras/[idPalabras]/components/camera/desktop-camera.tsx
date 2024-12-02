@@ -10,6 +10,7 @@ import Webcam from 'react-webcam';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { normalizeGestureWord } from '@/lib/utils';
+import { Palabra } from '@/interfaces/palabraInterface';
 
 // Define los gestos en mayúsculas para mantener la consistencia
 const gestures = ["A", "B", "C", "BIEN", "BUENOS DÍAS", "COMO ESTÁS", "HOLA", "MAL"];
@@ -25,10 +26,15 @@ const THRESHOLD = 0.8;
 const MAX_DISTANCE = 0.24;
 
 // Umbrales para mensajes cualitativos
-const HIGH_ACCURACY = 90;
+const HIGH_ACCURACY = 85;
 const MEDIUM_ACCURACY = 70;
 
-export default function GestureRecognizer() {
+interface DesktopCameraProps {
+  word: Palabra;
+  isSuccessTry: () => void;
+}
+
+export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gestureModel, setGestureModel] = useState<tf.LayersModel | null>(null);
@@ -39,13 +45,11 @@ export default function GestureRecognizer() {
   const countFrame = useRef<number>(0);
   const fixFrames = useRef<number>(0);
   const recording = useRef<boolean>(false);
-  const [sentence, setSentence] = useState<string[]>([]);
+  // const [sentence, setSentence] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
-
-  // Carga de los promedios de keypoints
   const [expectedKeypointsMap, setExpectedKeypointsMap] = useState<{ [gesture: string]: number[][] }>({});
 
-  // Cargar el archivo JSON con los keypoints esperados
+  // Cargar el archivo JSON con los keypoints promedios esperados
   useEffect(() => {
     fetch('/all_averages.json')
       .then(response => {
@@ -242,7 +246,12 @@ export default function GestureRecognizer() {
       if (maxConfidence > THRESHOLD) {
         const predictedGesture = gestures[maxIndex];
         setPrediction(predictedGesture);
-        setSentence((prevSentence) => [predictedGesture, ...prevSentence]);
+        if (predictedGesture.toLowerCase() != word.nombrePalabra.toLowerCase()) {
+          setFeedback(`Seña Incorrecta`);
+          return;
+        }
+
+        // setSentence((prevSentence) => [predictedGesture, ...prevSentence]);
 
         // Llamar a la función de síntesis de voz
         speak(predictedGesture);
@@ -265,6 +274,7 @@ export default function GestureRecognizer() {
           let feedbackMessage = `Precisión: ${accuracyRounded}%`;
   
           if (accuracy >= HIGH_ACCURACY) {
+            isSuccessTry();
             feedbackMessage += ' - Excelente ejecución de la seña.';
           } else if (accuracy >= MEDIUM_ACCURACY) {
             feedbackMessage += ' - Buena seña, pero puede mejorar.';
@@ -301,13 +311,13 @@ export default function GestureRecognizer() {
 
         // Dibujar las manos tal como son detectadas, sin invertir
         if (results.leftHandLandmarks) {
-          drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, { color: '#CC0000', lineWidth: 2 });
-          drawLandmarks(canvasCtx, results.leftHandLandmarks, { color: '#00FF00', lineWidth: 2 });
+          drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, { color: '#bcdfd2', lineWidth: 3 });
+          drawLandmarks(canvasCtx, results.leftHandLandmarks, { color: '#009c62', lineWidth: 1, radius: 3.5 });
         }
 
         if (results.rightHandLandmarks) {
-          drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, { color: '#00CC00', lineWidth: 2 });
-          drawLandmarks(canvasCtx, results.rightHandLandmarks, { color: '#FF0000', lineWidth: 2 });
+          drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, { color: '#d0afde', lineWidth: 3 });
+          drawLandmarks(canvasCtx, results.rightHandLandmarks, { color: '#660093', lineWidth: 1, radius: 3.5 });
         }
 
         canvasCtx.restore();
@@ -403,16 +413,16 @@ export default function GestureRecognizer() {
             height={480}
           />
           <div className="absolute top-4 left-4 z-30">
-            <Badge variant={isCapturing ? "default" : "secondary"}>
+            <Badge variant={isCapturing ? "secondary" : "default"} className='text-sm text-black'>
               {isCapturing ? 'Capturando...' : 'Esperando gesto...'}
             </Badge>
           </div>
           <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
-            <span className="font-semibold">Predicción:</span> {prediction || 'Ninguna'}
-          </div>
-          <div className="absolute bottom-16 left-4 z-30 bg-white text-black p-2 rounded">
             <span className="font-semibold">Retroalimentación:</span> {feedback || 'Ninguna'}
           </div>
+          {/* <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
+            <span className="font-semibold">Predicción:</span> {prediction || 'Ninguna'}
+          </div> */}
           {/* <div className="absolute bottom-4 right-4 z-30 bg-white bg-opacity-75 p-2 rounded">
             <span className="font-semibold">Frase:</span> {sentence.join(' ')}
           </div> */}

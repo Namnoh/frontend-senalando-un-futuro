@@ -24,7 +24,18 @@ interface ResponsiveComponentsProps {
 export default function ResponsiveComponents({ level, category, word, words, currentWordIndex: initialIndex }: ResponsiveComponentsProps) {
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
-    const [currentIndex, setCurrentIndex] = useState(initialIndex); 
+    const [currentIndex, setCurrentIndex] = useState(initialIndex);
+    const [successTry, setSuccessTry] = useState<number>(0);
+
+    const isSuccessTry = () => {
+        setSuccessTry(prev => {
+            const newValue = prev + 1;
+            if (prev >= 3) return 3;
+            console.log(newValue);
+            return newValue;
+        });
+    };
+
     const isMobile = useMediaQuery('(max-width: 1024px)');
     useEffect(() => {
         setMounted(true);
@@ -89,9 +100,10 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             : 
             (
                 <div className='flex flex-col h-full w-full items-center justify-center gap-10'>
+                    <h2 className={`text-3xl font-medium ${successTry < 3 ? 'text-red-500' : 'text-green-500'}`}>{successTry}/3</h2>
                     <div className='flex flex-grow gap-2 items-center w-full justify-center'>
                         <DesktopVideo word={word} />
-                        <DesktopCamera/>
+                        <DesktopCamera word={word} isSuccessTry={isSuccessTry}/>
                     </div>
                     <DesktopCarousel level={level} category={category} words={words}/>
                 </div>
