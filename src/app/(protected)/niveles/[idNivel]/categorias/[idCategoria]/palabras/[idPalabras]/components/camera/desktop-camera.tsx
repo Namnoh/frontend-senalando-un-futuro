@@ -73,7 +73,6 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
         const model = await tf.loadLayersModel('/web_model/model.json');
         setGestureModel(model);
         setIsModelLoaded(true);
-        console.log('Modelo cargado correctamente');
       } catch (error) {
         console.error("Error al cargar modelo:", error);
       }
@@ -239,9 +238,9 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
       const maxConfidence = Math.max(...confidences);
       const maxIndex = confidences.indexOf(maxConfidence);
   
-      gestures.forEach((gesture, index) => {
-        console.log(`${gesture}: ${(confidences[index] * 100).toFixed(2)}%`);
-      });
+      // gestures.forEach((gesture, index) => {
+      //   console.log(`${gesture}: ${(confidences[index] * 100).toFixed(2)}%`);
+      // });
   
       if (maxConfidence > THRESHOLD) {
         const predictedGesture = gestures[maxIndex];

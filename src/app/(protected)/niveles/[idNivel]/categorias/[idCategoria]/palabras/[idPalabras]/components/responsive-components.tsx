@@ -38,7 +38,7 @@ export default function ResponsiveComponents({ level, category, word, words, cur
         const wordFound = Object.values(progress!.palabrasProgreso).find(
             (palabra) => palabra.idPalabra === word.idPalabra
         );
-        if (wordFound) setSuccessTry(3);
+        if (wordFound || progress && progress.idNivel > level.idTitle) setSuccessTry(3);
     }, [])
 
     async function updateWordProgress() {
@@ -99,17 +99,32 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             // Se cuentan las palabras totales del progreso actual
             const progressWordsCount = Object.values(palabrasProgreso).filter(
                 (palabra) => palabra.nivelPalabra === level.idTitle
-            ).length; 
-            const porcentajeTotal = 100 * (progressWordsCount / levelWords.length);
-            // Se crea objeto completo de nuevo progreso.
-            const updatedProgress: UserProgress = {
-                idProgreso: Number(progress.idProgreso),
-                categoriasProgreso: categoriasProgreso,
-                palabrasProgreso: palabrasProgreso,
-                porcentajeNivel: porcentajeTotal,
-                idUsuario: Number(progress.idUsuario),
-                idNivel: Number(progress.idNivel),
-            };
+            ).length;
+            const porcentajeTotal = Math.round(100 * (progressWordsCount / levelWords.length));
+            // Se valida si completó todo el nivel
+            let updatedProgress: UserProgress;
+            if (porcentajeTotal === 100 && progress.idNivel != 3) {
+                // Si el nivel está completo, reinicia los progresos y sube el nivel
+                updatedProgress = {
+                    idProgreso: Number(progress.idProgreso),
+                    categoriasProgreso: {},
+                    palabrasProgreso: {},
+                    porcentajeNivel: 0,
+                    idUsuario: Number(progress.idUsuario),
+                    idNivel: Number(progress.idNivel) + 1,
+                };
+            } else {
+                // Si el nivel no está completo, actualiza el progreso existente
+                updatedProgress = {
+                    idProgreso: Number(progress.idProgreso),
+                    categoriasProgreso: categoriasProgreso,
+                    palabrasProgreso: palabrasProgreso,
+                    porcentajeNivel: porcentajeTotal,
+                    idUsuario: Number(progress.idUsuario),
+                    idNivel: Number(progress.idNivel),
+                };
+            }
+            // Actualiza el progreso del usuario
             await updateUserProgress(updatedProgress);
         } catch (error) {
             console.error("Error al actualizar el progreso:", error);

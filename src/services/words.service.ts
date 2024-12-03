@@ -32,7 +32,6 @@ export async function createWord(word:Palabra) {
 };
 
 // READ
-// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllWords(cache?:RequestCache):Promise<Palabra[]> {
     try {
         const response = await fetch(`${process.env.API_URL}/words/`, {
@@ -94,7 +93,6 @@ export async function deleteWord(idWord:number) {
 
 // * FIN DE CRUD PALABRAS
 
-// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getWordsFrom(idCategoria:number) {
     try {
         const response= await fetch(`${process.env.API_URL}/words/getAllByCategory/${idCategoria}`);
@@ -111,7 +109,13 @@ export async function getWordsFrom(idCategoria:number) {
 
 export async function getAllWordsFromLevel(idNivel:number) {
     try {
-        const response= await fetch(`${process.env.API_URL}/words/getAllWordsFromLevel/${idNivel}`);
+        const response= await fetch(`${process.env.API_URL}/words/getAllWordsFromLevel/${idNivel}`, {
+            // TODO: SIN CACHÉ PARA LAS PRUEBAS, LUEGO ELIMINAR
+            headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache', // Compatibilidad con navegadores más antiguos
+            },
+        });
         if (!response.ok) {
             throw new Error(`Error al obtener las palabras: ${response.statusText}`);
         }
