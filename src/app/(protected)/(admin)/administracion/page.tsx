@@ -18,8 +18,9 @@ export default function AdministracionPage() {
                     {isMobile ? (
                         <div className="flex h-full w-full items-center justify-center p-10 text-2xl text-center">
                             <span>Lo sentimos, el apartado de {' '} 
-                            <span className="text-primary">administración</span> no está disponible en dispositivos {' '}
-                            <span className="text-secondary">móviles</span>.</span>
+                                <span className="text-primary">administración</span> no está disponible en dispositivos {' '}
+                                <span className="text-secondary">móviles</span>.
+                            </span>
                         </div>
                     ) : (
                         <CRUD />
