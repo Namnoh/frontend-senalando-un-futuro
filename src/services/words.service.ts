@@ -104,7 +104,21 @@ export async function getWordsFrom(idCategoria:number) {
         const words = await response.json();
         return words;
     } catch (error) {
-        console.error("Error en getCategoriesFrom:", error);
+        console.error("Error en getWordsFrom:", error);
+        return[];
+    };
+};
+
+export async function getAllWordsFromLevel(idNivel:number) {
+    try {
+        const response= await fetch(`${process.env.API_URL}/words/getAllWordsFromLevel/${idNivel}`);
+        if (!response.ok) {
+            throw new Error(`Error al obtener las palabras: ${response.statusText}`);
+        }
+        const words = await response.json();
+        return words;
+    } catch (error) {
+        console.error("Error en getAllWordsFromLevel:", error);
         return[];
     };
 };

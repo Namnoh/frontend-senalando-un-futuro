@@ -77,7 +77,7 @@ export default function UserProgressContextProvider({children} : UserProgressCon
                 description: "Progreso del usuario actualizado correctamente",
                 variant: "success"
             });
-            // fetchProgress();
+            fetchProgress();
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Error desconocido al actualizar el progreso';
             toast({

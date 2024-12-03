@@ -17,11 +17,11 @@ const niveles = [
     },
     { 
         id: 2,
-        enlace: `/niveles/2-${encodeURIComponent('Intermedio')}/categorias`
+        enlace: `/niveles/2-${encodeURIComponent('intermedio')}/categorias`
     },
     { 
         id: 3,
-        enlace: `/niveles/3-${encodeURIComponent('Avanzado')}/categorias`
+        enlace: `/niveles/3-${encodeURIComponent('avanzado')}/categorias`
     },
 ]
 

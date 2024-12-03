@@ -13,11 +13,14 @@ export type CategoriaProgreso = {
     idCategoria: number;
     nombreCategoria: string;
     progresoCategoria: number;
+    nivelCategoria: number;
 }
 
 export type PalabraProgreso = {
     idPalabra: number;
     nombrePalabra: string;
+    categoriaPalabra: number;
+    nivelPalabra: number;
 }
 
 export interface UserProgress {

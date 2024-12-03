@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { toast } from '@/hooks/use-toast';
 import { useProgressContext } from '@/contexts/userProgressContext';
-import { UserProgress } from '@/interfaces/levelinterface';
+import { CategoriaProgreso, PalabraProgreso, UserProgress } from '@/interfaces/levelinterface';
 
 interface ResponsiveComponentsProps {
     level: TitleProp;
@@ -34,31 +34,81 @@ export default function ResponsiveComponents({ level, category, word, words, cur
     const { data: session } = useSession();
     const { progress, updateUserProgress } = useProgressContext();
 
+    useEffect(() => {
+        const wordFound = Object.values(progress!.palabrasProgreso).find(
+            (palabra) => palabra.idPalabra === word.idPalabra
+        );
+        if (wordFound) setSuccessTry(3);
+    }, [])
+
     async function updateWordProgress() {
         if (!session?.user?.id) {
             console.error("No se ha iniciado sesión o no se puede obtener el ID de usuario");
             return;
-        }
+        };
 
         if (!progress) {
             console.error("No hay datos de progreso disponibles");
             return;
-        }
+        };
+        setIsLoading(true);
 
         try {
+            // Guardar progreso de completado de la categoría
+            // Se obtienen todas las palabras de la categoría
+            const categoryWordsResponse = await fetch(`/api/words/getWordsFromCategory/${category.idTitle}`);
+            if (!categoryWordsResponse.ok) {
+                throw new Error('Failed to fetch words');
+            };
+            const categoryWordsTotal = await categoryWordsResponse.json();
+            // Se crea el progreso de palabras actual
+            const palabraProgreso : PalabraProgreso = {
+                idPalabra: Number(word.idPalabra),
+                nombrePalabra: word.nombrePalabra,
+                categoriaPalabra: category.idTitle,
+                nivelPalabra: level.idTitle
+            };
+            const palabrasProgreso: Record<string, PalabraProgreso> = {
+                ...progress.palabrasProgreso,
+                [word.idPalabra]: palabraProgreso
+            };
+            // Se cuentan las palabras totales del progreso actual
+            const wordsCount = Object.values(palabrasProgreso).filter(
+                (palabra) => palabra.categoriaPalabra === category.idTitle
+            ).length;
+            // Se hace el cálculo para el total.
+            const porcentajeCategoria = wordsCount / categoryWordsTotal.length;
+            const categoriaProgreso : CategoriaProgreso = {
+                idCategoria: category.idTitle,
+                nombreCategoria: category.nameTitle,
+                progresoCategoria: porcentajeCategoria,
+                nivelCategoria: level.idTitle
+            };
+            // Se crea el objeto con las categorias en progreso.
+            const categoriasProgreso: Record<string, CategoriaProgreso> = {
+                ...progress.categoriasProgreso,
+                [category.idTitle]: categoriaProgreso
+            };
+
+            // Se saca el porcentaje total del progreso.
+            const levelWordsResponse = await fetch(`/api/words/getAllWordsFromLevel/${level.idTitle}`);
+            if (!levelWordsResponse.ok) {
+                throw new Error('Failed to fetch words');
+            };
+            const levelWords = await levelWordsResponse.json();
+            // Se cuentan las palabras totales del progreso actual
+            const progressWordsCount = Object.values(palabrasProgreso).filter(
+                (palabra) => palabra.nivelPalabra === level.idTitle
+            ).length; 
+            const porcentajeTotal = 100 * (progressWordsCount / levelWords.length);
+            // Se crea objeto completo de nuevo progreso.
             const updatedProgress: UserProgress = {
-                ...progress,
                 idProgreso: Number(progress.idProgreso),
+                categoriasProgreso: categoriasProgreso,
+                palabrasProgreso: palabrasProgreso,
+                porcentajeNivel: porcentajeTotal,
                 idUsuario: Number(progress.idUsuario),
                 idNivel: Number(progress.idNivel),
-                porcentajeNivel : Number(progress.porcentajeNivel),
-                palabrasProgreso: {
-                    ...progress.palabrasProgreso,
-                    [word.idPalabra]: {
-                        idPalabra: Number(word.idPalabra),
-                        nombrePalabra: word.nombrePalabra
-                    }
-                }
             };
             await updateUserProgress(updatedProgress);
         } catch (error) {
@@ -74,6 +124,16 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (isLoading) {
+            toast({
+                title: "Guardando Progreso",
+                description: 'Por favor, no salga de la página.',
+                variant: "warning",
+            });
+        }
+    }, [isLoading])
 
     const isSuccessTry = () => {
         setSuccessTry(prev => {
