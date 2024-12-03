@@ -15,6 +15,7 @@ type Progress = UserProgress;
 type UserProgressContextType = {
     progress: Progress | null;
     updateProgress: (newUserProgress: UserProgress) => Promise<void>;
+    updateUserProgress: (newUserProgress: UserProgress) => Promise<void>;
     isLoading: boolean;
 }
 
@@ -44,6 +45,39 @@ export default function UserProgressContextProvider({children} : UserProgressCon
                 variant: "success"
             });
             setProgress(newUserProgress);
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Error desconocido al actualizar el progreso';
+            toast({
+                title: "Error",
+                description: errorMessage,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const updateUserProgress = async (newUserProgress: UserProgress) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/progress/updateUserProgress/${session!.user.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUserProgress),
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to update userProgress: ${response.statusText}`);
+            }
+            const updatedProgress = await response.json();
+            setProgress(updatedProgress);
+            toast({
+                title: "Éxito",
+                description: "Progreso del usuario actualizado correctamente",
+                variant: "success"
+            });
+            // fetchProgress();
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Error desconocido al actualizar el progreso';
             toast({
@@ -90,6 +124,7 @@ export default function UserProgressContextProvider({children} : UserProgressCon
     const contextValue = useMemo(() => ({
         progress,
         updateProgress,
+        updateUserProgress,
         isLoading
     }), [progress, isLoading]);
 

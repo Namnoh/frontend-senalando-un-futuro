@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { getParamsTitle } from '@/services/actions.services'
 import { getWordsFrom } from '@/services/words.service'
 import ResponsiveComponents from './components/responsive-components'
+import SimpleLoading from '@/components/customUI/simpleLoading';
 
 export default async function WordsPage({ params }: any) {
   // Obtener los datos de nivel, categoría y palabras
@@ -21,7 +22,7 @@ export default async function WordsPage({ params }: any) {
         <div>
           <h2 className='text-5xl mt-10 md:text-6xl lg:text-7xl font-medium text-defaultTextColor capitalize'>{palabra.nameTitle}</h2>
         </div>
-        <Suspense>
+        <Suspense fallback={<SimpleLoading />}>
           <ResponsiveComponents level={level} category={cat} word={currentWord} words={words} currentWordIndex={currentWordIndex} />
         </Suspense>
       </div>

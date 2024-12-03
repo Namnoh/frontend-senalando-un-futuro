@@ -12,6 +12,10 @@ import DesktopVideo from './vide/desktop-video';
 import MobileVideo from './vide/mobile-video';
 import { useSwipeable } from 'react-swipeable';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { toast } from '@/hooks/use-toast';
+import { useProgressContext } from '@/contexts/userProgressContext';
+import { UserProgress } from '@/interfaces/levelinterface';
 
 interface ResponsiveComponentsProps {
     level: TitleProp;
@@ -26,13 +30,56 @@ export default function ResponsiveComponents({ level, category, word, words, cur
     const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
     const [successTry, setSuccessTry] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { data: session } = useSession();
+    const { progress, updateUserProgress } = useProgressContext();
+
+    async function updateWordProgress() {
+        if (!session?.user?.id) {
+            console.error("No se ha iniciado sesión o no se puede obtener el ID de usuario");
+            return;
+        }
+
+        if (!progress) {
+            console.error("No hay datos de progreso disponibles");
+            return;
+        }
+
+        try {
+            const updatedProgress: UserProgress = {
+                ...progress,
+                idProgreso: Number(progress.idProgreso),
+                idUsuario: Number(progress.idUsuario),
+                idNivel: Number(progress.idNivel),
+                porcentajeNivel : Number(progress.porcentajeNivel),
+                palabrasProgreso: {
+                    ...progress.palabrasProgreso,
+                    [word.idPalabra]: {
+                        idPalabra: Number(word.idPalabra),
+                        nombrePalabra: word.nombrePalabra
+                    }
+                }
+            };
+            await updateUserProgress(updatedProgress);
+        } catch (error) {
+            console.error("Error al actualizar el progreso:", error);
+            // Aquí capturamos el mensaje del error para mostrarlo
+            const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+            toast({
+                title: "Error",
+                description: errorMessage,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const isSuccessTry = () => {
         setSuccessTry(prev => {
             const newValue = prev + 1;
-            if (prev >= 3) return 3;
-            console.log(newValue);
-            return newValue;
+            if (prev != 3 && newValue === 3) {updateWordProgress()}
+            return newValue >= 3 ? 3 : newValue;
         });
     };
 

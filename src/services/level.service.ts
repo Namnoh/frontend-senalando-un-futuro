@@ -42,25 +42,33 @@ export async function updateProgress(userProgress: UserProgress, idProgreso:numb
         const progress: UserProgress = await response.json();
         return { success:true, data:progress };
     } catch (error) {
-        console.error("Error en updateWord:", error);
+        console.error("Error en updateProgress:", error);
         const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
         return { success: false, error: errorMessage };
     };
 };
 
-// Función para actualizaar el progreso del usuario
-export async function updateUserProgress(idUsuario: number): Promise<UserProgress> {
+// Función para actualizar el progreso del usuario
+export async function updateUserProgress(idUsuario: number, userProgress: Omit<UserProgress, 'idProgreso'>): Promise<{ success: boolean; data?: UserProgress; error?: string }> {
     try {
-        const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`);
+        const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userProgress),
+        });
         if (!response.ok) {
-            throw new Error('Error al obtener el progreso del usuario');
-        }
-        const data: UserProgress = await response.json();
-        return data;
+            const errorData = await response.json();
+            throw new Error(`Error al actualizar el progreso: ${errorData.message || response.statusText}`);
+        };
+        const updatedProgress: UserProgress = await response.json();
+        return { success: true, data: updatedProgress };
     } catch (error) {
-        console.error('Error en fetchUserProgress:', error);
-        throw error; // Lanza el error para que el componente pueda manejarlo
-    }
+        console.error("Error en updateUserProgress:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
 }
 
 // Función para obtener el nombre del nivel
