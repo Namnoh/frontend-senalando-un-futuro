@@ -59,7 +59,7 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
                     </div>
                 </div>
             </Link>
-            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-words h-auto overflow-scroll`}>{newItem.itemName}</p>
+            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-words h-auto overflow-auto`}>{newItem.itemName}</p>
         </div>
     )
 }
