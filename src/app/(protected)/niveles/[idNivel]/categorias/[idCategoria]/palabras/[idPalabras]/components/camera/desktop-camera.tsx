@@ -1,3 +1,5 @@
+// pages/gesture-recognizer.tsx
+
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
@@ -9,8 +11,6 @@ import { HAND_CONNECTIONS } from '@mediapipe/hands';
 import Webcam from 'react-webcam';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { normalizeGestureWord } from '@/lib/utils';
-import { Palabra } from '@/interfaces/palabraInterface';
 
 // Define los gestos en mayúsculas para mantener la consistencia
 const gestures = ["A", "B", "C", "BIEN", "BUENOS DÍAS", "COMO ESTÁS", "HOLA", "MAL"];
@@ -26,15 +26,10 @@ const THRESHOLD = 0.8;
 const MAX_DISTANCE = 0.24;
 
 // Umbrales para mensajes cualitativos
-const HIGH_ACCURACY = 85;
+const HIGH_ACCURACY = 90;
 const MEDIUM_ACCURACY = 70;
 
-interface DesktopCameraProps {
-  word: Palabra;
-  isSuccessTry: () => void;
-}
-
-export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) {
+export default function GestureRecognizer() {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gestureModel, setGestureModel] = useState<tf.LayersModel | null>(null);
@@ -45,11 +40,31 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
   const countFrame = useRef<number>(0);
   const fixFrames = useRef<number>(0);
   const recording = useRef<boolean>(false);
-  // const [sentence, setSentence] = useState<string[]>([]);
+  const [sentence, setSentence] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
+
+  // Estado para controlar el muteo con persistencia
+  const [isMuted, setIsMuted] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const storedMuted = localStorage.getItem('isMuted');
+      return storedMuted === 'true';
+    }
+    return false;
+  });
+
+  // Referencia para mantener el valor actual de isMuted
+  const isMutedRef = useRef(isMuted);
+
+  // Sincronizar la referencia con el estado isMuted
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+    localStorage.setItem('isMuted', isMuted.toString());
+  }, [isMuted]);
+
+  // Carga de los promedios de keypoints
   const [expectedKeypointsMap, setExpectedKeypointsMap] = useState<{ [gesture: string]: number[][] }>({});
 
-  // Cargar el archivo JSON con los keypoints promedios esperados
+  // Cargar el archivo JSON con los keypoints esperados
   useEffect(() => {
     fetch('/all_averages.json')
       .then(response => {
@@ -209,8 +224,12 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
     return totalDistance / count;
   };
 
-  // Función de síntesis de voz
+  // Función de síntesis de voz utilizando la referencia
   const speak = useCallback((text: string) => {
+    if (isMutedRef.current) {
+      return; // No hacer nada si está muteado
+    }
+
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel(); // Detener cualquier discurso en curso
       const utterance = new SpeechSynthesisUtterance(text);
@@ -245,47 +264,41 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
       if (maxConfidence > THRESHOLD) {
         const predictedGesture = gestures[maxIndex];
         setPrediction(predictedGesture);
-        if (predictedGesture.toLowerCase() != word.nombrePalabra.toLowerCase()) {
-          setFeedback(`Seña Incorrecta`);
-          return;
-        }
-
-        // setSentence((prevSentence) => [predictedGesture, ...prevSentence]);
+        setSentence((prevSentence) => [predictedGesture, ...prevSentence]);
 
         // Llamar a la función de síntesis de voz
         speak(predictedGesture);
   
         // Obtener la secuencia de keypoints esperada (usando toLowerCase para coincidir con JSON)
-        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGesture)];
-  
+        const expectedKeypoints = expectedKeypointsMap[predictedGesture.toLowerCase()];
+
         if (expectedKeypoints) {
           // Normalizar los keypoints esperados
           const expectedKpNormalized = normalizeKeypoints(expectedKeypoints, MODEL_FRAMES);
-  
+
           // Comparar las secuencias
           const averageDistance = calculateAverageDistance(kpNormalized, expectedKpNormalized);
-  
+
           // Calcular el porcentaje de precisión
           const accuracy = Math.max(0, (1 - (averageDistance / MAX_DISTANCE)) * 100);
           const accuracyRounded = Math.round(accuracy);
-  
+
           // Generar el mensaje de retroalimentación
           let feedbackMessage = `Precisión: ${accuracyRounded}%`;
-  
+
           if (accuracy >= HIGH_ACCURACY) {
-            isSuccessTry();
             feedbackMessage += ' - Excelente ejecución de la seña.';
           } else if (accuracy >= MEDIUM_ACCURACY) {
             feedbackMessage += ' - Buena seña, pero puede mejorar.';
           } else {
             feedbackMessage += ' - Intenta mejorar la posición de tus manos.';
           }
-  
+
           setFeedback(feedbackMessage);
         } else {
           setFeedback('No hay referencia para este gesto.');
         }
-  
+
       } else {
         setPrediction('');
         setFeedback('No se reconoció la seña. Por favor, intenta de nuevo.');
@@ -310,13 +323,13 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
 
         // Dibujar las manos tal como son detectadas, sin invertir
         if (results.leftHandLandmarks) {
-          drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, { color: '#bcdfd2', lineWidth: 3 });
-          drawLandmarks(canvasCtx, results.leftHandLandmarks, { color: '#009c62', lineWidth: 1, radius: 3.5 });
+          drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, { color: '#CC0000', lineWidth: 5 });
+          drawLandmarks(canvasCtx, results.leftHandLandmarks, { color: '#00FF00', lineWidth: 2 });
         }
 
         if (results.rightHandLandmarks) {
-          drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, { color: '#d0afde', lineWidth: 3 });
-          drawLandmarks(canvasCtx, results.rightHandLandmarks, { color: '#660093', lineWidth: 1, radius: 3.5 });
+          drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, { color: '#00CC00', lineWidth: 5 });
+          drawLandmarks(canvasCtx, results.rightHandLandmarks, { color: '#FF0000', lineWidth: 2 });
         }
 
         canvasCtx.restore();
@@ -412,16 +425,64 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
             height={480}
           />
           <div className="absolute top-4 left-4 z-30">
-            <Badge variant={isCapturing ? "secondary" : "default"} className='text-sm text-black'>
+            <Badge variant={isCapturing ? "default" : "secondary"}>
               {isCapturing ? 'Capturando...' : 'Esperando gesto...'}
             </Badge>
           </div>
           <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
+            <span className="font-semibold">Predicción:</span> {prediction || 'Ninguna'}
+          </div>
+          <div className="absolute bottom-16 left-4 z-30 bg-white text-black p-2 rounded">
             <span className="font-semibold">Retroalimentación:</span> {feedback || 'Ninguna'}
           </div>
-          {/* <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
-            <span className="font-semibold">Predicción:</span> {prediction || 'Ninguna'}
-          </div> */}
+          
+          {/* Botón de Mute/Unmute */}
+          <div className="absolute top-4 right-4 z-30">
+            <button
+              onClick={() => setIsMuted(prev => !prev)}
+              className="flex items-center px-4 py-2 bg-gray-800 rounded hover:bg-gray-400 focus:outline-none"
+              aria-label={isMuted ? "Unmute Voice" : "Mute Voice"} // Accesibilidad
+            >
+              {isMuted ? (
+                <>
+                  {/* Icono de Unmute */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="red"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-volume-x h-5 w-5 mr-2"
+                  >
+                    <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+                    <line x1="22" y1="9" x2="16" y2="15" />
+                    <line x1="16" y1="9" x2="22" y2="15" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  {/* Icono de Mute */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-volume-2 h-5 w-5 mr-2"
+                  >
+                    <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+                    <path d="M16 9a5 5 0 0 1 0 6" />
+                    <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </div>
+          
           {/* <div className="absolute bottom-4 right-4 z-30 bg-white bg-opacity-75 p-2 rounded">
             <span className="font-semibold">Frase:</span> {sentence.join(' ')}
           </div> */}
