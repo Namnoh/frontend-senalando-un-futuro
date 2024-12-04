@@ -450,7 +450,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
           <div className="absolute top-4 right-4 z-30">
             <button
               onClick={() => setIsMuted(prev => !prev)}
-              className="flex items-center px-4 py-2 bg-gray-800 rounded hover:bg-gray-400 focus:outline-none"
+              className="flex items-center px-4 py-2 bg-background rounded hover:bg-gray-400 hover:text-white focus:outline-none"
               aria-label={isMuted ? "Unmute Voice" : "Mute Voice"} // Accesibilidad
             >
               {isMuted ? (
@@ -464,7 +464,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="lucide lucide-volume-x h-5 w-5 mr-2"
+                    className="lucide lucide-volume-x h-5 w-5"
                   >
                     <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
                     <line x1="22" y1="9" x2="16" y2="15" />
@@ -482,7 +482,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="lucide lucide-volume-2 h-5 w-5 mr-2"
+                    className="lucide lucide-volume-2 h-5 w-5"
                   >
                     <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
                     <path d="M16 9a5 5 0 0 1 0 6" />
