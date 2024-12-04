@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/carousel"
 import { Palabra } from "@/interfaces/palabraInterface"
 import { TitleProp } from "@/interfaces/commonInterfaces"
-import { MiniCardGalery } from '@/components/customUI/miniCardGalery';
 import CarruselList from "../carruselList"
 
 interface MobileCarouselProps {

@@ -210,8 +210,9 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             {( isMobile ? 
             (
                 <div className='flex flex-col w-[320px] sm:w-[600px] '>
+                    <h2 className={`text-center text-3xl font-medium ${successTry < 3 ? 'text-red-500' : 'text-green-500'}`}>{successTry}/3</h2>
                     <div {...manejadoresDeslizamiento}>
-                        <MobileCamera />
+                        <MobileCamera word={word} isSuccessTry={isSuccessTry}/>
                     </div>
                     <MobileVideo word={word} />
                     <div {...manejadoresDeslizamiento}>
