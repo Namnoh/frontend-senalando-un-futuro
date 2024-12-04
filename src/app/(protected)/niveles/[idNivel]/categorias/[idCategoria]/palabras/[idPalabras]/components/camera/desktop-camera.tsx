@@ -36,6 +36,7 @@ interface DesktopCameraProps {
 export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cameraRef = useRef<Camera | null>(null);
   const [gestureModel, setGestureModel] = useState<tf.LayersModel | null>(null);
   const [prediction, setPrediction] = useState<string>('');
   const [isCapturing, setIsCapturing] = useState(false);
@@ -47,6 +48,21 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
   // const [sentence, setSentence] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
 
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [isHolisticReady, setIsHolisticReady] = useState(false);
+
+  // Efecto para manejar la visibilidad de la página
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
   // Estado para controlar el muteo con persistencia
   const [isMuted, setIsMuted] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -206,6 +222,11 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
 
   // Función para enviar la imagen a Mediapipe Holistic
   const mediapipeDetection = useCallback(async (image: HTMLVideoElement, holistic: Holistic) => {
+    if (!holistic) {
+      console.warn('Holistic no está inicializado.');
+      return;
+    }
+  
     await holistic.send({ image });
   }, []);
 
@@ -381,44 +402,81 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
 
   // Inicializar Mediapipe Holistic y la cámara
   useEffect(() => {
-    if (!isModelLoaded) return;
+    if (!isModelLoaded || !isPageVisible) return;
 
-    const holistic = new Holistic({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
-      }
-    });
+    let holistic: Holistic | null = null;
+    let camera: Camera | null = null;
 
-    holistic.setOptions({
-      modelComplexity: 1,
-      smoothLandmarks: true,
-      enableSegmentation: false,
-      smoothSegmentation: true,
-      refineFaceLandmarks: false,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
-    });
+    const initializeHolistic = async () => {
+        holistic = new Holistic({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+        });
 
-    holistic.onResults(onResults);
+        holistic.setOptions({
+            modelComplexity: 1,
+            smoothLandmarks: true,
+            enableSegmentation: false,
+            smoothSegmentation: true,
+            refineFaceLandmarks: false,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5,
+        });
 
-    if (webcamRef.current && webcamRef.current.video) {
-      const camera = new Camera(webcamRef.current.video, {
-        onFrame: async () => {
-          if (webcamRef.current && webcamRef.current.video) {
-            await mediapipeDetection(webcamRef.current.video, holistic);
-          }
-        },
-        width: 640,
-        height: 480
-      });
-      camera.start();
-    }
+        holistic.onResults(onResults);
+
+        try {
+            await holistic.initialize();
+            setIsHolisticReady(true);
+
+            if (webcamRef.current && webcamRef.current.video) {
+                camera = new Camera(webcamRef.current.video, {
+                    onFrame: async () => {
+                        // Solo enviar la imagen si tanto holistic como la cámara están inicializados
+                        if (holistic && webcamRef.current && webcamRef.current.video) {
+                            await holistic.send({ image: webcamRef.current.video });
+                        }
+                    },
+                    width: 640,
+                    height: 480,
+                });
+                cameraRef.current = camera;
+                camera.start();
+            }
+        } catch (error) {
+            console.error("Error initializing Holistic:", error);
+            setIsHolisticReady(false);
+        }
+    };
+
+    initializeHolistic();
 
     return () => {
-      holistic.close();
+        // Limpiar de manera segura los objetos
+        setIsHolisticReady(false);
+        if (holistic) {
+            holistic.close();
+            holistic = null;  // Liberamos el objeto Holistic
+        }
+        if (camera) {
+            camera.stop();
+            camera = null;  // Liberamos el objeto Camera
+        }
     };
-  }, [isModelLoaded, mediapipeDetection, onResults]);
+  }, [isModelLoaded, onResults, isPageVisible]);
 
+  useEffect(() => {
+    if (cameraRef.current) {
+        if (isPageVisible && isHolisticReady) {
+            cameraRef.current.start(); // Reinicia la cámara solo si la página está visible
+        } else {
+            cameraRef.current.stop(); // Detén la cámara si la página no está visible
+        }
+    }
+}, [isPageVisible, isHolisticReady]);
+
+  // Depurador
+  console.log('isPageVisible:', isPageVisible);
+  console.log('isHolisticReady:', isHolisticReady);
   return (
     <Card className="w-full max-w-4xl">
       <CardContent className='p-6'>
@@ -436,7 +494,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
           />
           <div className="absolute top-4 left-4 z-30">
             <Badge variant={isCapturing ? "secondary" : "default"} className='text-sm text-black'>
-              {isCapturing ? 'Capturando...' : 'Esperando gesto...'}
+              {isPageVisible && isHolisticReady ? (isCapturing ? 'Capturando...' : 'Esperando gesto...') : 'Cámara desactivada'}
             </Badge>
           </div>
           {/* <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
@@ -492,12 +550,17 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
               )}
             </button>
           </div>
-          
+          {(!isPageVisible || !isHolisticReady) && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl font-bold">
+              Cámara desactivada
+            </div>
+          )}
           {/* <div className="absolute bottom-4 right-4 z-30 bg-white bg-opacity-75 p-2 rounded">
             <span className="font-semibold">Frase:</span> {sentence.join(' ')}
           </div> */}
         </div>
       </CardContent>
     </Card>
+    
   );
 }
