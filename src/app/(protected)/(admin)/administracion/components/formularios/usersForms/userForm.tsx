@@ -85,15 +85,17 @@ export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeD
         }
     };
     useEffect(() => {
-        const preventTextSelection = (e: MouseEvent) => {
-            window.getSelection()?.removeAllRanges(); // Elimina cualquier selección de texto activa
-        };
+        if (user){
+            const preventTextSelection = (e: MouseEvent) => {
+                window.getSelection()?.removeAllRanges(); // Elimina cualquier selección de texto activa
+            };
 
-        window.addEventListener('mousemove', preventTextSelection);
+            window.addEventListener('mousemove', preventTextSelection);
 
-        return () => {
-            window.removeEventListener('mousemove', preventTextSelection);
-        };
+            return () => {
+                window.removeEventListener('mousemove', preventTextSelection);
+            };
+        }
     }, []);
 
     return (
