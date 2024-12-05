@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { LoaderCircle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeDialog:() => void, refreshData?: () => void}) {
     const [ isLoading, setIsLoading ] = useState(false)
@@ -84,6 +84,18 @@ export function UserForm({user, closeDialog, refreshData}:{user?:Usuario, closeD
             }
         }
     };
+    useEffect(() => {
+        const preventTextSelection = (e: MouseEvent) => {
+            window.getSelection()?.removeAllRanges(); // Elimina cualquier selección de texto activa
+        };
+
+        window.addEventListener('mousemove', preventTextSelection);
+
+        return () => {
+            window.removeEventListener('mousemove', preventTextSelection);
+        };
+    }, []);
+
     return (
         <div onFocus={handleFocus}>
             <Form {...form}>
