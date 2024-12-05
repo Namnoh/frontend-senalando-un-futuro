@@ -56,7 +56,7 @@ export default function CrudCategorias({ onLoad }: { onLoad?: () => void }) {
             <FirstOptions refreshData={refreshData} type={'categories'}/>
             <div className="container mx-auto py-10 lg:min-w-[800px]">
                 {isLoading ? (
-                    <TableSkeleton search={true} clear={true} columns={true} pagination={true} selectedRows={true} />
+                    <TableSkeleton search={true} clear={true} deleteOp={true} columns={true} pagination={true} selectedRows={true} />
                 ) : (
                     <DataTable columns={columns} data={data}/>
                 )}

@@ -7,20 +7,31 @@ import bcrypt from "bcrypt";
 
 // CREATE
 // Función para generar una contraseña aleatoria
-function generarContrasena(longitud: number): string {
+async function generarContrasena(longitud: number): Promise<string> {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
     let contrasena = '';
     for (let i = 0; i < longitud; i++) {
         const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
         contrasena += caracteres[indiceAleatorio];
     }
-    return contrasena;
-};
+
+    // Número de rondas de salt (10 es un valor común y seguro)
+    const saltRounds = 10;
+
+    try {
+        // Encriptar la contraseña
+        const contrasenaEncriptada = await bcrypt.hash(contrasena, saltRounds);
+        return contrasenaEncriptada;
+    } catch (error) {
+        console.error('Error al encriptar la contraseña:', error);
+        throw new Error('No se pudo encriptar la contraseña');
+    }
+}
 
 export async function createUser(newUser:NuevoUsuario) {
     try {
         // Generar una contraseña aleatoria
-        const contrasenaGenerada = generarContrasena(12); 
+        const contrasenaGenerada = await generarContrasena(12);
         const usuarioCompleto = {
             ...newUser,
             contrasenaUsuario: contrasenaGenerada,
@@ -130,10 +141,33 @@ export async function deleteUser(idUsuario:number) {
             const errorData = await response.json();
             throw new Error(`Error al eliminar el usuario categoria: ${errorData.message || response.statusText}`);
         };
-        const categoria = await response.json();
-        return {success:true, data:categoria};
+        const user = await response.json();
+        return {success:true, data:user};
     } catch (error) {
         console.error("Error en deleteUser:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
+// DELETE MANY
+export async function deleteManyUsers(idsUsuarios:number[]) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/users/deleteManyUsers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(idsUsuarios)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al eliminar el(los) usuario(s): ${errorData.message || response.statusText}`);
+        };
+        const user = await response.json();
+        return {success:true, data:user};
+    } catch (error) {
+        console.error("Error en deleteManyUsers:", error);
         const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
         return { success: false, error: errorMessage };
     };

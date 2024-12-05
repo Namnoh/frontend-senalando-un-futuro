@@ -91,6 +91,29 @@ export async function deleteWord(idWord:number) {
     };
 };
 
+// DELETE MANY
+export async function deleteManyWords(idsWords:number[]) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/words/deleteManyWords`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(idsWords)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al eliminar la(s) palabra(s): ${errorData.message || response.statusText}`);
+        };
+        const user = await response.json();
+        return {success:true, data:user};
+    } catch (error) {
+        console.error("Error en deleteManyWords:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
 // * FIN DE CRUD PALABRAS
 
 export async function getWordsFrom(idCategoria:number) {

@@ -97,6 +97,29 @@ export async function deleteCategory(idCategoria:number) {
     };
 };
 
+// DELETE MANY
+export async function deleteManyCategories(idsCategories:number[]) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/categories/deleteManyCategories`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(idsCategories)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al eliminar la(s) categoria(s): ${errorData.message || response.statusText}`);
+        };
+        const user = await response.json();
+        return {success:true, data:user};
+    } catch (error) {
+        console.error("Error en deleteManyCategories:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
 // * FIN CRUD CATEGORIA
 
 export async function getCategory(idCategoria:number) {

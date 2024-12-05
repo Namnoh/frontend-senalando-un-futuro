@@ -4,16 +4,18 @@ type TableSkeletonProps = {
     search?: boolean;
     columns?: boolean;
     clear?: boolean;
+    deleteOp?: boolean;
     selectedRows?: boolean;
     pagination?: boolean;
 }
-export function TableSkeleton({ search, columns, clear, selectedRows, pagination }: TableSkeletonProps) {
+export function TableSkeleton({ search, columns, clear, deleteOp, selectedRows, pagination }: TableSkeletonProps) {
     return (
         <div className='container mx-auto py-10 lg:min-w-[800px]'>
             <div className='flex items-center py-4'>
                 {search ? <Skeleton className='h-9 w-full max-w-sm' /> : ''}
                 {columns ? <Skeleton className='h-9 w-24 ml-auto' /> : ''}
                 {clear ? <Skeleton className='h-9 w-12 ml-5' /> : ''}
+                {deleteOp ? <Skeleton className='h-9 w-12 ml-5' /> : ''}
             </div>
             <div className='rounded-md border'>
                 <Skeleton className='w-full h-80'/>
