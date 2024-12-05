@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { normalizeGestureWord } from '@/lib/utils';
 import { Palabra } from '@/interfaces/palabraInterface';
+import { InfoCapsule } from '@/components/customUI/InfoCapsule';
 
 // Define los gestos en mayúsculas para mantener la consistencia
 const gestures = ["A", "B", "C", "BIEN", "BUENOS DÍAS", "COMO ESTÁS", "HOLA", "MAL"];
@@ -473,8 +474,6 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
         }
     }
 }, [isPageVisible, isHolisticReady]);
-
-  // Depurador
   console.log('isPageVisible:', isPageVisible);
   console.log('isHolisticReady:', isHolisticReady);
   return (
@@ -497,23 +496,28 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
               {isPageVisible && isHolisticReady ? (isCapturing ? 'Capturando...' : 'Esperando gesto...') : 'Cámara desactivada'}
             </Badge>
           </div>
-          {/* <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
-            <span className="font-semibold">Predicción:</span> {prediction || 'Ninguna'}
-          </div> */}
           <div className="absolute bottom-4 left-4 z-30 bg-white text-black p-2 rounded">
             <span className="font-semibold">Retroalimentación:</span> {feedback || 'Ninguna'}
           </div>
-          
-          {/* Botón de Mute/Unmute */}
+          <div className='absolute bottom-4 right-4 z-30'>
+            <InfoCapsule message='
+            Consejos:\n\n
+            1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar\n en como se detecta la seña y dar un mal resultado.\n\n
+            2. El proceso de detección empieza a contar desde que se detecta la mano\n hasta que la mano es retirada de la vista de la camara. (En caso de señas\n
+            estaticas se recomienda estar a lo menos 3 segundos de detección para que\n detecte correctamente)\n\n
+            3. Para que el intento se concidere correcto debe contar con un porcentaje\n de aprobación igual o sobre el 85%.\n\n
+            4. Se recomienda contar con una distancia prudente en la cual se pueda\n visualizar completamente desde el pecho hasta la cabeza.\n\n
+            5. Se recomienda estar centrado y realizar las señas de forma precisa,\n no muy rapido ni muy lento.'
+            ></InfoCapsule>
+          </div>
           <div className="absolute top-4 right-4 z-30">
             <button
               onClick={() => setIsMuted(prev => !prev)}
               className="flex items-center px-4 py-2 bg-background rounded hover:bg-gray-400 hover:text-white focus:outline-none"
-              aria-label={isMuted ? "Unmute Voice" : "Mute Voice"} // Accesibilidad
+              aria-label={isMuted ? "Unmute Voice" : "Mute Voice"} 
             >
               {isMuted ? (
                 <>
-                  {/* Icono de Unmute */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -531,7 +535,6 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
                 </>
               ) : (
                 <>
-                  {/* Icono de Mute */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -555,12 +558,8 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
               Cámara desactivada
             </div>
           )}
-          {/* <div className="absolute bottom-4 right-4 z-30 bg-white bg-opacity-75 p-2 rounded">
-            <span className="font-semibold">Frase:</span> {sentence.join(' ')}
-          </div> */}
         </div>
       </CardContent>
-    </Card>
-    
+    </Card>  
   );
 }
