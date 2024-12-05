@@ -34,10 +34,12 @@ interface DesktopCameraProps {
   word: Palabra;
   isSuccessTry: () => void;
 }
-export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) {
+
+export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cameraRef = useRef<Camera | null>(null);
+  const holisticRef = useRef<Holistic | null>(null); // Usamos useRef para mantener Holistic
   const [gestureModel, setGestureModel] = useState<tf.LayersModel | null>(null);
   const [prediction, setPrediction] = useState<string>('');
   const [isCapturing, setIsCapturing] = useState(false);
@@ -64,6 +66,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
   // Estado para controlar el muteo con persistencia
   const [isMuted, setIsMuted] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -101,7 +104,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
         console.error('Error al cargar all_averages.json:', error);
       });
   }, []);
-  
+
   // Cargar el modelo de TensorFlow.js
   useEffect(() => {
     const loadModel = async () => {
@@ -222,13 +225,13 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
   }, []);
 
   // Función para enviar la imagen a Mediapipe Holistic
-  const mediapipeDetection = useCallback(async (image: HTMLVideoElement, holistic: Holistic) => {
-    if (!holistic) {
+  const mediapipeDetection = useCallback(async (image: HTMLVideoElement) => {
+    if (!holisticRef.current) {
       console.warn('Holistic no está inicializado.');
       return;
     }
-  
-    await holistic.send({ image });
+
+    await holisticRef.current.send({ image });
   }, []);
 
   // Calcular la distancia promedio entre las secuencias de keypoints
@@ -274,7 +277,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
       console.log('El modelo aún no está cargado');
       return;
     }
-  
+
     const inputTensor = tf.tensor(kpNormalized).expandDims(0);
     try {
       const prediction = gestureModel.predict(inputTensor) as tf.Tensor;
@@ -282,11 +285,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
       const confidences = predictionData[0];
       const maxConfidence = Math.max(...confidences);
       const maxIndex = confidences.indexOf(maxConfidence);
-  
-      // gestures.forEach((gesture, index) => {
-      //   console.log(`${gesture}: ${(confidences[index] * 100).toFixed(2)}%`);
-      // });
-  
+
       if (maxConfidence > THRESHOLD) {
         const predictedGesture = gestures[maxIndex];
         setPrediction(predictedGesture);
@@ -295,11 +294,9 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
           return;
         }
 
-        // setSentence((prevSentence) => [predictedGesture, ...prevSentence]);
-
         // Llamar a la función de síntesis de voz
         speak(predictedGesture);
-  
+
         // Obtener la secuencia de keypoints esperada (usando toLowerCase para coincidir con JSON)
         const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGesture)];
 
@@ -340,7 +337,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
     } finally {
       inputTensor.dispose();
     }
-  }, [gestureModel, normalizeKeypoints, speak, expectedKeypointsMap]);
+  }, [gestureModel, normalizeKeypoints, speak, expectedKeypointsMap, word.nombrePalabra, isSuccessTry]);
 
   // Función para manejar los resultados de Mediapipe
   const onResults = useCallback((results: any) => {
@@ -403,79 +400,81 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
 
   // Inicializar Mediapipe Holistic y la cámara
   useEffect(() => {
-    if (!isModelLoaded || !isPageVisible) return;
-
-    let holistic: Holistic | null = null;
-    let camera: Camera | null = null;
+    if (!isModelLoaded) return;
 
     const initializeHolistic = async () => {
-        holistic = new Holistic({
-            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
-        });
+      if (holisticRef.current) return; // Evitar inicialización múltiple
 
-        holistic.setOptions({
-            modelComplexity: 1,
-            smoothLandmarks: true,
-            enableSegmentation: false,
-            smoothSegmentation: true,
-            refineFaceLandmarks: false,
-            minDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5,
-        });
+      const holistic = new Holistic({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+      });
 
-        holistic.onResults(onResults);
+      holistic.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        smoothSegmentation: true,
+        refineFaceLandmarks: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
 
-        try {
-            await holistic.initialize();
-            setIsHolisticReady(true);
+      holistic.onResults(onResults);
 
-            if (webcamRef.current && webcamRef.current.video) {
-                camera = new Camera(webcamRef.current.video, {
-                    onFrame: async () => {
-                        // Solo enviar la imagen si tanto holistic como la cámara están inicializados
-                        if (holistic && webcamRef.current && webcamRef.current.video) {
-                            await holistic.send({ image: webcamRef.current.video });
-                        }
-                    },
-                    width: 640,
-                    height: 480,
-                });
-                cameraRef.current = camera;
-                camera.start();
-            }
-        } catch (error) {
-            console.error("Error initializing Holistic:", error);
-            setIsHolisticReady(false);
+      try {
+        await holistic.initialize();
+        setIsHolisticReady(true);
+        holisticRef.current = holistic;
+
+        if (webcamRef.current && webcamRef.current.video) {
+          const camera = new Camera(webcamRef.current.video, {
+            onFrame: async () => {
+              if (holisticRef.current && webcamRef.current && webcamRef.current.video) {
+                await holisticRef.current.send({ image: webcamRef.current.video });
+              }
+            },
+            width: 640,
+            height: 480,
+          });
+          cameraRef.current = camera;
+          if (isPageVisible) {
+            camera.start();
+          }
         }
+      } catch (error) {
+        console.error("Error initializing Holistic:", error);
+        setIsHolisticReady(false);
+      }
     };
 
     initializeHolistic();
 
     return () => {
-        // Limpiar de manera segura los objetos
-        setIsHolisticReady(false);
-        if (holistic) {
-            holistic.close();
-            holistic = null;  // Liberamos el objeto Holistic
-        }
-        if (camera) {
-            camera.stop();
-            camera = null;  // Liberamos el objeto Camera
-        }
+      setIsHolisticReady(false);
+      if (holisticRef.current) {
+        holisticRef.current.close();
+        holisticRef.current = null;
+      }
+      if (cameraRef.current) {
+        cameraRef.current.stop();
+        cameraRef.current = null;
+      }
     };
-  }, [isModelLoaded, onResults, isPageVisible]);
+  }, [isModelLoaded]);
 
   useEffect(() => {
     if (cameraRef.current) {
-        if (isPageVisible && isHolisticReady) {
-            cameraRef.current.start(); // Reinicia la cámara solo si la página está visible
-        } else {
-            cameraRef.current.stop(); // Detén la cámara si la página no está visible
-        }
+      if (isPageVisible && isHolisticReady) {
+        cameraRef.current.start();
+      } else {
+        cameraRef.current.stop();
+      }
     }
-}, [isPageVisible, isHolisticReady]);
+  }, [isPageVisible, isHolisticReady]);
+
   console.log('isPageVisible:', isPageVisible);
   console.log('isHolisticReady:', isHolisticReady);
+
   return (
     <Card className="w-full max-w-4xl">
       <CardContent className='p-6'>
@@ -514,7 +513,7 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
             <button
               onClick={() => setIsMuted(prev => !prev)}
               className="flex items-center px-4 py-2 bg-background rounded hover:bg-gray-400 hover:text-white focus:outline-none"
-              aria-label={isMuted ? "Unmute Voice" : "Mute Voice"} 
+              aria-label={isMuted ? "Unmute Voice" : "Mute Voice"}
             >
               {isMuted ? (
                 <>
@@ -560,6 +559,6 @@ export default function DesktopCamera({word, isSuccessTry}: DesktopCameraProps) 
           )}
         </div>
       </CardContent>
-    </Card>  
+    </Card>
   );
 }
