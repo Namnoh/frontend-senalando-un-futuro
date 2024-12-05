@@ -14,13 +14,14 @@ import { SearchPalabra } from '@/interfaces/commonInterfaces';
 import Link from 'next/link';
 import { SetStateAction, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { Lock } from 'lucide-react';
 
 const WAIT_BETWEEN_CHANGE = 400;
 
-export default function SearchModal({filteredItems, setFilteredItems}:{filteredItems:SearchPalabra[], setFilteredItems:React.Dispatch<SetStateAction<SearchPalabra[]>>}) {
+export default function SearchModal({levelProgress, setIsModalOpen, filteredItems, setFilteredItems}:{levelProgress:number | undefined, setIsModalOpen:React.Dispatch<SetStateAction<boolean>>, filteredItems:SearchPalabra[], setFilteredItems:React.Dispatch<SetStateAction<SearchPalabra[]>>}) {
     const [searchTerm, setSearchTerm] = useState(''); // Estado para el valor de búsqueda
-    
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    console.log(levelProgress);
 
     // Filtrar los ítems basados en lo que el usuario escribe
     const filterItems = useDebouncedCallback(async (currentSearchTerm) => {
@@ -63,25 +64,38 @@ export default function SearchModal({filteredItems, setFilteredItems}:{filteredI
                     ) : (
                         <ul className='h-full w-full flex flex-col lg:gap-5 justify-between'>
                             {filteredItems.length > 0 ? (
-                                filteredItems.map((item, index) => (
-                                    <div key={index}>
-                                        <Link
-                                            href={`/niveles/${item.idNivel}-${encodeURI(item.nombreNivel)}/categorias/${item.idCategoria}-${encodeURI(item.nombreCategoria)}/palabras/${item.idPalabra}`}
-                                            className='group'
+                                filteredItems.map((item, index) => {
+                                    const isUnlocked = levelProgress && levelProgress >= item.idNivel ? true : false;
+                                    return (
+                                        <div key={index}
+                                            onClick={() => {
+                                                if (isUnlocked) setIsModalOpen(false);
+                                            }}
+                                            className='relative'
                                         >
-                                            <li
-                                                className='flex flex-col items-center p-3 w-full lg:flex-row lg:w-full text-center rounded-xl group-hover:bg-primary-100 group-hover:text-black'
+                                            <Link
+                                                href={`/niveles/${item.idNivel}-${encodeURI(item.nombreNivel)}/categorias/${item.idCategoria}-${encodeURI(item.nombreCategoria)}/palabras/${item.idPalabra}-${encodeURI(item.nombrePalabra)}`}
+                                                className='group'
                                             >
-                                                <span className='h-auto lg:w-1/5 capitalize break-all'>{item.nombrePalabra}</span>
-                                                <span className='lg:w-1/5'>-</span>
-                                                <span className='h-auto lg:w-1/5 capitalize break-words'>{item.nombreCategoria}</span>
-                                                <span className='lg:w-1/5'>-</span>
-                                                <span className='h-auto lg:w-1/5 capitalize break-words'>{item.nombreNivel}</span>
-                                            </li>
-                                        </Link>
-                                        <Separator className='lg:hidden'/>
-                                    </div>
-                                ))
+                                                <li
+                                                    className={`flex flex-col items-center p-3 w-full lg:flex-row lg:w-full text-center rounded-xl group-hover:bg-primary-100 group-hover:text-black`}
+                                                >
+                                                    <span className='h-auto lg:w-1/5 capitalize break-all'>{item.nombrePalabra}</span>
+                                                    <span className='lg:w-1/5'>-</span>
+                                                    <span className='h-auto lg:w-1/5 capitalize break-words'>{item.nombreCategoria}</span>
+                                                    <span className='lg:w-1/5'>-</span>
+                                                    <span className='h-auto lg:w-1/5 capitalize break-words'>{item.nombreNivel}</span>
+                                                </li>
+                                            </Link>
+                                            {!isUnlocked && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 rounded-xl">
+                                                    <Lock className="w-8 h-8 text-white" />
+                                                </div>
+                                            )}
+                                            <Separator className='lg:hidden'/>
+                                        </div>
+                                    )
+                                })
                             ) : (
                                 <li>No se encontraron resultados</li>
                             )}
@@ -92,3 +106,7 @@ export default function SearchModal({filteredItems, setFilteredItems}:{filteredI
         </DialogContent>
     )
 };
+
+function useProgressContext(): { progress: any; updateUserProgress: any; } {
+    throw new Error('Function not implemented.');
+}
