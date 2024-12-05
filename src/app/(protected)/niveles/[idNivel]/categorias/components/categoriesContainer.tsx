@@ -8,7 +8,10 @@ export default async function CategoriesContainer({level}: {level:TitleProp}) {
 
     return (
         <div className='flex flex-wrap justify-center gap-5 gap-y-12 lg:gap-y-0 w-2/3 mb-10'>
-            { categories.map((c:Categoria) =>
+            { categories
+                .slice()
+                .sort((a: Categoria, b: Categoria) => a.idCategoria - b.idCategoria)
+                .map((c:Categoria) =>
                 {
                     return (
                         <MiniCardGalery
