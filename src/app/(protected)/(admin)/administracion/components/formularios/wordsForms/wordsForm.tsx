@@ -124,6 +124,19 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
             }
         }
     };
+    useEffect(() => {
+        if (word){
+            const preventTextSelection = (e: MouseEvent) => {
+                window.getSelection()?.removeAllRanges(); // Elimina cualquier selección de texto activa
+            };
+
+            window.addEventListener('mousemove', preventTextSelection);
+
+            return () => {
+                window.removeEventListener('mousemove', preventTextSelection);
+            };
+        }
+    }, []);
 
     return (
         <div onFocus={handleFocus}>
