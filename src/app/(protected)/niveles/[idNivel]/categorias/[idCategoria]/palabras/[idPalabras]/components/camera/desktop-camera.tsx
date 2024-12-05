@@ -12,23 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { normalizeGestureWord } from '@/lib/utils';
 import { Palabra } from '@/interfaces/palabraInterface';
 import { InfoCapsule } from '@/components/customUI/InfoCapsule';
+import {
+  MODEL_FRAMES,
+  MIN_LENGTH_FRAMES,
+  MARGIN_FRAME,
+  DELAY_FRAMES,
+  THRESHOLD,
+  MAX_DISTANCE,
+  HIGH_ACCURACY,
+  MEDIUM_ACCURACY,
+  GESTURES
+} from '@/lib/constants';
 
-// Define los gestos en mayúsculas para mantener la consistencia
-const gestures = ["A", "B", "C", "BIEN", "BUENOS DÍAS", "COMO ESTÁS", "HOLA", "MAL"];
-
-// Constantes de configuración
-const MODEL_FRAMES = 20;
-const MIN_LENGTH_FRAMES = 15;
-const MARGIN_FRAME = 1;
-const DELAY_FRAMES = 3;
-const THRESHOLD = 0.8;
-
-// Define el valor máximo de distancia aceptable (ajusta según tus pruebas)
-const MAX_DISTANCE = 0.24;
-
-// Umbrales para mensajes cualitativos
-const HIGH_ACCURACY = 85;
-const MEDIUM_ACCURACY = 70;
 
 interface DesktopCameraProps {
   word: Palabra;
@@ -109,7 +104,7 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
   useEffect(() => {
     const loadModel = async () => {
       try {
-        const model = await tf.loadLayersModel('/web_model/model.json');
+        const model = await tf.loadLayersModel('/webModel/model.json');
         setGestureModel(model);
         setIsModelLoaded(true);
       } catch (error) {
@@ -135,16 +130,28 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
   const interpolateKeypoints = useCallback(
     (keypoints: number[][], targetLength: number = MODEL_FRAMES): number[][] => {
       const currentLength = keypoints.length;
+      
+      // Si no hay keypoints, retorna vacío para evitar errores
+      if (currentLength === 0) {
+        return [];
+      }
+  
       if (currentLength === targetLength) return keypoints;
-
+  
       const indices = linspace(0, currentLength - 1, targetLength);
       const interpolatedKeypoints: number[][] = [];
-
+  
       for (const i of indices) {
         const lowerIdx = Math.floor(i);
         const upperIdx = Math.ceil(i);
         const weight = i - lowerIdx;
-
+  
+        // Verifica también aquí que lowerIdx y upperIdx no estén fuera de rango
+        if (lowerIdx < 0 || lowerIdx >= currentLength || upperIdx < 0 || upperIdx >= currentLength) {
+          // Si se da este caso, significa que no hay suficientes puntos. Retorna lo que tengas.
+          return keypoints;
+        }
+  
         if (lowerIdx === upperIdx) {
           interpolatedKeypoints.push([...keypoints[lowerIdx]]);
         } else {
@@ -155,7 +162,7 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
           interpolatedKeypoints.push(interpolatedPoint);
         }
       }
-
+  
       return interpolatedKeypoints;
     },
     []
@@ -164,6 +171,10 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
   // Normalización de keypoints para asegurar la longitud deseada
   const normalizeKeypoints = useCallback(
     (keypoints: number[][], targetLength: number = MODEL_FRAMES): number[][] => {
+      if (!keypoints || keypoints.length === 0 ) {
+        throw new Error("Keypoints is undefined or empty");
+      }
+
       const currentLength = keypoints.length;
 
       if (currentLength < targetLength) {
@@ -287,18 +298,21 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
       const maxIndex = confidences.indexOf(maxConfidence);
 
       if (maxConfidence > THRESHOLD) {
-        const predictedGesture = gestures[maxIndex];
-        setPrediction(predictedGesture);
-        if (predictedGesture.toLowerCase() != word.nombrePalabra.toLowerCase()) {
+        const predictedGestureKey = Object.keys(GESTURES)[maxIndex];
+        const predictedGestureValue = Object.values(GESTURES)[maxIndex];
+        setPrediction(predictedGestureKey);
+        console.log(predictedGestureKey);
+        console.log(predictedGestureValue);
+        if (predictedGestureValue.toLowerCase() != word.nombrePalabra.toLowerCase()) {
           setFeedback(`Seña Incorrecta`);
           return;
-        }
+        };
 
         // Llamar a la función de síntesis de voz
-        speak(predictedGesture);
+        speak(predictedGestureValue);
 
         // Obtener la secuencia de keypoints esperada (usando toLowerCase para coincidir con JSON)
-        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGesture)];
+        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGestureKey)];
 
         if (expectedKeypoints) {
           // Normalizar los keypoints esperados
@@ -433,8 +447,6 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
                 await holisticRef.current.send({ image: webcamRef.current.video });
               }
             },
-            width: 640,
-            height: 480,
           });
           cameraRef.current = camera;
           if (isPageVisible) {
@@ -472,9 +484,6 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
     }
   }, [isPageVisible, isHolisticReady]);
 
-  console.log('isPageVisible:', isPageVisible);
-  console.log('isHolisticReady:', isHolisticReady);
-
   return (
     <Card className="w-full max-w-4xl">
       <CardContent className='p-6'>
@@ -500,13 +509,13 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
           </div>
           <div className='absolute bottom-4 right-4 z-30'>
             <InfoCapsule message='
-            Consejos:\n\n
-            1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar\n en como se detecta la seña y dar un mal resultado.\n\n
-            2. El proceso de detección empieza a contar desde que se detecta la mano\n hasta que la mano es retirada de la vista de la camara. (En caso de señas\n
-            estaticas se recomienda estar a lo menos 3 segundos de detección para que\n detecte correctamente)\n\n
-            3. Para que el intento se concidere correcto debe contar con un porcentaje\n de aprobación igual o sobre el 85%.\n\n
-            4. Se recomienda contar con una distancia prudente en la cual se pueda\n visualizar completamente desde el pecho hasta la cabeza.\n\n
-            5. Se recomienda estar centrado y realizar las señas de forma precisa,\n no muy rapido ni muy lento.'
+              Consejos:\n\n
+              1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar\n en como se detecta la seña y dar un mal resultado.\n\n
+              2. El proceso de detección empieza a contar desde que se detecta la mano\n hasta que la mano es retirada de la vista de la camara. (En caso de señas\n
+              estaticas se recomienda estar a lo menos 3 segundos de detección para que\n detecte correctamente)\n\n
+              3. Para que el intento se concidere correcto debe contar con un porcentaje\n de aprobación igual o sobre el 85%.\n\n
+              4. Se recomienda contar con una distancia prudente en la cual se pueda\n visualizar completamente desde el pecho hasta la cabeza.\n\n
+              5. Se recomienda estar centrado y realizar las señas de forma precisa,\n no muy rapido ni muy lento.'
             ></InfoCapsule>
           </div>
           <div className="absolute top-4 right-4 z-30">

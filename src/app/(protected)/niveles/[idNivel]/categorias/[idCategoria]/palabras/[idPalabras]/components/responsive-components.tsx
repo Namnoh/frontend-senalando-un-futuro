@@ -35,11 +35,12 @@ export default function ResponsiveComponents({ level, category, word, words, cur
     const { progress, updateUserProgress } = useProgressContext();
 
     useEffect(() => {
-        const wordFound = Object.values(progress!.palabrasProgreso).find(
+        if (!progress) return;
+        const wordFound = Object.values(progress.palabrasProgreso).find(
             (palabra) => palabra.idPalabra === word.idPalabra
         );
         if (wordFound || progress && progress.idNivel > level.idTitle) setSuccessTry(3);
-    }, [])
+    }, [progress])
 
     async function updateWordProgress() {
         if (!session?.user?.id) {
