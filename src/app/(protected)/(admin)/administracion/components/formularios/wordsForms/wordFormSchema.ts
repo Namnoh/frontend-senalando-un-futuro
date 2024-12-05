@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 export const formSchema = z.object({
-    nombrePalabra: z.string({required_error: "Debe ingresar un nombre.",}).min(3, {
-        message: "Debe ingresar un nombre válido, mínimo 3 carácteres.",
+    nombrePalabra: z.string({required_error: "Debe ingresar un nombre.",}).min(1, {
+        message: "Debe ingresar un nombre válido, mínimo 1 carácteres.",
     }),
     iconPalabra: z.string({required_error: "Debe ingresar un icono.",}),
     videoPalabra: z.string({required_error: "Debe ingresar un video.",}),
