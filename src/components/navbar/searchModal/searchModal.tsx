@@ -21,7 +21,6 @@ const WAIT_BETWEEN_CHANGE = 400;
 export default function SearchModal({levelProgress, setIsModalOpen, filteredItems, setFilteredItems}:{levelProgress:number | undefined, setIsModalOpen:React.Dispatch<SetStateAction<boolean>>, filteredItems:SearchPalabra[], setFilteredItems:React.Dispatch<SetStateAction<SearchPalabra[]>>}) {
     const [searchTerm, setSearchTerm] = useState(''); // Estado para el valor de búsqueda
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    console.log(levelProgress);
 
     // Filtrar los ítems basados en lo que el usuario escribe
     const filterItems = useDebouncedCallback(async (currentSearchTerm) => {
