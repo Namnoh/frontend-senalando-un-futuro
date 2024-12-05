@@ -1,15 +1,14 @@
-'use client'
-
-import { useState } from "react"
+"use client";
+import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import * as z from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import styles from "@/app/styles/auth.module.scss"
-import { signIn } from "next-auth/react"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import styles from "@/app/styles/auth.module.scss";
+import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,42 +16,63 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
-
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 const sections = [
   {
-    image: "/svg/charlando.svg"
-  }]
-const formSchema = z.object({
-  nombreUsuario: z.string().min(2, {
-    message: "El nombre debe tener al menos 2 caracteres.",
-  }),
-  apellidoUsuario: z.string().min(2, {
-    message: "El apellido debe tener al menos 2 caracteres.",
-  }),
-  correoUsuario: z.string().email({
-    message: "Debe ser un correo electrónico válido.",
-  }),
-  contrasenaUsuario: z
-  .string()
-  .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
-  .regex(/[A-Z]/, { message: "La contraseña debe contener al menos una letra mayúscula." })
-  .regex(/[a-z]/, { message: "La contraseña debe contener al menos una letra minúscula." })
-  .regex(/[0-9]/, { message: "La contraseña debe contener al menos un número." })
-  .regex(/[^A-Za-z0-9]/, { message: "La contraseña debe contener al menos un carácter especial." }),
-  confirmPassword: z.string(),
-}).refine((data) => data.contrasenaUsuario === data.confirmPassword, {
-  message: "Las contraseñas no coinciden",
-  path: ["confirmPassword"],
-})
+    image: "/svg/charlando.svg",
+  },
+];
+const formSchema = z
+  .object({
+    nombreUsuario: z.string().min(2, {
+      message: "El nombre debe tener al menos 2 caracteres.",
+    }),
+    apellidoUsuario: z.string().min(2, {
+      message: "El apellido debe tener al menos 2 caracteres.",
+    }),
+    correoUsuario: z.string().email({
+      message: "Debe ser un correo electrónico válido.",
+    }),
+    contrasenaUsuario: z
+      .string()
+      .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
+      .regex(/[A-Z]/, {
+        message: "La contraseña debe contener al menos una letra mayúscula.",
+      })
+      .regex(/[a-z]/, {
+        message: "La contraseña debe contener al menos una letra minúscula.",
+      })
+      .regex(/[0-9]/, {
+        message: "La contraseña debe contener al menos un número.",
+      })
+      .regex(/[^A-Za-z0-9]/, {
+        message: "La contraseña debe contener al menos un carácter especial.",
+      }),
+    confirmPassword: z.string(),
+    aceptaTerminos: z.boolean().refine((val) => val === true, {
+      message: "Debes aceptar los Términos y Condiciones.",
+    }),
+  })
+  .refine((data) => data.contrasenaUsuario === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-  const [registerError, setRegisterError] = useState<string | null>(null)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [registerError, setRegisterError] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,43 +82,46 @@ export default function RegisterPage() {
       correoUsuario: "",
       contrasenaUsuario: "",
       confirmPassword: "",
+      aceptaTerminos: false,
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    setRegisterError(null)
+    setIsLoading(true);
+    setRegisterError(null);
 
     try {
-      const res = await fetch('/api/auth/register/', { 
-        method: 'POST',
+      const res = await fetch("/api/auth/register/", {
+        method: "POST",
         body: JSON.stringify({
           nombreUsuario: values.nombreUsuario,
           apellidoUsuario: values.apellidoUsuario,
           correoUsuario: values.correoUsuario,
-          contrasenaUsuario: values.contrasenaUsuario
+          contrasenaUsuario: values.contrasenaUsuario,
         }),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
-        throw new Error("Error en el registro")
+        throw new Error("Error en el registro");
       }
 
-      const resJSON = await res.json()
-      router.push('/login')
+      const resJSON = await res.json();
+      router.push("/login");
     } catch (error) {
-      setRegisterError("Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.")
+      setRegisterError(
+        "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo."
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/niveles" })
-  }
+    signIn("google", { callbackUrl: "/niveles" });
+  };
   return (
     <div className={styles.backgroundImageRegister}>
       <div className="flex flex-col lg:flex-row-reverse items-center justify-center gap-1 sm:gap-6 md:justify-evenly lg:flex-wrap min-h-screen mt-16 lg:mt-0">
@@ -111,7 +134,10 @@ export default function RegisterPage() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="nombreUsuario"
@@ -177,6 +203,34 @@ export default function RegisterPage() {
                     </FormItem>
                   )}
                 />
+
+                {/* Campo para aceptar los Términos y Condiciones */}
+                <FormField
+                  control={form.control}
+                  name="aceptaTerminos"
+                  render={({ field }) => (
+                    <FormItem className="flex items-start space-x-2">
+                      <FormControl>
+                        <Checkbox
+                          id="aceptaTerminos"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel
+                        htmlFor="aceptaTerminos"
+                        className="select-none"
+                      >
+                        He leído y acepto los{" "}
+                        <Link href="/tyc" className="underline text-primary">
+                          Términos y Condiciones
+                        </Link>
+                      </FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 {registerError && (
                   <div className="text-red-500 text-sm">{registerError}</div>
                 )}
@@ -202,7 +256,11 @@ export default function RegisterPage() {
                 </span>
               </div>
             </div>
-            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleSignIn}
+            >
               <svg
                 className="mr-2 h-4 w-4"
                 aria-hidden="true"
@@ -241,5 +299,5 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
