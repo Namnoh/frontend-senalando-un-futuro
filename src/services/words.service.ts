@@ -134,10 +134,7 @@ export async function getAllWordsFromLevel(idNivel:number) {
     try {
         const response= await fetch(`${process.env.API_URL}/words/getAllWordsFromLevel/${idNivel}`, {
             // TODO: SIN CACHÉ PARA LAS PRUEBAS, LUEGO ELIMINAR
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache', // Compatibilidad con navegadores más antiguos
-            },
+            cache: 'no-store'
         });
         if (!response.ok) {
             throw new Error(`Error al obtener las palabras: ${response.statusText}`);

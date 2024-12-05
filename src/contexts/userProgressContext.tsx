@@ -97,7 +97,9 @@ export default function UserProgressContextProvider({children} : UserProgressCon
                 console.warn('No se ha iniciado sesión o no se puede obtener el ID de usuario');
                 return;
             }
-            const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`);
+            const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`,{
+                cache: 'no-store'
+            });
             if (!response.ok) {
                 throw new Error(`Failed to fetch userProgress: ${response.statusText}`);
             }

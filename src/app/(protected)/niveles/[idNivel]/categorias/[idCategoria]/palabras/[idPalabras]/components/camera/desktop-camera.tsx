@@ -301,8 +301,7 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
         const predictedGestureKey = Object.keys(GESTURES)[maxIndex];
         const predictedGestureValue = Object.values(GESTURES)[maxIndex];
         setPrediction(predictedGestureKey);
-        console.log(predictedGestureKey);
-        console.log(predictedGestureValue);
+
         if (predictedGestureValue.toLowerCase() != word.nombrePalabra.toLowerCase()) {
           setFeedback(`Seña Incorrecta`);
           return;
