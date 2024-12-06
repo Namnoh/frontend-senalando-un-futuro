@@ -43,7 +43,7 @@ export default function MobileVideo({word}:{word:Palabra}) {
         <CardContent className='p-3'>
           {videoAvailable ? (
             <>
-              <div className="aspect-square mb-2">
+              <div className="aspect-video mb-2">
                 <ReactPlayer
                   ref={playerRef}
                   url={word.videoPalabra}
