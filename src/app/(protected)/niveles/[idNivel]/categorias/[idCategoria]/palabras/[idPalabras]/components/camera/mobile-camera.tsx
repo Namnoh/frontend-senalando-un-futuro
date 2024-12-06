@@ -11,31 +11,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { normalizeGestureWord } from '@/lib/utils';
 import { Palabra } from '@/interfaces/palabraInterface';
+import { InfoCapsule } from '@/components/customUI/InfoCapsule';
+import {
+  MODEL_FRAMES,
+  MIN_LENGTH_FRAMES,
+  MARGIN_FRAME,
+  DELAY_FRAMES,
+  THRESHOLD,
+  MAX_DISTANCE,
+  HIGH_ACCURACY,
+  MEDIUM_ACCURACY,
+  GESTURES
+} from '@/lib/constants';
 
-// Define los gestos en mayúsculas para mantener la consistencia
-const gestures = ["A", "B", "C", "BIEN", "BUENOS DÍAS", "COMO ESTÁS", "HOLA", "MAL"];
-
-// Constantes de configuración
-const MODEL_FRAMES = 20;
-const MIN_LENGTH_FRAMES = 15;
-const MARGIN_FRAME = 1;
-const DELAY_FRAMES = 3;
-const THRESHOLD = 0.8;
-
-// Define el valor máximo de distancia aceptable (ajusta según tus pruebas)
-const MAX_DISTANCE = 0.24;
-
-// Umbrales para mensajes cualitativos
-const HIGH_ACCURACY = 85;
-const MEDIUM_ACCURACY = 70;
 
 interface DesktopCameraProps {
   word: Palabra;
   isSuccessTry: () => void;
 }
-export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
+
+export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cameraRef = useRef<Camera | null>(null);
+  const holisticRef = useRef<Holistic | null>(null); // Usamos useRef para mantener Holistic
   const [gestureModel, setGestureModel] = useState<tf.LayersModel | null>(null);
   const [prediction, setPrediction] = useState<string>('');
   const [isCapturing, setIsCapturing] = useState(false);
@@ -46,6 +45,22 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
   const recording = useRef<boolean>(false);
   // const [sentence, setSentence] = useState<string[]>([]);
   const [feedback, setFeedback] = useState<string>('');
+
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [isHolisticReady, setIsHolisticReady] = useState(false);
+
+  // Efecto para manejar la visibilidad de la página
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden);
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   // Estado para controlar el muteo con persistencia
   const [isMuted, setIsMuted] = useState<boolean>(() => {
@@ -84,7 +99,7 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
         console.error('Error al cargar all_averages.json:', error);
       });
   }, []);
-  
+
   // Cargar el modelo de TensorFlow.js
   useEffect(() => {
     const loadModel = async () => {
@@ -115,16 +130,28 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
   const interpolateKeypoints = useCallback(
     (keypoints: number[][], targetLength: number = MODEL_FRAMES): number[][] => {
       const currentLength = keypoints.length;
+      
+      // Si no hay keypoints, retorna vacío para evitar errores
+      if (currentLength === 0) {
+        return [];
+      }
+  
       if (currentLength === targetLength) return keypoints;
-
+  
       const indices = linspace(0, currentLength - 1, targetLength);
       const interpolatedKeypoints: number[][] = [];
-
+  
       for (const i of indices) {
         const lowerIdx = Math.floor(i);
         const upperIdx = Math.ceil(i);
         const weight = i - lowerIdx;
-
+  
+        // Verifica también aquí que lowerIdx y upperIdx no estén fuera de rango
+        if (lowerIdx < 0 || lowerIdx >= currentLength || upperIdx < 0 || upperIdx >= currentLength) {
+          // Si se da este caso, significa que no hay suficientes puntos. Retorna lo que tengas.
+          return keypoints;
+        }
+  
         if (lowerIdx === upperIdx) {
           interpolatedKeypoints.push([...keypoints[lowerIdx]]);
         } else {
@@ -135,7 +162,7 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
           interpolatedKeypoints.push(interpolatedPoint);
         }
       }
-
+  
       return interpolatedKeypoints;
     },
     []
@@ -144,6 +171,10 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
   // Normalización de keypoints para asegurar la longitud deseada
   const normalizeKeypoints = useCallback(
     (keypoints: number[][], targetLength: number = MODEL_FRAMES): number[][] => {
+      if (!keypoints || keypoints.length === 0 ) {
+        throw new Error("Keypoints is undefined or empty");
+      }
+
       const currentLength = keypoints.length;
 
       if (currentLength < targetLength) {
@@ -205,8 +236,13 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
   }, []);
 
   // Función para enviar la imagen a Mediapipe Holistic
-  const mediapipeDetection = useCallback(async (image: HTMLVideoElement, holistic: Holistic) => {
-    await holistic.send({ image });
+  const mediapipeDetection = useCallback(async (image: HTMLVideoElement) => {
+    if (!holisticRef.current) {
+      console.warn('Holistic no está inicializado.');
+      return;
+    }
+
+    await holisticRef.current.send({ image });
   }, []);
 
   // Calcular la distancia promedio entre las secuencias de keypoints
@@ -251,7 +287,7 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
     if (!gestureModel) {
       return;
     }
-  
+
     const inputTensor = tf.tensor(kpNormalized).expandDims(0);
     try {
       const prediction = gestureModel.predict(inputTensor) as tf.Tensor;
@@ -260,20 +296,20 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
       const maxConfidence = Math.max(...confidences);
       const maxIndex = confidences.indexOf(maxConfidence); 
       if (maxConfidence > THRESHOLD) {
-        const predictedGesture = gestures[maxIndex];
-        setPrediction(predictedGesture);
-        if (predictedGesture.toLowerCase() != word.nombrePalabra.toLowerCase()) {
+        const predictedGestureKey = Object.keys(GESTURES)[maxIndex];
+        const predictedGestureValue = Object.values(GESTURES)[maxIndex];
+        setPrediction(predictedGestureKey);
+
+        if (predictedGestureValue.toLowerCase() != word.nombrePalabra.toLowerCase()) {
           setFeedback(`Seña Incorrecta`);
           return;
-        }
-
-        // setSentence((prevSentence) => [predictedGesture, ...prevSentence]);
+        };
 
         // Llamar a la función de síntesis de voz
-        speak(predictedGesture);
-  
+        speak(predictedGestureValue);
+
         // Obtener la secuencia de keypoints esperada (usando toLowerCase para coincidir con JSON)
-        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGesture)];
+        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGestureKey)];
 
         if (expectedKeypoints) {
           // Normalizar los keypoints esperados
@@ -312,7 +348,7 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
     } finally {
       inputTensor.dispose();
     }
-  }, [gestureModel, normalizeKeypoints, speak, expectedKeypointsMap]);
+  }, [gestureModel, normalizeKeypoints, speak, expectedKeypointsMap, word.nombrePalabra, isSuccessTry]);
 
   // Función para manejar los resultados de Mediapipe
   const onResults = useCallback((results: any) => {
@@ -377,41 +413,73 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
   useEffect(() => {
     if (!isModelLoaded) return;
 
-    const holistic = new Holistic({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
-      }
-    });
+    const initializeHolistic = async () => {
+      if (holisticRef.current) return; // Evitar inicialización múltiple
 
-    holistic.setOptions({
-      modelComplexity: 1,
-      smoothLandmarks: true,
-      enableSegmentation: false,
-      smoothSegmentation: true,
-      refineFaceLandmarks: false,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5
-    });
-
-    holistic.onResults(onResults);
-
-    if (webcamRef.current && webcamRef.current.video) {
-      const camera = new Camera(webcamRef.current.video, {
-        onFrame: async () => {
-          if (webcamRef.current && webcamRef.current.video) {
-            await mediapipeDetection(webcamRef.current.video, holistic);
-          }
-        },
-        width: 640,
-        height: 480
+      const holistic = new Holistic({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
       });
-      camera.start();
-    }
+
+      holistic.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        smoothSegmentation: true,
+        refineFaceLandmarks: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+
+      holistic.onResults(onResults);
+
+      try {
+        await holistic.initialize();
+        setIsHolisticReady(true);
+        holisticRef.current = holistic;
+
+        if (webcamRef.current && webcamRef.current.video) {
+          const camera = new Camera(webcamRef.current.video, {
+            onFrame: async () => {
+              if (holisticRef.current && webcamRef.current && webcamRef.current.video) {
+                await holisticRef.current.send({ image: webcamRef.current.video });
+              }
+            },
+          });
+          cameraRef.current = camera;
+          if (isPageVisible) {
+            camera.start();
+          }
+        }
+      } catch (error) {
+        console.error("Error initializing Holistic:", error);
+        setIsHolisticReady(false);
+      }
+    };
+
+    initializeHolistic();
 
     return () => {
-      holistic.close();
+      setIsHolisticReady(false);
+      if (holisticRef.current) {
+        holisticRef.current.close();
+        holisticRef.current = null;
+      }
+      if (cameraRef.current) {
+        cameraRef.current.stop();
+        cameraRef.current = null;
+      }
     };
-  }, [isModelLoaded, mediapipeDetection, onResults]);
+  }, [isModelLoaded]);
+
+  useEffect(() => {
+    if (cameraRef.current) {
+      if (isPageVisible && isHolisticReady) {
+        cameraRef.current.start();
+      } else {
+        cameraRef.current.stop();
+      }
+    }
+  }, [isPageVisible, isHolisticReady]);
 
   return (
     <div className="my-4">
@@ -430,8 +498,8 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
               height={480}
             />
             <div className="absolute top-4 left-4 z-30">
-              <Badge variant={isCapturing ? "secondary" : "default"} className=' text-black'>
-                {isCapturing ? 'Capturando...' : 'Esperando gesto...'}
+              <Badge variant={isCapturing ? "secondary" : "default"} className='text-sm text-black'>
+                {isPageVisible && isHolisticReady ? (isCapturing ? 'Capturando...' : 'Esperando gesto...') : 'Cámara desactivada'}
               </Badge>
             </div>
             <div className="absolute top-4 right-4 z-30">
@@ -478,6 +546,17 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
                   </>
                 )}
               </button>
+            </div>
+            <div className='absolute bottom-4 right-4 z-30'>
+              <InfoCapsule message='
+                Consejos:\n\n
+                1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar en como se detecta la seña y dar un mal resultado.\n\n
+                2. El proceso de detección empieza a contar desde que se detecta la mano hasta que la mano es retirada de la vista de la camara. (En caso de señas
+                estaticas se recomienda estar a lo menos 3 segundos de detección para que detecte correctamente)\n\n
+                3. Para que el intento se concidere correcto debe contar con un porcentaje de aprobación igual o sobre el 85%.\n\n
+                4. Se recomienda contar con una distancia prudente en la cual se pueda visualizar completamente desde el pecho hasta la cabeza.\n\n
+                5. Se recomienda estar centrado y realizar las señas de forma precisa, no muy rapido ni muy lento.'
+              ></InfoCapsule>
             </div>
           </div>
         </CardContent>
