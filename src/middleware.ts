@@ -20,6 +20,7 @@ async function middleware(request: NextRequest) {
         // Obtener el progreso del usuario
         const response = await fetch(`${process.env.API_URL}/progreso/usuario/${userId}`, {
             method: 'GET',
+            cache: 'no-store'
         });
         const userProgress: UserProgress = await response.json();
         const levelMatch = pathName.match(/^\/niveles\/(\d+)/);

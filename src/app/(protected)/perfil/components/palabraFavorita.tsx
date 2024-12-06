@@ -10,7 +10,9 @@ export default function WordList({ categoryId = 1 }: { categoryId?: number }) {
 
     useEffect(() => {
         const fetchWords = async () => {
-        const response = await fetch(`/api/words/getWordsFromCategory/${categoryId}`);
+        const response = await fetch(`/api/words/getWordsFromCategory/${categoryId}`,{
+            cache: 'no-store'
+        });
             if (!response.ok) {
                 throw new Error('Failed to fetch words');
             };

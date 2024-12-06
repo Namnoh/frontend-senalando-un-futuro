@@ -26,7 +26,9 @@ export default function SearchModal({levelProgress, setIsModalOpen, filteredItem
     const filterItems = useDebouncedCallback(async (currentSearchTerm) => {
         if (currentSearchTerm === '') {return setFilteredItems([])}
         setIsLoading(true);
-        const response = await fetch(`/api/words/getWordsFromInput/${currentSearchTerm}`);
+        const response = await fetch(`/api/words/getWordsFromInput/${currentSearchTerm}`,{
+            cache: 'no-store'
+        });
         if (!response.ok) {
             throw new Error('Failed to fetch words');
         };

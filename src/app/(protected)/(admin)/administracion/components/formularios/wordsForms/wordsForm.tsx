@@ -81,7 +81,9 @@ export function WordForm({word, closeDialog, refreshData}:{word?:Palabra, closeD
 
     const getCategories = async () => {
         try {
-            const response = await fetch('/api/crud/categories');
+            const response = await fetch('/api/crud/categories', {
+                cache: 'no-store'
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             };

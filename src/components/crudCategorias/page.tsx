@@ -24,7 +24,9 @@ export default function CrudCategorias({ onLoad }: { onLoad?: () => void }) {
 
         try {
             setIsLoading(true);
-            const response = await fetch('/api/crud/categories');
+            const response = await fetch('/api/crud/categories',{
+                cache: 'no-store'
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             };
