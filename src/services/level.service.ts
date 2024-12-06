@@ -60,14 +60,12 @@ export async function updateUserProgress(idUsuario: number, userProgress: Omit<U
             },
             body: JSON.stringify(progress),
         });
-        const msg = await response.json();
-        console.log("RESPUESTA SERVICIO API: ", msg);
+        const responseData = await response.json();
+        console.log("RESPUESTA SERVICIO API: ", responseData);
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Error al actualizar el progreso: ${errorData.message || response.statusText}`);
+            throw new Error(`Error al actualizar el progreso: ${responseData.message || response.statusText}`);
         };
-        const updatedProgress: UserProgress = await response.json();
-        return { success: true, data: updatedProgress };
+        return { success: true, data: responseData as UserProgress };
     } catch (error) {
         console.error("Error en updateUserProgress:", error);
         const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
