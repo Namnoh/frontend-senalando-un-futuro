@@ -15,6 +15,7 @@ type Progress = UserProgress;
 type UserProgressContextType = {
     progress: Progress | null;
     updateProgress: (newUserProgress: UserProgress) => Promise<void>;
+    updateUserProgress: (newUserProgress: UserProgress) => Promise<void>;
     isLoading: boolean;
 }
 
@@ -56,6 +57,39 @@ export default function UserProgressContextProvider({children} : UserProgressCon
         }
     };
 
+    const updateUserProgress = async (newUserProgress: UserProgress) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`/api/progress/updateUserProgress/${session!.user.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUserProgress),
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to update userProgress: ${response.statusText}`);
+            }
+            const updatedProgress = await response.json();
+            setProgress(updatedProgress);
+            toast({
+                title: "Éxito",
+                description: "Progreso del usuario actualizado correctamente",
+                variant: "success"
+            });
+            fetchProgress();
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Error desconocido al actualizar el progreso';
+            toast({
+                title: "Error",
+                description: errorMessage,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const fetchProgress = async () => {
         setIsLoading(true);
         try {
@@ -63,7 +97,9 @@ export default function UserProgressContextProvider({children} : UserProgressCon
                 console.warn('No se ha iniciado sesión o no se puede obtener el ID de usuario');
                 return;
             }
-            const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`);
+            const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`,{
+                cache: 'no-store'
+            });
             if (!response.ok) {
                 throw new Error(`Failed to fetch userProgress: ${response.statusText}`);
             }
@@ -90,6 +126,7 @@ export default function UserProgressContextProvider({children} : UserProgressCon
     const contextValue = useMemo(() => ({
         progress,
         updateProgress,
+        updateUserProgress,
         isLoading
     }), [progress, isLoading]);
 

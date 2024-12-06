@@ -23,6 +23,7 @@ import ContenidoTabla from "./contenidoTabla";
 import SelectedOptions from "./selectedOptions";
 import PaginationBtns from "./paginationBtns";
 import CleanFilters from "./cleanFilters";
+import DeleteMany from "./deleteMany";
 
 export function DataTable<TData, TValue>({
     columns,
@@ -58,6 +59,7 @@ export function DataTable<TData, TValue>({
                 <BarraBusqueda table={table} />
                 <DropDownOptions table={table} />
                 <CleanFilters table={table} />
+                <DeleteMany table={table} />
             </div>
             <div className="rounded-md border bg-background">
                 <Table>

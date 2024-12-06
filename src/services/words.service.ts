@@ -32,7 +32,6 @@ export async function createWord(word:Palabra) {
 };
 
 // READ
-// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getAllWords(cache?:RequestCache):Promise<Palabra[]> {
     try {
         const response = await fetch(`${process.env.API_URL}/words/`, {
@@ -92,9 +91,31 @@ export async function deleteWord(idWord:number) {
     };
 };
 
+// DELETE MANY
+export async function deleteManyWords(idsWords:number[]) {
+    try {
+        const response = await fetch(`${process.env.API_URL}/words/deleteManyWords`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(idsWords)
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Error al eliminar la(s) palabra(s): ${errorData.message || response.statusText}`);
+        };
+        const user = await response.json();
+        return {success:true, data:user};
+    } catch (error) {
+        console.error("Error en deleteManyWords:", error);
+        const errorMessage = (error instanceof Error) ? error.message : 'Error desconocido';
+        return { success: false, error: errorMessage };
+    };
+};
+
 // * FIN DE CRUD PALABRAS
 
-// TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getWordsFrom(idCategoria:number) {
     try {
         const response= await fetch(`${process.env.API_URL}/words/getAllByCategory/${idCategoria}`);
@@ -104,7 +125,24 @@ export async function getWordsFrom(idCategoria:number) {
         const words = await response.json();
         return words;
     } catch (error) {
-        console.error("Error en getCategoriesFrom:", error);
+        console.error("Error en getWordsFrom:", error);
+        return[];
+    };
+};
+
+export async function getAllWordsFromLevel(idNivel:number) {
+    try {
+        const response= await fetch(`${process.env.API_URL}/words/getAllWordsFromLevel/${idNivel}`, {
+            // TODO: SIN CACHÉ PARA LAS PRUEBAS, LUEGO ELIMINAR
+            cache: 'no-store'
+        });
+        if (!response.ok) {
+            throw new Error(`Error al obtener las palabras: ${response.statusText}`);
+        }
+        const words = await response.json();
+        return words;
+    } catch (error) {
+        console.error("Error en getAllWordsFromLevel:", error);
         return[];
     };
 };
@@ -156,14 +194,10 @@ export async function getWordsFromInput(input:string):Promise<SearchPalabra[]> {
 export async function getWordById(idPalabra: number, idCategoria: number): Promise<Palabra | null> {
     try {
         const words = await getWordsFrom(idCategoria);
-        console.log("Lista de palabras obtenida:", words);
-
         const palabra = words.find((word: Palabra) => word.idPalabra === idPalabra) || null;
-
         if (!palabra) {
             console.error(`Palabra con id ${idPalabra} no encontrada en la categoría ${idCategoria}`);
         }
-
         return palabra;
     } catch (error) {
         console.error("Error en getWordById:", error);

@@ -47,13 +47,13 @@ export function EditCreateBtn({type, closeDialog, item, refreshData}: {type:stri
                 {/* Contenido Formulario */}
                 {type === 'users' ? (
                     // Renderizar componente formulario Usuario
-                    <UserForm user={item ? item : null} closeDialog={closeDialog} refreshData={refreshData}/>
+                    <UserForm user={item ? item : undefined} closeDialog={closeDialog} refreshData={refreshData}/>
                 ) : type === 'categories' ? (
                     // Renderizar componente formulario Categoria
-                    <CategoryForm category={item ? item : null} closeDialog={closeDialog} refreshData={refreshData}/>
+                    <CategoryForm category={item ? item : undefined} closeDialog={closeDialog} refreshData={refreshData}/>
                 ) : (
                     // Palabras
-                    <WordForm word={item ? item : null} closeDialog={closeDialog} refreshData={refreshData}/>
+                    <WordForm word={item ? item : undefined} closeDialog={closeDialog} refreshData={refreshData}/>
                 )}
             </DialogContent>
         </>

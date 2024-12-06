@@ -49,17 +49,17 @@ export const MiniCardGalery = ({level, category, item, iconClasses}: MiniCardGal
                 className='group'
             >
                 <div className={`flex items-center justify-center h-full w-full border-2 border-accent-100 rounded-2xl p-5 relative shadow-md ${isCategoria(item) ? 'bg-background' : 'bg-white'}`}>
-                    <DynamicIcon name={newItem.itemIcon} classes={iconClasses}/>
-                    <ProgressBadge itemId={newItem.itemId} isPalabraSection={isPalabraSection}/>
+                    <DynamicIcon name={newItem.itemIcon} classes={iconClasses} />
+                    <ProgressBadge itemId={newItem.itemId} levelId={level?.idTitle} isPalabraSection={isPalabraSection}/>
                     <div className="absolute inset-0 bg-accent-600 opacity-0 group-hover:opacity-70 transition-opacity duration-300 ease-in-out rounded-2xl"/>
                     <div
-                        className='flex items-center justify-center text-center absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out lg:text-xl break-words pointer-events-none lg:pointer-events-auto'
+                        className='flex items-center justify-center text-center absolute h-max opacity-0 group-hover:opacity-100 text-white font-medium transition-opacity duration-300 ease-in-out text-xl break-words pointer-events-none lg:pointer-events-auto'
                     >
                         <p>{newItem.itemName}</p>
                     </div>
                 </div>
             </Link>
-            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-words h-auto overflow-scroll`}>{newItem.itemName}</p>
+            <p className={`text-center mt-2 lg:hidden ${isPalabraSection ? 'text-white' : 'text-defaultTextColor'} break-words h-auto overflow-auto`}>{newItem.itemName}</p>
         </div>
     )
 }

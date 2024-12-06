@@ -20,7 +20,7 @@ import { Categoria } from "@/interfaces/categoriaInterface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 
 export function CategoryForm({category, closeDialog, refreshData}:{category?:Categoria, closeDialog:() => void, refreshData?: () => void}) {
@@ -67,117 +67,143 @@ export function CategoryForm({category, closeDialog, refreshData}:{category?:Cat
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            nombreCategoria: category ? category.nombreCategoria : '' ,
-            descripcionCategoria: category ? category.descripcionCategoria : '' ,
-            iconoCategoria: category ? category.iconoCategoria : '' ,
-            bgCategoria: category ? category.bgCategoria : '' ,
-            idNivel: category ? category.idNivel : undefined,
+            nombreCategoria: category?.nombreCategoria || '' ,
+            descripcionCategoria: category?.descripcionCategoria || '' ,
+            iconoCategoria: category?.iconoCategoria || '' ,
+            bgCategoria: category?.bgCategoria || '' ,
+            idNivel: category?.idNivel || undefined,
         },
     })
 
+    const handleFocus = (e: React.FocusEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLInputElement;
+        if (target.tagName === 'INPUT' && target.type === 'text') {
+            const length = target.value.length;
+            if (length >= 2) {
+                setTimeout(() => {
+                    target.setSelectionRange(length, length);
+                }, 0);
+            }
+        }
+    };
+    useEffect(() => {
+        if (category){
+            const preventTextSelection = (e: MouseEvent) => {
+                window.getSelection()?.removeAllRanges(); // Elimina cualquier selección de texto activa
+            };
+
+            window.addEventListener('mousemove', preventTextSelection);
+
+            return () => {
+                window.removeEventListener('mousemove', preventTextSelection);
+            };
+        }
+    }, []);
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                {category ? (
-                    <FormItem>
-                        <FormLabel>ID</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Jhon" disabled={true} value={category?.idCategoria}/>
-                            </FormControl>
-                            <FormDescription>
-                                No puedes editar este campo.
-                            </FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                ) : (
-                    ''
-                )}
-                <FormField
-                    control={form.control}
-                    name="nombreCategoria"
-                    render={({ field }) => (
+        <div onFocus={handleFocus}>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {category ? (
                         <FormItem>
-                            <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Animales" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="descripcionCategoria"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Descripción</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Breve descripción sobre el tema" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="iconoCategoria"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Icono <span className="text-red-500">*</span></FormLabel>
-                            <FormControl>
-                                <Input placeholder="Nombre o enlace" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="bgCategoria"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Fondo</FormLabel>
-                            <FormControl>
-                                <Input placeholder="https://imagen-ejemplo.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="idNivel"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>ID Nivel <span className="text-red-500">*</span></FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value ? field.value.toString() : undefined}>
+                            <FormLabel>ID</FormLabel>
                                 <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione un Nivel" />
-                                    </SelectTrigger>
+                                    <Input disabled={true} value={category?.idCategoria}/>
                                 </FormControl>
-                                <SelectContent>
-                                    <SelectItem value='1'>1 - Básico</SelectItem>
-                                    <SelectItem value='2'>2 - Intermedio</SelectItem>
-                                    <SelectItem value='3'>3 - Avanzado</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                <FormDescription>
+                                    No puedes editar este campo.
+                                </FormDescription>
                             <FormMessage />
                         </FormItem>
-                    )}
-                />
-                <div className="flex flex-row sm:justify-between w-full">
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancelar</Button>
-                    </DialogClose>
-                    { isLoading ? (
-                        <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
                     ) : (
-                        <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!category ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                        ''
                     )}
-                </div>
-            </form>
-        </Form>
+                    <FormField
+                        control={form.control}
+                        name="nombreCategoria"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Nombre <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j Animales" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="descripcionCategoria"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Descripción</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Breve descripción sobre el tema" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="iconoCategoria"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Icono <span className="text-red-500">*</span></FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Nombre o enlace" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="bgCategoria"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Fondo</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="e.j https://imagen-ejemplo.com" {...field} onKeyDown={(e) => e.stopPropagation()}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="idNivel"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>ID Nivel <span className="text-red-500">*</span></FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value ? field.value.toString() : undefined}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione un Nivel" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value='1'>1 - Básico</SelectItem>
+                                        <SelectItem value='2'>2 - Intermedio</SelectItem>
+                                        <SelectItem value='3'>3 - Avanzado</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <div className="flex flex-row sm:justify-between w-full">
+                        <DialogClose asChild>
+                            <Button type="button" variant="outline">Cancelar</Button>
+                        </DialogClose>
+                        { isLoading ? (
+                            <LoaderCircle className={`animate-spin text-primary h-8 w-8`}/>
+                        ) : (
+                            <Button type="submit" variant="default" className="text-background" disabled={isLoading}>{!category ? 'Crear Registro' : 'Actualizar Registro'}</Button>
+                        )}
+                    </div>
+                </form>
+            </Form>
+        </div>
     )
 };

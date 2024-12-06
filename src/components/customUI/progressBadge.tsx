@@ -7,10 +7,11 @@ import { CategoriaProgreso, PalabraProgreso } from '@/interfaces/levelinterface'
 
 type ProgressBadgeProps = {
     itemId : number;
+    levelId : number | undefined;
     isPalabraSection : boolean;
 }
 
-export default function ProgressBadge({itemId, isPalabraSection}: ProgressBadgeProps) {
+export default function ProgressBadge({itemId, levelId, isPalabraSection}: ProgressBadgeProps) {
     const { progress } = useProgressContext();
     let status : number | boolean = false;
     if (progress) {
@@ -23,7 +24,7 @@ export default function ProgressBadge({itemId, isPalabraSection}: ProgressBadgeP
             const categoryProgress = Object.values(progress.categoriasProgreso).find(
                 (category: CategoriaProgreso) => Number(category.idCategoria) === itemId
             );
-            status = categoryProgress ? categoryProgress?.progresoCategoria : 0;  
+            status = categoryProgress ? categoryProgress.progresoCategoria : 0;
         };
     };
 

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation' // Importamos useRouter para redirigir al usuario
+import { InfoCapsule } from '@/components/customUI/InfoCapsule'
 
 // Definir el esquema de validación con zod
 const formSchema = z.object({
@@ -84,9 +85,12 @@ export default function ResetPasswordForm() {
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Restablecer contraseña</CardTitle>
+          <div className='flex flex-row items-center gap-4'>
           <CardDescription className="text-center">
-            Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña
+            Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña 
           </CardDescription>
+            <InfoCapsule message="Si no ves el correo en la bandeja de entrada\nasegurate de revisar la bandeja de SPAM"></InfoCapsule>
+          </div>
         </CardHeader>
         <CardContent>
           <Form {...form}>

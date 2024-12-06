@@ -4,7 +4,7 @@ const sections = [
     {
         title: "Nuestra misión",
         content: "Nuestra misión como equipo es ayudar a las personas a aprender el lenguaje de señas de manera simple y divertida, usando videos interactivos y retroalimentación personalizada. Creemos en la importancia de la inclusión y queremos facilitar la comunicación entre personas sordas y oyentes.",
-        image: "/svg/quienesSomos.svg"
+        image: "/images/quienessomos.png"
     },
     {
         title: "Inspiración",

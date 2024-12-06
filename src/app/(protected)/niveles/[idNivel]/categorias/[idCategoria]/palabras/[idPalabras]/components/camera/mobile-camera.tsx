@@ -1,125 +1,485 @@
-"use client"
+'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import * as tf from '@tensorflow/tfjs';
-import * as handpose from '@tensorflow-models/handpose';
+import { Holistic } from '@mediapipe/holistic';
+import { Camera } from '@mediapipe/camera_utils';
+import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
+import { HAND_CONNECTIONS } from '@mediapipe/hands';
 import Webcam from 'react-webcam';
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { normalizeGestureWord } from '@/lib/utils';
+import { Palabra } from '@/interfaces/palabraInterface';
+import { InfoCapsule } from '@/components/customUI/InfoCapsule';
+import {
+  MODEL_FRAMES,
+  MIN_LENGTH_FRAMES,
+  MARGIN_FRAME,
+  DELAY_FRAMES,
+  THRESHOLD,
+  MAX_DISTANCE,
+  HIGH_ACCURACY,
+  MEDIUM_ACCURACY,
+  GESTURES
+} from '@/lib/constants';
 
-export default function MobileCamera() {
+
+interface DesktopCameraProps {
+  word: Palabra;
+  isSuccessTry: () => void;
+}
+
+export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [model, setModel] = useState<handpose.HandPose | null>(null);
+  const cameraRef = useRef<Camera | null>(null);
+  const holisticRef = useRef<Holistic | null>(null); // Usamos useRef para mantener Holistic
   const [gestureModel, setGestureModel] = useState<tf.LayersModel | null>(null);
-  const framesBuffer = useRef<number[][]>([]); // Buffer de frames para procesar en el modelo de gestos
+  const [prediction, setPrediction] = useState<string>('');
+  const [isCapturing, setIsCapturing] = useState(false);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const kpSeq = useRef<number[][]>([]);
+  const countFrame = useRef<number>(0);
+  const fixFrames = useRef<number>(0);
+  const recording = useRef<boolean>(false);
+  // const [sentence, setSentence] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState<string>('');
 
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [isHolisticReady, setIsHolisticReady] = useState(false);
+
+  // Efecto para manejar la visibilidad de la página
   useEffect(() => {
-    const loadModels = async () => {
-      try {
-        // Cargar modelo de HandPose
-        const handModel = await handpose.load();
-        setModel(handModel);
-        console.log('Modelo de HandPose cargado.');
-
-        // Cargar modelo de gestos
-        const loadedGestureModel = await tf.loadLayersModel(`http://localhost:3000/web_model/model.json`);
-        console.log('Modelo de gestos cargado:', loadedGestureModel);
-        setGestureModel(loadedGestureModel);
-      } catch (error) {
-        console.error("Error al cargar los modelos:", error);
-      }
+    const handleVisibilityChange = () => {
+      setIsPageVisible(!document.hidden);
     };
-    loadModels();
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
-  const detect = async () => {
-    if (
-      webcamRef.current &&
-      webcamRef.current.video &&
-      webcamRef.current.video.readyState === 4 &&
-      model
-    ) {
-      const video = webcamRef.current.video;
-      const videoWidth = video.videoWidth;
-      const videoHeight = video.videoHeight;
+  // Estado para controlar el muteo con persistencia
+  const [isMuted, setIsMuted] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const storedMuted = localStorage.getItem('isMuted');
+      return storedMuted === 'true';
+    }
+    return false;
+  });
 
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
+  // Referencia para mantener el valor actual de isMuted
+  const isMutedRef = useRef(isMuted);
 
-      if (canvasRef.current) {
-        canvasRef.current.width = videoWidth;
-        canvasRef.current.height = videoHeight;
+  // Sincronizar la referencia con el estado isMuted
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+    localStorage.setItem('isMuted', isMuted.toString());
+  }, [isMuted]);
 
-        const hands = await model.estimateHands(video);
-        if (hands.length > 0) {
-          console.log('Se detecta mano:', hands);
+  // Carga de los promedios de keypoints
+  const [expectedKeypointsMap, setExpectedKeypointsMap] = useState<{ [gesture: string]: number[][] }>({});
 
-          // Inicializamos un array para los keypoints combinados de ambas manos
-          let combinedKeypoints: number[] = [];
+  // Cargar el archivo JSON con los keypoints esperados
+  useEffect(() => {
+    fetch('/all_averages.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se pudo cargar all_averages.json');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setExpectedKeypointsMap(data);
+      })
+      .catch(error => {
+        console.error('Error al cargar all_averages.json:', error);
+      });
+  }, []);
 
-          if (hands.length === 2) {
-            // Si hay dos manos detectadas, combinar los keypoints de ambas
-            combinedKeypoints = hands[0].landmarks.flat().concat(hands[1].landmarks.flat());
-          } else {
-            // Si hay solo una mano, duplicar los keypoints para llegar a 126
-            combinedKeypoints = hands[0].landmarks.flat().concat(hands[0].landmarks.flat());
-          }
+  // Cargar el modelo de TensorFlow.js
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        const model = await tf.loadLayersModel('/webModel/model.json');
+        setGestureModel(model);
+        setIsModelLoaded(true);
+      } catch (error) {
+        console.error("Error al cargar modelo:", error);
+      }
+    };
+    loadModel();
+  }, []);
 
-          // Añadir los keypoints actuales al buffer de frames
-          framesBuffer.current.push(combinedKeypoints);
+  // Función para generar números equidistantes (linspace)
+  function linspace(start: number, stop: number, num: number): number[] {
+    const arr = [];
+    const step = (stop - start) / (num - 1);
 
-          // Si ya tenemos suficientes frames en el buffer, podemos hacer la predicción
-          if (framesBuffer.current.length >= 20) {
-            // Tomar los últimos 20 frames para la predicción
-            const inputFrames = framesBuffer.current.slice(-20);
+    for (let i = 0; i < num; i++) {
+      arr.push(start + step * i);
+    }
 
-            try {
-              // Crear el tensor con la forma (1, 20, 126)
-              const tensor = tf.tensor3d([inputFrames], [1, 20, 126]);
-              const prediction = gestureModel?.predict(tensor) as tf.Tensor;
-              const predictionData = await prediction.array();
-              console.log('Predicción:', predictionData);
+    return arr;
+  }
 
-              // Limpia tensores para evitar fugas de memoria
-              tensor.dispose();
-              prediction.dispose();
-
-              // Vaciar el buffer de frames
-              framesBuffer.current = [];
-            } catch (error) {
-              console.error("Error al realizar la predicción:", error);
-            }
-          }
-
-          // Dibujar en el canvas
-          const ctx = canvasRef.current.getContext('2d');
-          if (ctx) {
-            ctx.clearRect(0, 0, videoWidth, videoHeight);
-            ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
-
-            // Dibujar landmarks de la mano
-            hands.forEach(hand => {
-              hand.landmarks.forEach(landmark => {
-                const [x, y] = landmark;
-
-                ctx.beginPath();
-                ctx.arc(x, y, 5, 0, 3 * Math.PI);
-                ctx.fillStyle = "red";
-                ctx.fill();
-              });
-            });
-          }
+  // Interpolación de keypoints para normalizar la secuencia
+  const interpolateKeypoints = useCallback(
+    (keypoints: number[][], targetLength: number = MODEL_FRAMES): number[][] => {
+      const currentLength = keypoints.length;
+      
+      // Si no hay keypoints, retorna vacío para evitar errores
+      if (currentLength === 0) {
+        return [];
+      }
+  
+      if (currentLength === targetLength) return keypoints;
+  
+      const indices = linspace(0, currentLength - 1, targetLength);
+      const interpolatedKeypoints: number[][] = [];
+  
+      for (const i of indices) {
+        const lowerIdx = Math.floor(i);
+        const upperIdx = Math.ceil(i);
+        const weight = i - lowerIdx;
+  
+        // Verifica también aquí que lowerIdx y upperIdx no estén fuera de rango
+        if (lowerIdx < 0 || lowerIdx >= currentLength || upperIdx < 0 || upperIdx >= currentLength) {
+          // Si se da este caso, significa que no hay suficientes puntos. Retorna lo que tengas.
+          return keypoints;
+        }
+  
+        if (lowerIdx === upperIdx) {
+          interpolatedKeypoints.push([...keypoints[lowerIdx]]);
+        } else {
+          const interpolatedPoint = keypoints[lowerIdx].map(
+            (value, idx) =>
+              (1 - weight) * value + weight * keypoints[upperIdx][idx]
+          );
+          interpolatedKeypoints.push(interpolatedPoint);
         }
       }
-    }
+  
+      return interpolatedKeypoints;
+    },
+    []
+  );
+
+  // Normalización de keypoints para asegurar la longitud deseada
+  const normalizeKeypoints = useCallback(
+    (keypoints: number[][], targetLength: number = MODEL_FRAMES): number[][] => {
+      if (!keypoints || keypoints.length === 0 ) {
+        throw new Error("Keypoints is undefined or empty");
+      }
+
+      const currentLength = keypoints.length;
+
+      if (currentLength < targetLength) {
+        return interpolateKeypoints(keypoints, targetLength);
+      } else if (currentLength > targetLength) {
+        const step = currentLength / targetLength;
+        const indices = Array.from({ length: targetLength }, (_, i) =>
+          Math.floor(i * step)
+        );
+        const selectedKeypoints = indices.map((idx) => keypoints[idx]);
+        return selectedKeypoints;
+      } else {
+        return keypoints;
+      }
+    },
+    [interpolateKeypoints]
+  );
+
+  // Función para reflejar los keypoints de la mano izquierda
+  const flipHandLandmarks = (landmarks: any[]): any[] => {
+    return landmarks.map(landmark => ({
+      ...landmark,
+      x: 1 - landmark.x, // Invertir la coordenada X
+    }));
   };
 
+  // Extraer keypoints de los resultados de Mediapipe
+  const extractKeypoints = useCallback((results: any): number[] => {
+    let leftHand = Array(21 * 3).fill(0);
+    let rightHand = Array(21 * 3).fill(0);
+
+    if (results.rightHandLandmarks && !results.leftHandLandmarks) {
+      // Solo se detecta la mano derecha
+      rightHand = results.rightHandLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+    } else if (results.leftHandLandmarks && !results.rightHandLandmarks) {
+      // Solo se detecta la mano izquierda
+      const flippedLandmarks = flipHandLandmarks(results.leftHandLandmarks);
+      rightHand = flippedLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+    } else if (results.leftHandLandmarks && results.rightHandLandmarks) {
+      // Se detectan ambas manos
+      leftHand = results.leftHandLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+      rightHand = results.rightHandLandmarks.flatMap(
+        (landmark: any) => [landmark.x, landmark.y, landmark.z]
+      );
+    }
+
+    return [...leftHand, ...rightHand];
+  }, []);
+
+  // Verificar si hay manos detectadas
+  const thereHand = useCallback((results: any): boolean => {
+    return !!(results.leftHandLandmarks || results.rightHandLandmarks);
+  }, []);
+
+  // Función para enviar la imagen a Mediapipe Holistic
+  const mediapipeDetection = useCallback(async (image: HTMLVideoElement) => {
+    if (!holisticRef.current) {
+      console.warn('Holistic no está inicializado.');
+      return;
+    }
+
+    await holisticRef.current.send({ image });
+  }, []);
+
+  // Calcular la distancia promedio entre las secuencias de keypoints
+  const calculateAverageDistance = (userKeypoints: number[][], expectedKeypoints: number[][]): number => {
+    let totalDistance = 0;
+    let count = 0;
+
+    for (let i = 0; i < userKeypoints.length; i++) {
+      const userFrame = userKeypoints[i];
+      const expectedFrame = expectedKeypoints[i];
+
+      for (let j = 0; j < userFrame.length; j++) {
+        const diff = userFrame[j] - expectedFrame[j];
+        totalDistance += Math.abs(diff);
+        count += 1;
+      }
+    }
+
+    return totalDistance / count;
+  };
+
+  // Función de síntesis de voz utilizando la referencia
+  const speak = useCallback((text: string) => {
+    if (isMutedRef.current) {
+      return; // No hacer nada si está muteado
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Detener cualquier discurso en curso
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-MX'; // Establecer el idioma a español
+      utterance.rate = 1; // Velocidad (0.1 a 10)
+      utterance.pitch = 2; // Tono (0 a 2)
+      window.speechSynthesis.speak(utterance);
+    } else {
+      console.warn('La síntesis de voz no está soportada en este navegador.');
+    }
+  }, []);
+
+  // Función para predecir el gesto
+  const predictGesture = useCallback(async (kpNormalized: number[][]) => {
+    if (!gestureModel) {
+      return;
+    }
+
+    const inputTensor = tf.tensor(kpNormalized).expandDims(0);
+    try {
+      const prediction = gestureModel.predict(inputTensor) as tf.Tensor;
+      const predictionData = await prediction.array() as number[][];
+      const confidences = predictionData[0];
+      const maxConfidence = Math.max(...confidences);
+      const maxIndex = confidences.indexOf(maxConfidence); 
+      if (maxConfidence > THRESHOLD) {
+        const predictedGestureKey = Object.keys(GESTURES)[maxIndex];
+        const predictedGestureValue = Object.values(GESTURES)[maxIndex];
+        setPrediction(predictedGestureKey);
+
+        if (predictedGestureValue.toLowerCase() != word.nombrePalabra.toLowerCase()) {
+          setFeedback(`Seña Incorrecta`);
+          return;
+        };
+
+        // Llamar a la función de síntesis de voz
+        speak(predictedGestureValue);
+
+        // Obtener la secuencia de keypoints esperada (usando toLowerCase para coincidir con JSON)
+        const expectedKeypoints = expectedKeypointsMap[normalizeGestureWord(predictedGestureKey)];
+
+        if (expectedKeypoints) {
+          // Normalizar los keypoints esperados
+          const expectedKpNormalized = normalizeKeypoints(expectedKeypoints, MODEL_FRAMES);
+
+          // Comparar las secuencias
+          const averageDistance = calculateAverageDistance(kpNormalized, expectedKpNormalized);
+
+          // Calcular el porcentaje de precisión
+          const accuracy = Math.max(0, (1 - (averageDistance / MAX_DISTANCE)) * 100);
+          const accuracyRounded = Math.round(accuracy);
+
+          // Generar el mensaje de retroalimentación
+          let feedbackMessage = `Precisión: ${accuracyRounded}%`;
+
+          if (accuracy >= HIGH_ACCURACY) {
+            isSuccessTry();
+            feedbackMessage += ' - Excelente ejecución de la seña.';
+          } else if (accuracy >= MEDIUM_ACCURACY) {
+            feedbackMessage += ' - Buena seña, pero puede mejorar.';
+          } else {
+            feedbackMessage += ' - Intenta mejorar la posición de tus manos.';
+          }
+
+          setFeedback(feedbackMessage);
+        } else {
+          setFeedback('No hay referencia para este gesto.');
+        }
+
+      } else {
+        setPrediction('');
+        setFeedback('No se reconoció la seña. Por favor, intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error("Error durante la predicción:", error);
+    } finally {
+      inputTensor.dispose();
+    }
+  }, [gestureModel, normalizeKeypoints, speak, expectedKeypointsMap, word.nombrePalabra, isSuccessTry]);
+
+  // Función para manejar los resultados de Mediapipe
+  const onResults = useCallback((results: any) => {
+    if (canvasRef.current) {
+      const canvasElement = canvasRef.current;
+      const canvasCtx = canvasElement.getContext('2d');
+
+      if (canvasCtx) {
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+        // Dibujar las manos tal como son detectadas, sin invertir
+        if (results.leftHandLandmarks) {
+          drawConnectors(canvasCtx, results.leftHandLandmarks, HAND_CONNECTIONS, { color: '#bcdfd2', lineWidth: 3 });
+          drawLandmarks(canvasCtx, results.leftHandLandmarks, { color: '#009c62', lineWidth: 1, radius: 3.5 });
+        }
+
+        if (results.rightHandLandmarks) {
+          drawConnectors(canvasCtx, results.rightHandLandmarks, HAND_CONNECTIONS, { color: '#d0afde', lineWidth: 3 });
+          drawLandmarks(canvasCtx, results.rightHandLandmarks, { color: '#660093', lineWidth: 1, radius: 3.5 });
+        }
+
+        canvasCtx.restore();
+      }
+    }
+
+    if (thereHand(results) || recording.current) {
+      recording.current = false;
+      countFrame.current += 1;
+
+      if (countFrame.current > MARGIN_FRAME) {
+        const kpFrame = extractKeypoints(results);
+        kpSeq.current.push(kpFrame);
+      }
+
+      setIsCapturing(true);
+    } else {
+      if (countFrame.current >= MIN_LENGTH_FRAMES + MARGIN_FRAME) {
+        fixFrames.current += 1;
+
+        if (fixFrames.current < DELAY_FRAMES) {
+          recording.current = true;
+          return;
+        }
+
+        const kpSequence = kpSeq.current.slice(0, -(MARGIN_FRAME + DELAY_FRAMES));
+        const kpNormalized = normalizeKeypoints(kpSequence, MODEL_FRAMES);
+
+        predictGesture(kpNormalized);
+      }
+
+      recording.current = false;
+      fixFrames.current = 0;
+      countFrame.current = 0;
+      kpSeq.current = [];
+      setIsCapturing(false);
+    }
+  }, [extractKeypoints, normalizeKeypoints, predictGesture, thereHand]);
+
+  // Inicializar Mediapipe Holistic y la cámara
   useEffect(() => {
-    const interval = setInterval(() => {
-      detect();
-    }, 100);
-    return () => clearInterval(interval);
-  }, [model, gestureModel]);
+    if (!isModelLoaded) return;
+
+    const initializeHolistic = async () => {
+      if (holisticRef.current) return; // Evitar inicialización múltiple
+
+      const holistic = new Holistic({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
+      });
+
+      holistic.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        smoothSegmentation: true,
+        refineFaceLandmarks: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+
+      holistic.onResults(onResults);
+
+      try {
+        await holistic.initialize();
+        setIsHolisticReady(true);
+        holisticRef.current = holistic;
+
+        if (webcamRef.current && webcamRef.current.video) {
+          const camera = new Camera(webcamRef.current.video, {
+            onFrame: async () => {
+              if (holisticRef.current && webcamRef.current && webcamRef.current.video) {
+                await holisticRef.current.send({ image: webcamRef.current.video });
+              }
+            },
+          });
+          cameraRef.current = camera;
+          if (isPageVisible) {
+            camera.start();
+          }
+        }
+      } catch (error) {
+        console.error("Error initializing Holistic:", error);
+        setIsHolisticReady(false);
+      }
+    };
+
+    initializeHolistic();
+
+    return () => {
+      setIsHolisticReady(false);
+      if (holisticRef.current) {
+        holisticRef.current.close();
+        holisticRef.current = null;
+      }
+      if (cameraRef.current) {
+        cameraRef.current.stop();
+        cameraRef.current = null;
+      }
+    };
+  }, [isModelLoaded]);
+
+  useEffect(() => {
+    if (cameraRef.current) {
+      if (isPageVisible && isHolisticReady) {
+        cameraRef.current.start();
+      } else {
+        cameraRef.current.stop();
+      }
+    }
+  }, [isPageVisible, isHolisticReady]);
 
   return (
     <div className="my-4">
@@ -134,10 +494,76 @@ export default function MobileCamera() {
             <canvas
               ref={canvasRef}
               className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
+              width={640}
+              height={480}
             />
+            <div className="absolute top-4 left-4 z-30">
+              <Badge variant={isCapturing ? "secondary" : "default"} className='text-sm text-black'>
+                {isPageVisible && isHolisticReady ? (isCapturing ? 'Capturando...' : 'Esperando gesto...') : 'Cámara desactivada'}
+              </Badge>
+            </div>
+            <div className="absolute top-4 right-4 z-30">
+              <button
+                onClick={() => setIsMuted(prev => !prev)}
+                className="flex items-center px-2 py-1 bg-background rounded hover:bg-gray-400 hover:text-white focus:outline-none"
+                aria-label={isMuted ? "Unmute Voice" : "Mute Voice"} // Accesibilidad
+              >
+                {isMuted ? (
+                  <>
+                    {/* Icono de Unmute */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="red"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-volume-x h-5 w-5"
+                    >
+                      <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+                      <line x1="22" y1="9" x2="16" y2="15" />
+                      <line x1="16" y1="9" x2="22" y2="15" />
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    {/* Icono de Mute */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-volume-2 h-5 w-5"
+                    >
+                      <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+                      <path d="M16 9a5 5 0 0 1 0 6" />
+                      <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
+                    </svg>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className='absolute bottom-4 right-4 z-30'>
+              <InfoCapsule message='
+                Consejos:\n\n
+                1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar en como se detecta la seña y dar un mal resultado.\n\n
+                2. El proceso de detección empieza a contar desde que se detecta la mano hasta que la mano es retirada de la vista de la camara. (En caso de señas
+                estaticas se recomienda estar a lo menos 3 segundos de detección para que detecte correctamente)\n\n
+                3. Para que el intento se concidere correcto debe contar con un porcentaje de aprobación igual o sobre el 85%.\n\n
+                4. Se recomienda contar con una distancia prudente en la cual se pueda visualizar completamente desde el pecho hasta la cabeza.\n\n
+                5. Se recomienda estar centrado y realizar las señas de forma precisa, no muy rapido ni muy lento.'
+              ></InfoCapsule>
+            </div>
           </div>
         </CardContent>
       </Card>
+      <div className="bg-white text-black p-2 rounded text-center">
+        <span className="font-semibold">Retroalimentación:</span> {feedback || 'Ninguna'}
+      </div>
     </div>
   )
 }

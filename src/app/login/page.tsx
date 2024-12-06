@@ -85,7 +85,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.backgroundImageLogin}>
-      <div className="flex flex-col lg:flex-row-reverse items-center justify-center gap-1 sm:gap-6 md:justify-evenly lg:flex-wrap min-h-screen">
+      <div className="flex flex-col lg:flex-row-reverse items-center justify-center gap-1 sm:gap-6 md:justify-evenly lg:flex-wrap min-h-screen mt-16 lg:mt-0">
         <Card className="w-[350px]">
           <CardHeader>
             <CardTitle className="text-center">Iniciar sesión</CardTitle>
@@ -180,10 +180,10 @@ export default function LoginPage() {
             </p>
           </CardFooter>
         </Card>
-        <div className="flex items-center justify-center bg-white outline outline-primary-300 shadow-xl shadow-primary-500 w-[500px] h-[500px] rounded-full">
+        <div className="flex items-center justify-center bg-white outline outline-primary-300 shadow-xl shadow-primary-500 lg:w-[500px] lg:h-[500px] rounded-full p-7 md:p-0 overflow-hidden">
           <Image
             src={sections[0].image}
-            alt="Videollamada de ejemplo"
+            alt="Sticker video llamada"
             width={360}
             height={360}
             className="object-contain rounded-bl-[20%] rounded-br-[20%] "

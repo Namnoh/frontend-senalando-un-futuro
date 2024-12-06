@@ -4,10 +4,35 @@ import { Vista } from '@/interfaces/vistaInterface';
 import SearchModal from './searchModal';
 import { useEffect, useState } from 'react';
 import { SearchPalabra } from '@/interfaces/commonInterfaces';
+import { useSession } from 'next-auth/react';
+import { UserProgress } from '@/interfaces/levelinterface';
 
 export default function searchButton({l, isOpen}:{l:Vista, isOpen?:boolean}) {
+    const { data: session, status } = useSession();
     const [filteredItems, setFilteredItems] = useState<SearchPalabra[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [levelProgress, setLevelProgress] = useState<number>();
+
+    const getUserProgress = async () => {
+        try {
+            if (!session?.user?.id) {
+                console.warn('No se ha iniciado sesión o no se puede obtener el ID de usuario');
+                return;
+            }
+            const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch userProgress: ${response.statusText}`);
+            }
+            const fetchedProgress: UserProgress = await response.json();
+            setLevelProgress(fetchedProgress.idNivel);
+        } catch (err) {
+            console.error('Error fetching user progress:', err);
+        };
+    };
+
+    useEffect(() => {
+        if (status === 'authenticated') getUserProgress();
+    }, [status])
 
     useEffect(() => {
         if (!isModalOpen) {
@@ -16,7 +41,7 @@ export default function searchButton({l, isOpen}:{l:Vista, isOpen?:boolean}) {
     }, [isModalOpen]);
 
     return (
-        <Dialog onOpenChange={setIsModalOpen}>
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger>
                 <div
                     key={l.idVista}
@@ -37,7 +62,7 @@ export default function searchButton({l, isOpen}:{l:Vista, isOpen?:boolean}) {
                     )}
                 </div>
             </DialogTrigger>
-            <SearchModal filteredItems={filteredItems} setFilteredItems={setFilteredItems}/>
+            <SearchModal levelProgress={levelProgress} setIsModalOpen={setIsModalOpen} filteredItems={filteredItems} setFilteredItems={setFilteredItems}/>
         </Dialog>
     )
 };

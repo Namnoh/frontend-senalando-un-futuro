@@ -12,7 +12,7 @@ export default async function Categorias({params}:any) {
             <div className="flex flex-col flex-grow items-center gap-20" >
                 <div className="flex flex-col items-center gap-5">
                     <CustomHeader level={level}>
-                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-medium">Categorías</h2>
+                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-medium">Categorías</h2>
                     </CustomHeader>
                 </div>
                 {/* Categorías */}

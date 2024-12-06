@@ -8,17 +8,23 @@
 		},
 		{
 			"path": "../sign-language-ia"
-		},
-		{
-			"path": "../functions"
 		}
 	],
 	"settings": {
 		"cSpell.words": [
 			"arange",
+			"blendshapes",
+			"derecho",
+			"FACEMESH",
+			"Fileset",
 			"hookform",
+			"imshow",
+			"jetson",
 			"Keras",
 			"mediapipe",
+			"producción",
+			"SRGB",
+			"Submuestreo",
 			"Swipeable",
 			"tensorflowjs",
 			"tfjs"
