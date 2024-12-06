@@ -52,7 +52,7 @@ export async function updateProgress(userProgress: UserProgress, idProgreso:numb
 export async function updateUserProgress(idUsuario: number, userProgress: Omit<UserProgress, 'idProgreso'>): Promise<{ success: boolean; data?: UserProgress; error?: string }> {
     try {
         const progress = userProgress;
-        console.log("PROGRESO DE USUARIO EN SERVICIO: ", progress);
+
         const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`, {
             method: 'PATCH',
             headers: {
@@ -61,7 +61,7 @@ export async function updateUserProgress(idUsuario: number, userProgress: Omit<U
             body: JSON.stringify(progress),
         });
         const responseData = await response.json();
-        console.log("RESPUESTA SERVICIO API: ", responseData);
+
         if (!response.ok) {
             throw new Error(`Error al actualizar el progreso: ${responseData.message || response.statusText}`);
         };

@@ -6,7 +6,6 @@ export async function PATCH(request: Request, context:any): Promise<NextResponse
     try {
         const { params } = context;
         const userProgress: Omit<UserProgress, 'idProgreso'> = await request.json(); // Obtener el cuerpo de la solicitud
-        console.log("PROGRESO DE USUARIO EN API: ", userProgress);
         const response = await updateUserProgress(Number(params.idUsuario), userProgress);
         if (!response.success) {
             return NextResponse.json({ error: response.error }, { status: 500 });

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import * as tf from '@tensorflow/tfjs';
+import * as tflite from '@tensorflow/tfjs-tflite';
 import { Holistic } from '@mediapipe/holistic';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
@@ -25,12 +26,12 @@ import {
 } from '@/lib/constants';
 
 
-interface DesktopCameraProps {
+interface MobileCameraProps {
   word: Palabra;
   isSuccessTry: () => void;
 }
 
-export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps) {
+export default function MobileCamera({ word, isSuccessTry }: MobileCameraProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cameraRef = useRef<Camera | null>(null);
@@ -100,18 +101,20 @@ export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps)
       });
   }, []);
 
-  // Cargar el modelo de TensorFlow.js
+  // Cargar el modelo de TensorFlow lite
   useEffect(() => {
-    const loadModel = async () => {
+    const loadTfliteModel = async () => {
       try {
+        await tf.setBackend('webgl');
+        await tf.ready();
         const model = await tf.loadLayersModel('/webModel/model.json');
         setGestureModel(model);
         setIsModelLoaded(true);
       } catch (error) {
-        console.error("Error al cargar modelo:", error);
+        console.error("Error al cargar modelo TFLite:", error);
       }
     };
-    loadModel();
+    loadTfliteModel();
   }, []);
 
   // Función para generar números equidistantes (linspace)
@@ -295,6 +298,7 @@ export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps)
       const confidences = predictionData[0];
       const maxConfidence = Math.max(...confidences);
       const maxIndex = confidences.indexOf(maxConfidence); 
+
       if (maxConfidence > THRESHOLD) {
         const predictedGestureKey = Object.keys(GESTURES)[maxIndex];
         const predictedGestureValue = Object.values(GESTURES)[maxIndex];
@@ -348,7 +352,7 @@ export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps)
     } finally {
       inputTensor.dispose();
     }
-  }, [gestureModel, normalizeKeypoints, speak, expectedKeypointsMap, word.nombrePalabra, isSuccessTry]);
+  }, [ gestureModel, normalizeKeypoints, speak, expectedKeypointsMap, word.nombrePalabra, isSuccessTry]);
 
   // Función para manejar los resultados de Mediapipe
   const onResults = useCallback((results: any) => {
@@ -485,7 +489,7 @@ export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps)
     <div className="my-4">
       <Card className="w-full">
         <CardContent className='p-3'>
-          <div className="relative aspect-square">
+          <div className="relative aspect-video">
             <Webcam
               audio={false}
               ref={webcamRef}
