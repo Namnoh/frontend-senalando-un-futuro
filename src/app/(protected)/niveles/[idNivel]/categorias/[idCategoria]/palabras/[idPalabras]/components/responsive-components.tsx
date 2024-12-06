@@ -35,11 +35,12 @@ export default function ResponsiveComponents({ level, category, word, words, cur
     const { progress, updateUserProgress } = useProgressContext();
 
     useEffect(() => {
-        const wordFound = Object.values(progress!.palabrasProgreso).find(
+        if (!progress) return;
+        const wordFound = Object.values(progress.palabrasProgreso).find(
             (palabra) => palabra.idPalabra === word.idPalabra
         );
-        if (wordFound || progress && progress.idNivel > level.idTitle) setSuccessTry(3);
-    }, [])
+        if (wordFound) setSuccessTry(3);
+    }, [progress])
 
     async function updateWordProgress() {
         if (!session?.user?.id) {
@@ -56,7 +57,10 @@ export default function ResponsiveComponents({ level, category, word, words, cur
         try {
             // Guardar progreso de completado de la categoría
             // Se obtienen todas las palabras de la categoría
-            const categoryWordsResponse = await fetch(`/api/words/getWordsFromCategory/${category.idTitle}`);
+            const categoryWordsResponse = await fetch(`/api/words/getWordsFromCategory/${category.idTitle}`, {
+                method: "GET",
+                cache: 'no-store'
+            });
             if (!categoryWordsResponse.ok) {
                 throw new Error('Failed to fetch words');
             };
@@ -91,7 +95,10 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             };
 
             // Se saca el porcentaje total del progreso.
-            const levelWordsResponse = await fetch(`/api/words/getAllWordsFromLevel/${level.idTitle}`);
+            const levelWordsResponse = await fetch(`/api/words/getAllWordsFromLevel/${level.idTitle}`, {
+                method: "GET",
+                cache: 'no-store'
+            });
             if (!levelWordsResponse.ok) {
                 throw new Error('Failed to fetch words');
             };
@@ -101,14 +108,14 @@ export default function ResponsiveComponents({ level, category, word, words, cur
                 (palabra) => palabra.nivelPalabra === level.idTitle
             ).length;
             const porcentajeTotal = Math.round(100 * (progressWordsCount / levelWords.length));
-            // Se valida si completó todo el nivel
+
             let updatedProgress: UserProgress;
             if (porcentajeTotal === 100 && progress.idNivel != 3) {
                 // Si el nivel está completo, reinicia los progresos y sube el nivel
                 updatedProgress = {
                     idProgreso: Number(progress.idProgreso),
-                    categoriasProgreso: {},
-                    palabrasProgreso: {},
+                    categoriasProgreso: categoriasProgreso,
+                    palabrasProgreso: palabrasProgreso,
                     porcentajeNivel: 0,
                     idUsuario: Number(progress.idUsuario),
                     idNivel: Number(progress.idNivel) + 1,

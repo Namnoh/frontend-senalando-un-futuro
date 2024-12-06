@@ -20,7 +20,7 @@ import { Categoria } from "@/interfaces/categoriaInterface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogClose } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderCircle } from "lucide-react";
 
 export function CategoryForm({category, closeDialog, refreshData}:{category?:Categoria, closeDialog:() => void, refreshData?: () => void}) {
@@ -86,6 +86,19 @@ export function CategoryForm({category, closeDialog, refreshData}:{category?:Cat
             }
         }
     };
+    useEffect(() => {
+        if (category){
+            const preventTextSelection = (e: MouseEvent) => {
+                window.getSelection()?.removeAllRanges(); // Elimina cualquier selección de texto activa
+            };
+
+            window.addEventListener('mousemove', preventTextSelection);
+
+            return () => {
+                window.removeEventListener('mousemove', preventTextSelection);
+            };
+        }
+    }, []);
 
     return (
         <div onFocus={handleFocus}>

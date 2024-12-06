@@ -41,7 +41,7 @@ export default function CRUD() {
     }, [tabParams, handleTabChange]);
 
     return (
-        <div className={`${styles.backgroundImage} h-full`}>
+        <div>
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full h-full flex flex-col items-center justify-center">
                 <SelectionTabs activeTab={activeTab} />
                 <div className='flex-grow'>

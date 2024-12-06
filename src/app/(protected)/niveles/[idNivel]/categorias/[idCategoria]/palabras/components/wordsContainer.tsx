@@ -8,7 +8,10 @@ export default async function WordsContainer({level, category}: {level:TitleProp
 
     return (
         <div className='flex flex-wrap justify-center gap-5 lg:gap-y-10 w-full sm:w-2/3 mb-10'>
-            { words.map((w:Palabra) =>
+            { words
+                .slice()
+                .sort((a: Palabra, b: Palabra) => a.idPalabra - b.idPalabra)
+                .map((w:Palabra) =>
                 {
                     return (
                         

@@ -3,7 +3,7 @@ import { Nivel, UserProgress } from "@/interfaces/levelinterface";
 import { Palabra } from "@/interfaces/palabraInterface";
 import { Usuario } from "@/interfaces/usuarioInterface";
 
-type newItem = Usuario | Categoria | Palabra;
+type newItem = Usuario | Categoria | Palabra | any;
 
 export function isUsuario(item: newItem): item is Usuario {
     return 'idUsuario' in item && 'nombreUsuario' in item;
