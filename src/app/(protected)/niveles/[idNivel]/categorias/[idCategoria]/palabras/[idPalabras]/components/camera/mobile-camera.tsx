@@ -357,6 +357,8 @@ export default function MobileCamera({ word, isSuccessTry }: MobileCameraProps) 
   const onResults = useCallback((results: any) => {
     if (canvasRef.current) {
       const canvasElement = canvasRef.current;
+      canvasElement.width = canvasElement.offsetWidth;
+      canvasElement.height = canvasElement.offsetHeight;
       const canvasCtx = canvasElement.getContext('2d');
 
       if (canvasCtx) {
@@ -497,8 +499,8 @@ export default function MobileCamera({ word, isSuccessTry }: MobileCameraProps) 
             <canvas
               ref={canvasRef}
               className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
-              width={640}
-              height={480}
+              // width={640}
+              // height={480}
             />
             <div className="absolute top-4 left-4 z-30">
               <Badge variant={isCapturing ? "secondary" : "default"} className='text-sm text-black'>

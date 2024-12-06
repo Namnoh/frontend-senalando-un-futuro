@@ -3,14 +3,9 @@
 import * as React from "react"
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
 import { Button } from "../../ui/button";
-import {
-    Card,
-    CardTitle,
-} from "../../ui/card";
 import { ModeToggle } from "@/components/themeToggle/modeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { ClosedSidebarLinks, OpenedSidebarLinks } from "../sidebarLinks";
-import Link from "next/link";
 import ProfileCard from "../profileCard";
 
 export default function Sidebar({actualRoute, links}:{actualRoute:string, links:any}) {

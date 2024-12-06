@@ -27,12 +27,16 @@ export default function MobileCarousel({ level, category, words, currentWordInde
   }
 
   // Obtener la palabra correspondiente al índice
-  const currentWord = words[currentWordIndex];
+  const orderedWords = words.slice().sort((a: Palabra, b: Palabra) => a.idPalabra - b.idPalabra).map((word: Palabra) => word)
+  const currentWord = orderedWords[currentWordIndex];
   return (  
     <div className="flex justify-center gap-5 w-full my-10">
       <Carousel className="flex w-[80%] justify-center">
         <CarouselContent className="flex w-full">
-          {words.map((word: Palabra) => (
+          {words
+            .slice()
+            .sort((a: Palabra, b: Palabra) => a.idPalabra - b.idPalabra)
+            .map((word: Palabra) => (
             <CarouselItem className="basis-1/2 sm:basis-1/3 md:basis-1/3">
               <div className="w-fit">
                 <CarruselList

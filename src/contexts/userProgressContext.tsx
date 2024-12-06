@@ -122,7 +122,7 @@ export default function UserProgressContextProvider({children} : UserProgressCon
         if (status === "authenticated" && !progress) {
             fetchProgress();
         }
-    }, [status, progress]);
+    }, [status]);
 
     const contextValue = useMemo(() => ({
         progress,
