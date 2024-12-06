@@ -34,11 +34,19 @@ export const DynamicIcon = ({name, classes, strokeWidth}: {name: string, classes
         return <ReactIconComponent className={classes} />;
     }
     
+    const colors = ['white', 'black', 'red', 'blue'];
+    if (colors.includes(name)) {
+        const bgColor = name === 'black' || name === 'white' ? `bg-${name}` : `bg-${name}-600`;
+        return(
+            <div className={`flex items-center justify-center text-center ${classes} ${bgColor} rounded-full  font-medium text-lg lg:text-xl break-words pointer-events-none lg:pointer-events-auto`}>
+            </div>
+            )
+    }
+    
     // Si no se encuentra en ninguna biblioteca, devolver el texto
     return (
         <div
-            className={`flex items-center justify-center text-center ${classes} font-medium text-lg lg:text-xl break-words pointer-events-none lg:pointer-events-auto`}
-        >
+            className={`flex items-center justify-center text-center ${classes} font-medium text-lg lg:text-xl break-words pointer-events-none lg:pointer-events-auto`}>
             <p>{name}</p>
         </div>
     );
