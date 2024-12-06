@@ -1,21 +1,51 @@
-import React from "react";
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import styles from './styles/home.module.scss';
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator"
-import  Link  from "next/link";
-import Image from "next/image";
-import ScrollPrompt from "@/components/customUI/scroll-prompt"
-import AnimatedSection from "@/components/customUI/animated-section"
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import NextImage from "next/image"; // Renombrado para evitar conflictos
+import ScrollPrompt from "@/components/customUI/scroll-prompt";
+import AnimatedSection from "@/components/customUI/animated-section";
 import { InfoCapsule } from "@/components/customUI/InfoCapsule";
+import Snowfall from 'react-snowfall';
 
 const HomePage = () => {
+  const [snowImg, setSnowImg] = useState<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/images/snowflake.png'; 
+    img.onload = () => {
+      setSnowImg(img);
+    };
+  }, []);
+
   return (
-    // inicio contenedor principal
     <>
-      <div className={styles.backgroundImage}>  
-        <div className='flex flex-col lg:flex-row items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap h-[100vh] p-4 -mt-[60px]  lg:mt-0'>
+      {snowImg && (
+        <Snowfall
+          style={{
+            position: 'fixed',
+            width: '100vw',
+            height: '100vh',
+            zIndex: 1
+          }}
+          snowflakeCount={200}
+          speed={[0.5, 3]}
+          wind={[-0.5, 2]}
+          radius={[5, 20]}
+          opacity={[0.1, 0.2]}
+          rotationSpeed={[-1, 1]}
+          images={[snowImg]}
+        />
+      )}
+
+      <div className={styles.backgroundImage} style={{ position: 'relative', zIndex: 2 }}>
+        <div className='flex flex-col lg:flex-row items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap h-[100vh] p-4 -mt-[60px] lg:mt-0'>
           <div className="lg:max-w-[60%] sm:max-w-[70%] md:max-w-[70%] max-w-[70%] flex flex-col items-center">
-            <div className="text-center font-medium mb-5 xl:text-[40px] lg:text-[34px] md:text-[28px] sm:bg-transparent sm:text-[28px] text-[26px] bg-background">
+            <div className="text-center font-medium mb-5 xl:text-[40px] lg:text-[34px] md:text-[28px] sm:text-[28px] text-[26px] bg-background">
               ¡Empieza Ahora a Aprender Lengua de Señas Chilena con Ayuda de la Inteligencia Artificial!
             </div>
             <div className="flex flex-col items-center">
@@ -24,13 +54,16 @@ const HomePage = () => {
                 <Button className="rounded-lg text-[18px] h-12 w-44" variant="default">
                   <Link href="/login" className="text-center">Empieza Ahora!</Link>                
                 </Button>
-                <InfoCapsule message="Ten en cuenta que esta aplicación es solo para motivos específicos,\n aun así recomendamos tomar cursos reales para poder complementar\n  lo aprendido"></InfoCapsule>
+                <InfoCapsule message={`Ten en cuenta que esta aplicación es solo para motivos específicos,
+                  aun así recomendamos tomar cursos reales para poder complementar 
+                  lo aprendido`}>
+                  </InfoCapsule>
               </div>
             </div>
           </div>
           <div className="ml-[10px] lg:max-w-[50%] flex flex-col text-center justify-center items-center">
             <section>
-              <Image
+              <NextImage
                 className="w-[30vh] mr-1"
                 src="/images/Logo_SinBG.png"
                 alt="Logo"
@@ -48,9 +81,6 @@ const HomePage = () => {
         </div>
       </div>
       
-      {/* Inicio secciones */}
-
-      {/* Seccion 1 */}
       <AnimatedSection className='flex flex-col lg:flex-row-reverse items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap h-[80vh] mt-10'>
         <div className="lg:max-w-[60%] sm:max-w-[80%] md:max-w-[80%] max-w-[90%] flex flex-col items-center">
           <div className="text-center mb-5 lg:text-5xl md:text-[28px] sm:text-[28px] text-3xl">
@@ -62,7 +92,7 @@ const HomePage = () => {
         </div>
         <div className="ml-[10px] lg:max-w-[50%] flex flex-col text-center justify-center items-center">
           <section>
-            <Image
+            <NextImage
               className="w-[30vh] mr-1"
               src="/images/logocora.png"
               alt="Logo"
@@ -74,18 +104,19 @@ const HomePage = () => {
         </div>
         <Separator className="m-6 w-4/5 bg-secondary" />
       </AnimatedSection>
-      {/* Seccion 2 */}
+
       <AnimatedSection className='flex flex-col lg:flex-row items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap h-[80vh] mt-10'>
         <div className="lg:max-w-[60%] sm:max-w-[70%] md:max-w-[70%] max-w-[70%] flex flex-col items-center">
           <div className="text-center mb-5 lg:text-5xl md:text-[28px] sm:text-[28px] text-3xl">
             ¿Cómo es que funciona?
           </div>
           <div className="text-center text-lg md:text-xl lg:text-2xl">
-            La aplicación ofrece tres niveles de aprendizaje, con diferentes categorías, donde podrás ver cómo realizar la seña y luego recibirás retroalimentación personalizada y a tiempo real gracias a nuestra Super duper inteligencia artificial</div>
+            La aplicación ofrece tres niveles de aprendizaje, con diferentes categorías, donde podrás ver cómo realizar la seña y luego recibirás retroalimentación personalizada y a tiempo real gracias a nuestra Super duper inteligencia artificial
+          </div>
         </div>
         <div className="ml-[10px] lg:max-w-[50%] flex flex-col text-center justify-center items-center">
           <section>
-            <Image
+            <NextImage
               className="w-[30vh] mr-1"
               src="/images/comofunciona.png"
               alt="Logo"
@@ -98,7 +129,6 @@ const HomePage = () => {
         <Separator className="m-6 w-[70%] bg-secondary" />
       </AnimatedSection>
 
-      {/* Seccion 3 */}
       <AnimatedSection className='flex flex-col lg:flex-row-reverse items-center justify-center gap-5 sm:gap-6 md:justify-evenly lg:flex-wrap h-[80vh] mt-10'>
         <div className="lg:max-w-[60%] sm:max-w-[70%] md:max-w-[70%] max-w-[70%] flex flex-col items-center">
           <div className="text-center mb-5 lg:text-5xl md:text-[28px] sm:text-[28px] text-3xl">
@@ -110,7 +140,7 @@ const HomePage = () => {
         </div>
         <div className="ml-[10px] lg:max-w-[50%] flex flex-col text-center justify-center items-center">
           <section>
-            <Image
+            <NextImage
               className="w-[30vh] mr-1"
               src="/images/beneficio.png"
               alt="Logo"
@@ -135,5 +165,5 @@ const HomePage = () => {
     </>
   );
 };
-export default HomePage;
 
+export default HomePage;

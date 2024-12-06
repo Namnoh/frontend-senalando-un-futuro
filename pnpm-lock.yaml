@@ -17,6 +17,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
+      '@lottiefiles/react-lottie-player':
+        specifier: ^3.5.4
+        version: 3.5.4(react@18.3.1)
       '@mediapipe/camera_utils':
         specifier: ^0.3.1675466862
         version: 0.3.1675466862
@@ -137,6 +140,9 @@ importers:
       react-circular-progressbar:
         specifier: ^2.1.0
         version: 2.1.0(react@18.3.1)
+      react-confetti:
+        specifier: ^6.1.0
+        version: 6.1.0(react@18.3.1)
       react-dom:
         specifier: ^18
         version: 18.3.1(react@18.3.1)
@@ -152,6 +158,9 @@ importers:
       react-responsive:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
+      react-snowfall:
+        specifier: ^2.2.0
+        version: 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-swipeable:
         specifier: ^7.0.2
         version: 7.0.2(react@18.3.1)
@@ -859,6 +868,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lottiefiles/react-lottie-player@3.5.4':
+    resolution: {integrity: sha512-2FptWtHQ+o7MzdsMKSvNZ1Mz7xtKSYI0WL9HjZ1r+CvsXR3lbLQUDp7Pwx6qhg0Akm4VluQ+8/D1S1fcr1Ao4w==}
+    peerDependencies:
+      react: 16 - 18
 
   '@mapbox/node-pre-gyp@1.0.11':
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
@@ -3340,6 +3354,9 @@ packages:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
 
+  lottie-web@5.12.2:
+    resolution: {integrity: sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==}
+
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
@@ -3877,6 +3894,12 @@ packages:
     peerDependencies:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
 
+  react-confetti@6.1.0:
+    resolution: {integrity: sha512-7Ypx4vz0+g8ECVxr88W9zhcQpbeujJAVqL14ZnXJ3I23mOI9/oBVTQ3dkJhUmB0D6XOtCZEM6N0Gm9PMngkORw==}
+    engines: {node: '>=10.18'}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.1 || ^18.0.0
+
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
@@ -3932,6 +3955,12 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       react: '>=16.8.0'
+
+  react-snowfall@2.2.0:
+    resolution: {integrity: sha512-dRk7vEHq/ZUOG+JHk2k/hH3HmliOWGXr4rKRDeW4mjWuHeI1r5h0Lc1r2jnTtUS1im702d6tCmNGymlNTdhXYg==}
+    peerDependencies:
+      react: "^16.8 ||\_17.x || 18.x"
+      react-dom: ^16.8 || 17.x || 18.x
 
   react-style-singleton@2.2.1:
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
@@ -4490,6 +4519,9 @@ packages:
 
   tslib@2.8.0:
     resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
+
+  tween-functions@1.2.0:
+    resolution: {integrity: sha512-PZBtLYcCLtEcjL14Fzb1gSxPBeL7nWvGhO5ZFPGqziCcr8uvHp0NDmdjBchp6KHL+tExcg0m3NISmKxhU394dA==}
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -5699,6 +5731,11 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@lottiefiles/react-lottie-player@3.5.4(react@18.3.1)':
+    dependencies:
+      lottie-web: 5.12.2
+      react: 18.3.1
 
   '@mapbox/node-pre-gyp@1.0.11(encoding@0.1.13)':
     dependencies:
@@ -8472,6 +8509,8 @@ snapshots:
     dependencies:
       js-tokens: 4.0.0
 
+  lottie-web@5.12.2: {}
+
   lru-cache@10.4.3: {}
 
   lru-cache@5.1.1:
@@ -9086,6 +9125,11 @@ snapshots:
     dependencies:
       react: 18.3.1
 
+  react-confetti@6.1.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      tween-functions: 1.2.0
+
   react-dom@18.3.1(react@18.3.1):
     dependencies:
       loose-envify: 1.4.0
@@ -9141,6 +9185,12 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
       shallow-equal: 3.1.0
+
+  react-snowfall@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-fast-compare: 3.2.2
 
   react-style-singleton@2.2.1(@types/react@18.3.11)(react@18.3.1):
     dependencies:
@@ -9770,6 +9820,8 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@2.8.0: {}
+
+  tween-functions@1.2.0: {}
 
   type-check@0.4.0:
     dependencies:

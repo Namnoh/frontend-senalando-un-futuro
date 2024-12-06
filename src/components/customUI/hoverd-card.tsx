@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card } from "@/components/ui/card"
 import Link from 'next/link'
 import { ProgressCircle } from '@/app/(protected)/niveles/components/progress-circle'
 import { CardContent } from '@/app/(protected)/niveles/components/content-card'
 import { useLevelData } from '@/app/(protected)/niveles/components/use-level'
 import SimpleLoading from './simpleLoading'
-import { UserProgress } from '@/interfaces/levelinterface'
+import { PalabraProgreso, UserProgress } from '@/interfaces/levelinterface'
 
 interface HoverCardProps {
     levelId: number
@@ -19,7 +19,34 @@ interface HoverCardProps {
 export function HoverCard({ levelId, link, bloqueado, userProgress }: HoverCardProps) { 
     const [isHovered, setIsHovered] = useState(false)
     const { levelData, isLoading, error } = useLevelData(levelId, userProgress)
-    const full = levelId < userProgress.idNivel ? 100 : null; 
+    const [levelProgress, setLevelProgress] = useState(0)
+    
+    const calculateProgress = async () => {
+        try {
+            const levelWordsResponse = await fetch(`/api/words/getAllWordsFromLevel/${levelId}`, {
+                method: "GET",
+                cache: 'no-cache'
+            });
+            if (!levelWordsResponse.ok) {
+                throw new Error('Failed to fetch words');
+            };
+            const levelWords = await levelWordsResponse.json();
+
+            const userWords = Object.values(userProgress.palabrasProgreso)
+                .filter((palabraProgreso: PalabraProgreso) => {
+                    return palabraProgreso.nivelPalabra === levelId
+            }).length;
+            const porcentajeTotal = Math.round(100 * (userWords / levelWords.length));
+            setLevelProgress(porcentajeTotal);
+        } catch (error) {
+            console.error("Error al actualizar el progreso:", error);
+        }
+    };
+
+    useEffect(() => {
+        calculateProgress();
+    }, []);
+
     if (isLoading) {
         return <SimpleLoading />
     }
@@ -40,7 +67,7 @@ export function HoverCard({ levelId, link, bloqueado, userProgress }: HoverCardP
         onMouseLeave={() => setIsHovered(false)}
         >
         <ProgressCircle 
-            progress={isLocked ? 0 : (full ?? userProgress.porcentajeNivel)}
+            progress={levelProgress}
             colorClasses={colorClasses}
             isLocked={isLocked}
         />

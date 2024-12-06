@@ -17,8 +17,8 @@ export function isPalabra(item: newItem): item is Palabra {
     return 'idPalabra' in item && 'nombrePalabra' in item;
 }
 const mockLevels: Nivel[] = [
-    {id: 1, nombreNivel: "Nivel Básico",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nAbecedario \nNumeros \nColores` , iconoNivel: 'BookOpen',statusNivel: 1,bloqueado: false},
-    {id: 2,nombreNivel: "Nivel Intermedio",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nAbecedario \nNumeros \nColores`,iconoNivel: 'Book',statusNivel: 2,bloqueado: true},
+    {id: 1, nombreNivel: "Nivel Básico",descripcionNivel: `En este nivel veras categorias como:\nAbecedario ` , iconoNivel: 'BookOpen',statusNivel: 1,bloqueado: false},
+    {id: 2,nombreNivel: "Nivel Intermedio",descripcionNivel: `En este nivel veras categorias como:  \nAnimales \nColores \nVida diaria`,iconoNivel: 'Book',statusNivel: 2,bloqueado: true},
     {id: 3,nombreNivel: "Nivel Avanzado",descripcionNivel: "Domina técnicas avanzadas", iconoNivel: 'GraduationCap', statusNivel: 3,  bloqueado: true }
 ]
 
