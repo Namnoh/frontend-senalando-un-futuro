@@ -104,7 +104,7 @@ export default function MobileCamera({ word, isSuccessTry }: DesktopCameraProps)
   useEffect(() => {
     const loadModel = async () => {
       try {
-        const model = await tf.loadLayersModel('/web_model/model.json');
+        const model = await tf.loadLayersModel('/webModel/model.json');
         setGestureModel(model);
         setIsModelLoaded(true);
       } catch (error) {
