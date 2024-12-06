@@ -25,7 +25,7 @@ export default function CrudPalabras({ onLoad }: { onLoad?: () => void }) {
         try {
             setIsLoading(true);
             const response = await fetch('/api/crud/words', {
-                cache: 'no-store'
+                cache: 'no-cache'
             });
             if (!response.ok) {
                 throw new Error('Failed to fetch words');

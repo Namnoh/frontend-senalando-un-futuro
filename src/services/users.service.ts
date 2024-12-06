@@ -97,7 +97,7 @@ export async function getAllUsers():Promise<Usuario[]> {
     try {
         const response = await fetch(`${process.env.API_URL}/users/`, {
             method: 'GET',
-            cache: 'no-store'
+            cache: 'no-cache'
         });
         if (!response.ok) {
             throw new Error(`Error al obtener los usuarios: ${response.statusText}`);

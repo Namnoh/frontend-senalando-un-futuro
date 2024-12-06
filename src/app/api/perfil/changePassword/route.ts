@@ -17,7 +17,7 @@ export async function PATCH(request: NextRequest) {
         const res = await fetch(
             `${process.env.API_URL}/users/authorize/${session.user.email}`,{
                 method: "GET",
-                cache: 'no-store'
+                cache: 'no-cache'
             }
         );
         if (!res.ok) {

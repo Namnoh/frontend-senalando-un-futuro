@@ -20,7 +20,7 @@ export default function searchButton({l, isOpen}:{l:Vista, isOpen?:boolean}) {
                 return;
             }
             const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`,{
-                cache: 'no-store'
+                cache: 'no-cache'
             });
             if (!response.ok) {
                 throw new Error(`Failed to fetch userProgress: ${response.statusText}`);

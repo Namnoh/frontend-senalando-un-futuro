@@ -13,7 +13,7 @@ export async function fetchUserProgress(idUsuario: number): Promise<UserProgress
         const response = await fetch(`${process.env.API_URL}/progreso/usuario/${idUsuario}`, {
             method: 'GET',
             // TODO: ELIMINAR ESTO EN PROD
-            cache: 'no-store'
+            cache: 'no-cache'
         });
         if (!response.ok) {
             throw new Error('Error al obtener el progreso del usuario');
