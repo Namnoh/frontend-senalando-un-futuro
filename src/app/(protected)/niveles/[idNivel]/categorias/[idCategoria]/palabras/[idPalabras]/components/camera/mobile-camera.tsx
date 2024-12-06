@@ -488,7 +488,7 @@ export default function MobileCamera({ word, isSuccessTry }: MobileCameraProps) 
     <div className="my-4">
       <Card className="w-full">
         <CardContent className='p-3'>
-          <div className="relative aspect-video">
+          <div className="relative aspect-[9/12]">
             <Webcam
               audio={false}
               ref={webcamRef}
