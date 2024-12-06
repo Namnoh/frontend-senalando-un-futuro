@@ -22,7 +22,6 @@ export default function WordList({ categoryId = 1 }: { categoryId?: number }) {
     }, [categoryId])
 
     const handleWordClick = (word: Palabra) => {
-        console.log(`Clicked on word: ${word.nombrePalabra}`)
     }
 
     return (

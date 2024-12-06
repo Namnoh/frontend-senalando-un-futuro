@@ -51,7 +51,6 @@ export default function MobileVideo({word}:{word:Palabra}) {
                   height="100%"
                   playbackRate={playbackRate}
                   playing={isPlaying}
-                  onReady={() => console.log('Video ready')}
                   onError={(e) => console.error('Error loading video:', e)}
                   onEnded={() => setIsPlaying(false)}
                 />

@@ -249,7 +249,6 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
   // Función para predecir el gesto
   const predictGesture = useCallback(async (kpNormalized: number[][]) => {
     if (!gestureModel) {
-      console.log('El modelo aún no está cargado');
       return;
     }
   
@@ -259,12 +258,7 @@ export default function MobileCamera({word, isSuccessTry}: DesktopCameraProps) {
       const predictionData = await prediction.array() as number[][];
       const confidences = predictionData[0];
       const maxConfidence = Math.max(...confidences);
-      const maxIndex = confidences.indexOf(maxConfidence);
-  
-      // gestures.forEach((gesture, index) => {
-      //   console.log(`${gesture}: ${(confidences[index] * 100).toFixed(2)}%`);
-      // });
-  
+      const maxIndex = confidences.indexOf(maxConfidence); 
       if (maxConfidence > THRESHOLD) {
         const predictedGesture = gestures[maxIndex];
         setPrediction(predictedGesture);

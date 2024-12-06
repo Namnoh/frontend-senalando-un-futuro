@@ -174,14 +174,10 @@ export async function getWordsFromInput(input:string):Promise<SearchPalabra[]> {
 export async function getWordById(idPalabra: number, idCategoria: number): Promise<Palabra | null> {
     try {
         const words = await getWordsFrom(idCategoria);
-        console.log("Lista de palabras obtenida:", words);
-
         const palabra = words.find((word: Palabra) => word.idPalabra === idPalabra) || null;
-
         if (!palabra) {
             console.error(`Palabra con id ${idPalabra} no encontrada en la categoría ${idCategoria}`);
         }
-
         return palabra;
     } catch (error) {
         console.error("Error en getWordById:", error);

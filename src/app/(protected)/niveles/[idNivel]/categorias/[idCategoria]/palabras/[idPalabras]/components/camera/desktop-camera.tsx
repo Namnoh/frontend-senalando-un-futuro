@@ -155,7 +155,6 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
           interpolatedKeypoints.push(interpolatedPoint);
         }
       }
-
       return interpolatedKeypoints;
     },
     []
@@ -186,7 +185,7 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
   const flipHandLandmarks = (landmarks: any[]): any[] => {
     return landmarks.map(landmark => ({
       ...landmark,
-      x: 1 - landmark.x, // Invertir la coordenada X
+      x: 1 - landmark.x,
     }));
   };
 
@@ -274,7 +273,6 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
   // Función para predecir el gesto
   const predictGesture = useCallback(async (kpNormalized: number[][]) => {
     if (!gestureModel) {
-      console.log('El modelo aún no está cargado');
       return;
     }
 
@@ -306,7 +304,7 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
 
           // Comparar las secuencias
           const averageDistance = calculateAverageDistance(kpNormalized, expectedKpNormalized);
-
+          
           // Calcular el porcentaje de precisión
           const accuracy = Math.max(0, (1 - (averageDistance / MAX_DISTANCE)) * 100);
           const accuracyRounded = Math.round(accuracy);
@@ -442,7 +440,7 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
           }
         }
       } catch (error) {
-        console.error("Error initializing Holistic:", error);
+        console.error("Error al inicializar Holistic:", error);
         setIsHolisticReady(false);
       }
     };
@@ -471,10 +469,6 @@ export default function DesktopCamera({ word, isSuccessTry }: DesktopCameraProps
       }
     }
   }, [isPageVisible, isHolisticReady]);
-
-  console.log('isPageVisible:', isPageVisible);
-  console.log('isHolisticReady:', isHolisticReady);
-
   return (
     <Card className="w-full max-w-4xl">
       <CardContent className='p-6'>

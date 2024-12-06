@@ -52,7 +52,6 @@ export default function DesktopVideo({word}: {word:Palabra}) {
                   height="100%"
                   playbackRate={playbackRate}
                   playing={isPlaying}
-                  onReady={() => console.log('Video listo')}
                   onError={(e) => console.error('Error al cargar el video:', e)}
                   onEnded={() => setIsPlaying(false)}
                 />
