@@ -59,7 +59,7 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             // Se obtienen todas las palabras de la categoría
             const categoryWordsResponse = await fetch(`/api/words/getWordsFromCategory/${category.idTitle}`, {
                 method: "GET",
-                cache: 'no-store'
+                cache: 'no-cache'
             });
             if (!categoryWordsResponse.ok) {
                 throw new Error('Failed to fetch words');
@@ -97,7 +97,7 @@ export default function ResponsiveComponents({ level, category, word, words, cur
             // Se saca el porcentaje total del progreso.
             const levelWordsResponse = await fetch(`/api/words/getAllWordsFromLevel/${level.idTitle}`, {
                 method: "GET",
-                cache: 'no-store'
+                cache: 'no-cache'
             });
             if (!levelWordsResponse.ok) {
                 throw new Error('Failed to fetch words');

@@ -15,7 +15,7 @@ export default function AllSidebars({actualRoute, isMobile} : {actualRoute:strin
         const fetchLinks = async () => {
             try {
                 const response = await fetch('/api/sidebar', {
-                    cache: 'no-store'
+                    cache: 'no-cache'
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch sidebar links');

@@ -98,7 +98,7 @@ export default function UserProgressContextProvider({children} : UserProgressCon
                 return;
             }
             const response = await fetch(`/api/level/fetchUserProgress/${session.user.id}`,{
-                cache: 'no-store'
+                cache: 'no-cache'
             });
             if (!response.ok) {
                 throw new Error(`Failed to fetch userProgress: ${response.statusText}`);

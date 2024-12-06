@@ -8,7 +8,7 @@
 
 # PWA
 sw.js
-workbox/*
+workbox*
 
 # testing
 /coverage

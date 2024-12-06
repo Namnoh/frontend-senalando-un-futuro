@@ -118,7 +118,9 @@ export async function deleteManyWords(idsWords:number[]) {
 
 export async function getWordsFrom(idCategoria:number) {
     try {
-        const response= await fetch(`${process.env.API_URL}/words/getAllByCategory/${idCategoria}`);
+        const response= await fetch(`${process.env.API_URL}/words/getAllByCategory/${idCategoria}`,{
+            cache: 'no-cache'
+        });
         if (!response.ok) {
             throw new Error(`Error al obtener las palabras: ${response.statusText}`);
         }
@@ -134,7 +136,7 @@ export async function getAllWordsFromLevel(idNivel:number) {
     try {
         const response= await fetch(`${process.env.API_URL}/words/getAllWordsFromLevel/${idNivel}`, {
             // TODO: SIN CACHÉ PARA LAS PRUEBAS, LUEGO ELIMINAR
-            cache: 'no-store'
+            cache: 'no-cache'
         });
         if (!response.ok) {
             throw new Error(`Error al obtener las palabras: ${response.statusText}`);

@@ -6,7 +6,7 @@ import { getSession } from 'next-auth/react';
 export async function fetchUser(idUsuario: number): Promise<Usuario> {
     try {
         const response = await fetch(`${process.env.API_URL}/users/${idUsuario}`,{
-            cache: 'no-store'
+            cache: 'no-cache'
         });
         if (!response.ok) {
             throw new Error('Error al obtener el progreso del usuario');
