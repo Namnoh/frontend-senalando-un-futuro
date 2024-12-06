@@ -551,15 +551,14 @@ export default function MobileCamera({ word, isSuccessTry }: MobileCameraProps) 
               </button>
             </div>
             <div className='absolute bottom-4 right-4 z-30'>
-              <InfoCapsule message='
-                Consejos:\n\n
-                1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar en como se detecta la seña y dar un mal resultado.\n\n
-                2. El proceso de detección empieza a contar desde que se detecta la mano hasta que la mano es retirada de la vista de la camara. (En caso de señas
-                estaticas se recomienda estar a lo menos 3 segundos de detección para que detecte correctamente)\n\n
-                3. Para que el intento se concidere correcto debe contar con un porcentaje de aprobación igual o sobre el 85%.\n\n
-                4. Se recomienda contar con una distancia prudente en la cual se pueda visualizar completamente desde el pecho hasta la cabeza.\n\n
-                5. Se recomienda estar centrado y realizar las señas de forma precisa, no muy rapido ni muy lento.'
-              ></InfoCapsule>
+            <InfoCapsule message={`Consejos:
+              1. Asegurate de tener una correcta iluminacón, la falta de esta podria afectar en como se detecta la seña y dar un mal resultado.
+              2. El proceso de detección empieza a contar desde que se detecta la mano hasta que la mano es retirada de la vista de la camara. 
+              (En caso de señas estaticas se recomienda estar a lo menos 3 segundos de detección para que detecte correctamente)
+              3. Para que el intento se concidere correcto debe contar con un porcentaje de aprobación igual o sobre el 85%.
+              4. Se recomienda contar con una distancia prudente en la cual se pueda visualizar completamente desde el pecho hasta la cabeza.
+              5. Se recomienda estar centrado y realizar las señas de forma precisa, no muy rapido ni muy lento.`}>
+            </InfoCapsule>
             </div>
           </div>
         </CardContent>
