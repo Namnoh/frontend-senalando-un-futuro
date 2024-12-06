@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
                 `${process.env.API_URL}/users/authorize/${credentials?.email}`,
                 {
                     method: "GET",
+                    cache: 'no-store'
                 }
             );
 
@@ -53,7 +54,9 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user, }) {
         const email = user.email;
 
-        const response = await fetch(`${process.env.API_URL}/users/authorize/${email}`);
+        const response = await fetch(`${process.env.API_URL}/users/authorize/${email}`,{
+            cache: 'no-store'
+        });
         const userData = await response.json();
 
         if (response.ok) {

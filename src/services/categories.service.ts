@@ -43,6 +43,7 @@ export async function getAllCategories() {
     try {
         const response = await fetch(`${process.env.API_URL}/categories/`, {
             method: 'GET',
+            cache: 'no-store'
         });
         if (!response.ok) {
             throw new Error(`Error al obtener las categorias: ${response.statusText}`);
@@ -124,7 +125,9 @@ export async function deleteManyCategories(idsCategories:number[]) {
 
 export async function getCategory(idCategoria:number) {
     try {
-        const response = await fetch(`${process.env.API_URL}/categories/${idCategoria}`);
+        const response = await fetch(`${process.env.API_URL}/categories/${idCategoria}`,{
+            cache: 'no-store'
+        });
         if (!response.ok) {
             throw new Error(`Error al obtener la categoría: ${response.statusText}`);
         };
@@ -139,7 +142,9 @@ export async function getCategory(idCategoria:number) {
 // TODO: validar que el usuario tiene acceso a ese nivel de donde pide la categoría
 export async function getCategoriesFrom(idNivel:number) {
     try {
-        const response= await fetch(`${process.env.API_URL}/categories/getAllByLevel/${idNivel}`);
+        const response= await fetch(`${process.env.API_URL}/categories/getAllByLevel/${idNivel}`,{
+            cache: 'no-store'
+        });
         if (!response.ok) {
             throw new Error(`Error al obtener las categorías: ${response.statusText}`);
         }

@@ -14,7 +14,9 @@ export default function AllSidebars({actualRoute, isMobile} : {actualRoute:strin
     useEffect(() => {
         const fetchLinks = async () => {
             try {
-                const response = await fetch('/api/sidebar');
+                const response = await fetch('/api/sidebar', {
+                    cache: 'no-store'
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch sidebar links');
                 }
