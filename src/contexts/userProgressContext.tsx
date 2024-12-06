@@ -60,7 +60,8 @@ export default function UserProgressContextProvider({children} : UserProgressCon
     const updateUserProgress = async (newUserProgress: UserProgress) => {
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/progress/updateUserProgress/${session!.user.id}`, {
+            if (!session) return;
+            const response = await fetch(`/api/progress/updateUserProgress/${session.user.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
